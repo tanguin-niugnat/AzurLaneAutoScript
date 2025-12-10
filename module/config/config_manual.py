@@ -11,6 +11,8 @@ class ManualConfig:
     SCHEDULER_PRIORITY = """
     Restart
     > OpsiCrossMonth
+    > IslandRestaurant > IslandJuuCoffee > IslandJuuEatery > IslandGrill > IslandTeahouse
+    > IslandFarm > IslandMineForest > IslandDailyGather
     > Commission > Tactical > Research
     > Exercise
     > Dorm > Meowfficer > Guild > Gacha

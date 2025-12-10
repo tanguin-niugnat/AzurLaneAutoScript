@@ -96,6 +96,21 @@
       "OpsiCrossMonth"
     ]
   },
+  "Island": {
+    "menu": "collapse",
+    "page": "setting",
+    "tasks": [
+      "IslandFarm",
+      "IslandMineForest",
+      "IslandRestaurant",
+      "IslandTeahouse",
+      "IslandGrill",
+      "IslandJuuEatery",
+      "IslandJuuCoffee",
+      "IslandDailyGather",
+      "IslandManufacture"
+    ]
+  },
   "Tool": {
     "menu": "collapse",
     "page": "tool",
