@@ -11,14 +11,17 @@ from module.handler.login import LoginHandler
 
 
 
-class Island(Timer,SelectCharacter,WarehouseOCR):
+class Island(UI,Timer,SelectCharacter,WarehouseOCR):
+    def __init__(self, *args, **kwargs):
+        SelectCharacter.__init__(self, *args, **kwargs)
+        WarehouseOCR.__init__(self)
     def goto_management(self):
         self.ui_goto(page_island)
         while True:
             self.device.screenshot()
-            if self.appear(ISLAND_CHECK):
+            if self.appear(ISLAND_CHECK, offset=(5, 5)):
                 self.device.click(ISLAND_GOTO_MANAGEMENT)
-            if self.appear(ISLAND_MANAGEMENT_CHECK):
+            if self.appear(ISLAND_MANAGEMENT_CHECK, offset=(5, 5)):
                 break
     def goto_island_map(self):
         self.ui_goto(page_island)

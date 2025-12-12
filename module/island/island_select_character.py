@@ -3,9 +3,9 @@ from module.base.button import *
 from module.island.island import *
 
 
-class SelectCharacter(UI):
+class SelectCharacter(InfoHandler):
     def __init__(self, *args, **kwargs):
-        UI.__init__(self, *args, **kwargs)
+        InfoHandler.__init__(self, *args, **kwargs)
         self.grid = ButtonGrid(
             origin=(58, 141),
             delta=(140, 180),
