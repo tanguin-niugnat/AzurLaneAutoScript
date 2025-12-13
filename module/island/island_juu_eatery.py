@@ -5,41 +5,44 @@ from collections import Counter
 from datetime import datetime
 from module.handler.login import LoginHandler
 from module.ocr.ocr import *
+from module.island.island_select_character import *
+from module.island.warehouse import *
 
-class IslandJuuEatery(Island, LoginHandler):
+class IslandJuuEatery(Island,WarehouseOCR,SelectCharacter,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
+        WarehouseOCR.__init__(self)
         self.ISLAND_JUU_EATERY = [
             {'name': 'apple_pie', 'template': TEMPLATE_APPLE_PIE, 'var_name': 'apple_pie',
-             'selection': APPLE_PIE_SELECTION, 'selection_check': APPLE_PIE_SELECTION_CHECK,
+             'selection': SELECT_APPLE_PIE, 'selection_check': SELECT_APPLE_PIE_CHECK,
              'post_action': POST_APPLE_PIE},
             {'name': 'corn_cup', 'template': TEMPLATE_CORN_CUP, 'var_name': 'corn_cup',
-             'selection': CORN_CUP_SELECTION, 'selection_check': CORN_CUP_SELECTION_CHECK,
+             'selection': SELECT_CORN_CUP, 'selection_check': SELECT_CORN_CUP_CHECK,
              'post_action': POST_CORN_CUP},
             {'name': 'orange_pie', 'template': TEMPLATE_ORANGE_PIE, 'var_name': 'orange_pie',
-             'selection': ORANGE_PIE_SELECTION, 'selection_check': ORANGE_PIE_SELECTION_CHECK,
+             'selection': SELECT_ORANGE_PIE, 'selection_check': SELECT_ORANGE_PIE_CHECK,
              'post_action': POST_ORANGE_PIE},
             {'name': 'banana_crepe', 'template': TEMPLATE_BANANA_CREPE, 'var_name': 'banana_crepe',
-             'selection': BANANA_CREPE_SELECTION, 'selection_check': BANANA_CREPE_SELECTION_CHECK,
+             'selection': SELECT_BANANA_CREPE, 'selection_check': SELECT_BANANA_CREPE_CHECK,
              'post_action': POST_BANANA_CREPE},
             {'name': 'orchard_duo', 'template': TEMPLATE_ORCHARD_DUO, 'var_name': 'orchard_duo',
-             'selection': ORCHARD_DUO_SELECTION, 'selection_check': ORCHARD_DUO_SELECTION_CHECK,
+             'selection': SELECT_ORCHARD_DUO, 'selection_check': SELECT_ORCHARD_DUO_CHECK,
              'post_action': POST_ORCHARD_DUO},
             {'name': 'rice_mango', 'template': TEMPLATE_RICE_MANGO, 'var_name': 'rice_mango',
-             'selection': RICE_MANGO_SELECTION, 'selection_check': RICE_MANGO_SELECTION_CHECK,
+             'selection': SELECT_RICE_MANGO, 'selection_check': SELECT_RICE_MANGO_CHECK,
              'post_action': POST_RICE_MANGO},
             {'name': 'succulently_sweet', 'template': TEMPLATE_SUCCULENTLY_SWEET, 'var_name': 'succulently_sweet',
-             'selection': SUCCULENTLY_SWEET_SELECTION, 'selection_check': SUCCULENTLY_SWEET_SELECTION_CHECK,
+             'selection': SELECT_SUCCULENTLY_SWEET, 'selection_check': SELECT_SUCCULENTLY_SWEET_CHECK,
              'post_action': POST_SUCCULENTLY_SWEET},
             {'name': 'berry_orange', 'template': TEMPLATE_BERRY_ORANGE, 'var_name': 'berry_orange',
-             'selection': BERRY_ORANGE_SELECTION, 'selection_check': BERRY_ORANGE_SELECTION_CHECK,
+             'selection': SELECT_BERRY_ORANGE, 'selection_check': SELECT_BERRY_ORANGE_CHECK,
              'post_action': POST_BERRY_ORANGE},
             {'name': 'strawberry_charlotte', 'template': TEMPLATE_STRAWBERRY_CHARLOTTE,
              'var_name': 'strawberry_charlotte',
-             'selection': STRAWBERRY_CHARLOTTE_SELECTION, 'selection_check': STRAWBERRY_CHARLOTTE_SELECTION_CHECK,
+             'selection': SELECT_STRAWBERRY_CHARLOTTE, 'selection_check': SELECT_STRAWBERRY_CHARLOTTE_CHECK,
              'post_action': POST_STRAWBERRY_CHARLOTTE},
             {'name': 'cheese', 'template': TEMPLATE_CHEESE, 'var_name': 'cheese',
-             'selection': CHEESE_SELECTION, 'selection_check': CHEESE_SELECTION_CHECK,
+             'selection': SELECT_CHEESE, 'selection_check': SELECT_CHEESE_CHECK,
              'post_action': POST_CHEESE},
         ]
         self.name_to_config = {item['name']: item for item in self.ISLAND_JUU_EATERY}
@@ -92,7 +95,7 @@ class IslandJuuEatery(Island, LoginHandler):
         if self.appear(ISLAND_WORK_COMPLETE,offset=(5,5)):
             while True:
                 self.device.screenshot()
-                if self.appear(ISLAND_POST_SELECT,offset=1):
+                if self.appear(ISLAND_POST_SELECT,offset=(5,5)):
                     break
                 if self.device.click(POST_GET):
                     continue
@@ -111,7 +114,7 @@ class IslandJuuEatery(Island, LoginHandler):
                 self.post_check_meal[product] += number
             else:
                 self.post_check_meal[product] = number
-            if self.appear_then_click(POST_GET, offset=(5, 5)):
+            if self.appear_then_click(POST_GET, offset=(5,5)):
                 while True:
                     self.device.screenshot()
                     self.device.click(ISLAND_POST_CHECK)
@@ -127,6 +130,7 @@ class IslandJuuEatery(Island, LoginHandler):
             self.posts[post_id]['status'] = 'idle'
             self.device.click(POST_CLOSE)
             setattr(self, time_var_name, None)
+        self.device.click(POST_CLOSE)
 
     def post_product_check(self):
         config = self.ISLAND_JUU_EATERY
@@ -167,9 +171,13 @@ class IslandJuuEatery(Island, LoginHandler):
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
             self.select_character()
+            self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
             for _ in range(number):
                 self.device.click(POST_ADD_ONE)
+            ocr_production_number = Digit(OCR_PRODUCTION_NUMBER, letter=(57, 58, 60), threshold=100,
+                    alphabet='0123456789')
+            number = ocr_production_number
             self.device.click(POST_ADD_ORDER)
             self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
             self.post_manage_up_swipe(450)

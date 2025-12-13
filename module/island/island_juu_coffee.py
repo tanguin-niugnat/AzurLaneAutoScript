@@ -5,38 +5,41 @@ from collections import Counter
 from datetime import datetime
 from module.handler.login import LoginHandler
 from module.ocr.ocr import *
+from module.island.island_select_character import *
+from module.island.warehouse import *
 
-class IslandJuuCoffee(Island, LoginHandler):
+class IslandJuuCoffee(Island,WarehouseOCR,SelectCharacter,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
+        WarehouseOCR.__init__(self)
         self.ISLAND_JUU_COFFEE = [
             {'name': 'iced_coffee', 'template': TEMPLATE_ICED_COFFEE, 'var_name': 'iced_coffee',
-             'selection': ICED_COFFEE_SELECTION, 'selection_check': ICED_COFFEE_SELECTION_CHECK,
+             'selection': SELECT_ICED_COFFEE, 'selection_check': SELECT_ICED_COFFEE_CHECK,
              'post_action': POST_ICED_COFFEE},
             {'name': 'omelette', 'template': TEMPLATE_OMELETTE, 'var_name': 'omelette',
-             'selection': OMELETTE_SELECTION, 'selection_check': OMELETTE_SELECTION_CHECK,
+             'selection': SELECT_OMELETTE, 'selection_check': SELECT_OMELETTE_CHECK,
              'post_action': POST_OMELETTE},
             {'name': 'cheese', 'template': TEMPLATE_CHEESE, 'var_name': 'cheese',
-             'selection': CHEESE_SELECTION, 'selection_check': CHEESE_SELECTION_CHECK,
+             'selection': SELECT_CHEESE, 'selection_check': SELECT_CHEESE_CHECK,
              'post_action': POST_CHEESE},
             {'name': 'latte', 'template': TEMPLATE_LATTE, 'var_name': 'latte',
-             'selection': LATTE_SELECTION, 'selection_check': LATTE_SELECTION_CHECK,
+             'selection': SELECT_LATTE, 'selection_check': SELECT_LATTE_CHECK,
              'post_action': POST_LATTE},
             {'name': 'citrus_coffee', 'template': TEMPLATE_CITRUS_COFFEE, 'var_name': 'citrus_coffee',
-             'selection': CITRUS_COFFEE_SELECTION, 'selection_check': CITRUS_COFFEE_SELECTION_CHECK,
+             'selection': SELECT_CITRUS_COFFEE, 'selection_check': SELECT_CITRUS_COFFEE_CHECK,
              'post_action': POST_CITRUS_COFFEE},
             {'name': 'strawberry_milkshake', 'template': TEMPLATE_STRAWBERRY_MILKSHAKE,
              'var_name': 'strawberry_milkshake',
-             'selection': STRAWBERRY_MILKSHAKE_SELECTION, 'selection_check': STRAWBERRY_MILKSHAKE_SELECTION_CHECK,
+             'selection': SELECT_STRAWBERRY_MILKSHAKE, 'selection_check': SELECT_STRAWBERRY_MILKSHAKE_CHECK,
              'post_action': POST_STRAWBERRY_MILKSHAKE},
             {'name': 'morning_light', 'template': TEMPLATE_MORNING_LIGHT, 'var_name': 'morning_light',
-             'selection': MORNING_LIGHT_SELECTION, 'selection_check': MORNING_LIGHT_SELECTION_CHECK,
+             'selection': SELECT_MORNING_LIGHT, 'selection_check': SELECT_MORNING_LIGHT_CHECK,
              'post_action': POST_MORNING_LIGHT},
             {'name': 'wake_up_call', 'template': TEMPLATE_WAKE_UP_CALL, 'var_name': 'wake_up_call',
-             'selection': WAKE_UP_CALL_SELECTION, 'selection_check': WAKE_UP_CALL_SELECTION_CHECK,
+             'selection': SELECT_WAKE_UP_CALL, 'selection_check': SELECT_WAKE_UP_CALL_CHECK,
              'post_action': POST_WAKE_UP_CALL},
             {'name': 'fruity_fruitier', 'template': TEMPLATE_FRUITY_FRUITIER, 'var_name': 'fruity_fruitier',
-             'selection': FRUITY_FRUITIER_SELECTION, 'selection_check': FRUITY_FRUITIER_SELECTION_CHECK,
+             'selection': SELECT_FRUITY_FRUITIER, 'selection_check': SELECT_FRUITY_FRUITIER_CHECK,
              'post_action': POST_FRUITY_FRUITIER},
         ]
         self.name_to_config = {item['name']: item for item in self.ISLAND_JUU_COFFEE}
@@ -89,7 +92,7 @@ class IslandJuuCoffee(Island, LoginHandler):
         if self.appear(ISLAND_WORK_COMPLETE,offset=(5,5)):
             while True:
                 self.device.screenshot()
-                if self.appear(ISLAND_POST_SELECT,offset=1):
+                if self.appear(ISLAND_POST_SELECT,offset=(5,5)):
                     break
                 if self.device.click(POST_GET):
                     continue
@@ -155,13 +158,17 @@ class IslandJuuCoffee(Island, LoginHandler):
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
             self.select_character()
+            self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
             for _ in range(number):
                 self.device.click(POST_ADD_ONE)
+            ocr_production_number = Digit(OCR_PRODUCTION_NUMBER, letter=(57, 58, 60), threshold=100,
+                    alphabet='0123456789')
+            number = ocr_production_number
             self.device.click(POST_ADD_ORDER)
             self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
             self.post_manage_up_swipe(450)
-            self.post_manage_up_swipe(450)# 或执行两次 self.post_manage_up_swipe(450)
+            self.post_manage_up_swipe(450)
             self.post_open(post_button)
             time_value = time_work.ocr(self.device.image)
             finish_time = datetime.now() + time_value

@@ -4,7 +4,7 @@ from datetime import datetime
 from module.handler.login import LoginHandler
 from module.island.warehouse import *
 
-class IslandFarm(Island,WarehouseOCR,LoginHandler):
+class IslandFarm(Island,WarehouseOCR,SelectCharacter,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
         WarehouseOCR.__init__(self)
@@ -37,35 +37,35 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
                 'threshold': self.farm_config['farm_threshold'],
                 'items': [
                     {'name': 'wheat', 'template': TEMPLATE_WHEAT, 'var_name': 'wheat',
-                     'selection': WHEAT_SELECTION, 'selection_check': WHEAT_SELECTION_CHECK,
+                     'selection': SELECT_WHEAT, 'selection_check': SELECT_WHEAT_CHECK,
                      'post_action': POST_WHEAT, 'category': 'farm', 'seed_number': 99,
                      'shop': SHOP_SEED_WHEAT},
                     {'name': 'corn', 'template': TEMPLATE_CORN, 'var_name': 'corn',
-                     'selection': CORN_SELECTION, 'selection_check': CORN_SELECTION_CHECK,
+                     'selection': SELECT_CORN, 'selection_check': SELECT_CORN_CHECK,
                      'post_action': POST_CORN, 'category': 'farm', 'seed_number': 99,
                      'shop': SHOP_SEED_CORN},
                     {'name': 'rice', 'template': TEMPLATE_RICE, 'var_name': 'rice',
-                     'selection': RICE_SELECTION, 'selection_check': RICE_SELECTION_CHECK,
+                     'selection': SELECT_RICE, 'selection_check': SELECT_RICE_CHECK,
                      'post_action': POST_RICE, 'category': 'farm', 'seed_number': 45,
                      'shop': SHOP_SEED_RICE},
                     {'name': 'chinese_cabbage', 'template': TEMPLATE_CHINESE_CABBAGE, 'var_name': 'chinese_cabbage',
-                     'selection': CHINESE_CABBAGE_SELECTION, 'selection_check': CHINESE_CABBAGE_SELECTION_CHECK,
+                     'selection': SELECT_CHINESE_CABBAGE, 'selection_check': SELECT_CHINESE_CABBAGE_CHECK,
                      'post_action': POST_CHINESE_CABBAGE, 'category': 'farm', 'seed_number': 99,
                      'shop': SHOP_SEED_CHINESE_CABBAGE},
                     {'name': 'potato', 'template': TEMPLATE_POTATO, 'var_name': 'potato',
-                     'selection': POTATO_SELECTION, 'selection_check': POTATO_SELECTION_CHECK,
+                     'selection': SELECT_POTATO, 'selection_check': SELECT_POTATO_CHECK,
                      'post_action': POST_POTATO, 'category': 'farm', 'seed_number': 36,
                      'shop': SHOP_SEED_POTATO},
                     {'name': 'soybean', 'template': TEMPLATE_SOYBEAN, 'var_name': 'soybean',
-                     'selection': SOYBEAN_SELECTION, 'selection_check': SOYBEAN_SELECTION_CHECK,
+                     'selection': SELECT_SOYBEAN, 'selection_check': SELECT_SOYBEAN_CHECK,
                      'post_action': POST_SOYBEAN, 'category': 'farm', 'seed_number': 45,
                      'shop': SHOP_SEED_SOYBEAN},
                     {'name': 'pasture', 'template': TEMPLATE_PASTURE, 'var_name': 'pasture',
-                     'selection': PASTURE_SELECTION, 'selection_check': PASTURE_SELECTION_CHECK,
+                     'selection': SELECT_PASTURE, 'selection_check': SELECT_PASTURE_CHECK,
                      'post_action': POST_PASTURE, 'category': 'farm', 'seed_number': 99,
                      'shop': SHOP_SEED_PASTURE},
                     {'name': 'coffee_bean', 'template': TEMPLATE_COFFEE_BEAN, 'var_name': 'coffee_bean',
-                     'selection': COFFEE_BEAN_SELECTION, 'selection_check': COFFEE_BEAN_SELECTION_CHECK,
+                     'selection': SELECT_COFFEE_BEAN, 'selection_check': SELECT_COFFEE_BEAN_CHECK,
                      'post_action': POST_COFFEE_BEAN, 'category': 'farm', 'seed_number': 36,
                      'shop': SHOP_SEED_COFFEE_BEAN},
                 ]
@@ -75,31 +75,31 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
                 'threshold': self.farm_config['orchard_threshold'],
                 'items': [
                     {'name': 'apple', 'template': TEMPLATE_APPLE, 'var_name': 'apple',
-                     'selection': APPLE_SELECTION, 'selection_check': APPLE_SELECTION_CHECK,
+                     'selection': SELECT_APPLE, 'selection_check': SELECT_APPLE_CHECK,
                      'post_action': POST_APPLE, 'category': 'orchard', 'seed_number': 20,
                      'shop': SHOP_SEED_APPLE},
                     {'name': 'citrus', 'template': TEMPLATE_CITRUS, 'var_name': 'citrus',
-                     'selection': CITRUS_SELECTION, 'selection_check': CITRUS_SELECTION_CHECK,
+                     'selection': SELECT_CITRUS, 'selection_check': SELECT_CITRUS_CHECK,
                      'post_action': POST_CITRUS, 'category': 'orchard', 'seed_number': 20,
                      'shop': SHOP_SEED_CITRUS},
                     {'name': 'banana', 'template': TEMPLATE_BANANA, 'var_name': 'banana',
-                     'selection': BANANA_SELECTION, 'selection_check': BANANA_SELECTION_CHECK,
+                     'selection': SELECT_BANANA, 'selection_check': SELECT_BANANA_CHECK,
                      'post_action': POST_BANANA, 'category': 'orchard', 'seed_number': 16,
                      'shop': SHOP_SEED_BANANA},
                     {'name': 'mango', 'template': TEMPLATE_MANGO, 'var_name': 'mango',
-                     'selection': MANGO_SELECTION, 'selection_check': MANGO_SELECTION_CHECK,
+                     'selection': SELECT_MANGO, 'selection_check': SELECT_MANGO_CHECK,
                      'post_action': POST_MANGO, 'category': 'orchard', 'seed_number': 16,
                      'shop': SHOP_SEED_MANGO},
                     {'name': 'lemon', 'template': TEMPLATE_LEMON, 'var_name': 'lemon',
-                     'selection': LEMON_SELECTION, 'selection_check': LEMON_SELECTION_CHECK,
+                     'selection': SELECT_LEMON, 'selection_check': SELECT_LEMON_CHECK,
                      'post_action': POST_LEMON, 'category': 'orchard', 'seed_number': 28,
                      'shop': SHOP_SEED_LEMON},
                     {'name': 'avocado', 'template': TEMPLATE_AVOCADO, 'var_name': 'avocado',
-                     'selection': AVOCADO_SELECTION, 'selection_check': AVOCADO_SELECTION_CHECK,
+                     'selection': SELECT_AVOCADO, 'selection_check': SELECT_AVOCADO_CHECK,
                      'post_action': POST_AVOCADO, 'category': 'orchard', 'seed_number': 16,
                      'shop': SHOP_SEED_AVOCADO},
                     {'name': 'rubber', 'template': TEMPLATE_RUBBER, 'var_name': 'rubber',
-                     'selection': RUBBER_SELECTION, 'selection_check': RUBBER_SELECTION_CHECK,
+                     'selection': SELECT_RUBBER, 'selection_check': SELECT_RUBBER_CHECK,
                      'post_action': POST_RUBBER, 'category': 'orchard', 'seed_number': 16,
                      'shop': SHOP_SEED_RUBBER},
                 ]
@@ -109,31 +109,31 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
                 'threshold': self.farm_config['nursery_threshold'],
                 'items': [
                     {'name': 'carrot', 'template': TEMPLATE_CARROT, 'var_name': 'carrot',
-                     'selection': CARROT_SELECTION, 'selection_check': CARROT_SELECTION_CHECK,
+                     'selection': SELECT_CARROT, 'selection_check': SELECT_CARROT_CHECK,
                      'post_action': POST_CARROT, 'category': 'nursery', 'seed_number': 33,
                      'shop': SHOP_SEED_CARROT},
                     {'name': 'onion', 'template': TEMPLATE_ONION, 'var_name': 'onion',
-                     'selection': ONION_SELECTION, 'selection_check': ONION_SELECTION_CHECK,
+                     'selection': SELECT_ONION, 'selection_check': SELECT_ONION_CHECK,
                      'post_action': POST_ONION, 'category': 'nursery', 'seed_number': 12,
                      'shop': SHOP_SEED_ONION},
                     {'name': 'flax', 'template': TEMPLATE_FLAX, 'var_name': 'flax',
-                     'selection': FLAX_SELECTION, 'selection_check': FLAX_SELECTION_CHECK,
+                     'selection': SELECT_FLAX, 'selection_check': SELECT_FLAX_CHECK,
                      'post_action': POST_FLAX, 'category': 'nursery', 'seed_number': 33,
                      'shop': SHOP_SEED_FLAX},
                     {'name': 'strawberry', 'template': TEMPLATE_STRAWBERRY, 'var_name': 'strawberry',
-                     'selection': STRAWBERRY_SELECTION, 'selection_check': STRAWBERRY_SELECTION_CHECK,
+                     'selection': SELECT_STRAWBERRY, 'selection_check': SELECT_STRAWBERRY_CHECK,
                      'post_action': POST_STRAWBERRY, 'category': 'nursery', 'seed_number': 12,
                      'shop': SHOP_SEED_STRAWBERRY},
                     {'name': 'cotton', 'template': TEMPLATE_COTTON, 'var_name': 'cotton',
-                     'selection': COTTON_SELECTION, 'selection_check': COTTON_SELECTION_CHECK,
+                     'selection': SELECT_COTTON, 'selection_check': SELECT_COTTON_CHECK,
                      'post_action': POST_COTTON, 'category': 'nursery', 'seed_number': 21,
                      'shop': SHOP_SEED_COTTON},
                     {'name': 'tea', 'template': TEMPLATE_TEA, 'var_name': 'tea',
-                     'selection': TEA_SELECTION, 'selection_check': TEA_SELECTION_CHECK,
+                     'selection': SELECT_TEA, 'selection_check': SELECT_TEA_CHECK,
                      'post_action': POST_TEA, 'category': 'nursery', 'seed_number': 12,
                      'shop': SHOP_SEED_TEA},
                     {'name': 'lavender', 'template': TEMPLATE_LAVENDER, 'var_name': 'lavender',
-                     'selection': LAVENDER_SELECTION, 'selection_check': LAVENDER_SELECTION_CHECK,
+                     'selection': SELECT_LAVENDER, 'selection_check': SELECT_LAVENDER_CHECK,
                      'post_action': POST_LAVENDER, 'category': 'nursery', 'seed_number': 12,
                      'shop': SHOP_SEED_LAVENDER},
                 ]
@@ -540,8 +540,7 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
             print('没有找到农田岗位计时器')
             self.config.task_delay(success=True)
         self.ui_goto_main()
-    def test(self):
-        self.select_product(LAVENDER_SELECTION,LAVENDER_SELECTION_CHECK)
+
 if __name__ == "__main__":
     az =IslandFarm('alas', task='Alas')
     az.device.screenshot()

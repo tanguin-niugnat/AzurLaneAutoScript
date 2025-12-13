@@ -1,11 +1,9 @@
 from module.island_select_character.assets import *
 from module.base.button import *
-from module.island.island import *
 
-
-class SelectCharacter(InfoHandler):
-    def __init__(self, *args, **kwargs):
-        InfoHandler.__init__(self, *args, **kwargs)
+class SelectCharacter:
+    def __init__(self, device):
+        self.device = device
         self.grid = ButtonGrid(
             origin=(58, 141),
             delta=(140, 180),
@@ -184,6 +182,7 @@ class SelectCharacter(InfoHandler):
                 else:
                     self.device.click(button)
                 self.device.sleep(0.3)
+
 
 
     def select_character_b(self,screenshot):

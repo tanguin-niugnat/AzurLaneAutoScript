@@ -1,3 +1,4 @@
+
 from module.island_teahouse.assets import *
 from module.island.assets import *
 from module.island.island import *
@@ -5,38 +6,44 @@ from collections import Counter
 from datetime import datetime
 from module.handler.login import LoginHandler
 from module.ocr.ocr import *
+from module.island.warehouse import *
+from module.island.island_select_character import *
+from module.base.template import *
+import os
 
+import imageio
 
-class IslandTeahouse(Island, LoginHandler):
+class IslandTeahouse(Island,WarehouseOCR,SelectCharacter,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
+        WarehouseOCR.__init__(self)
         self.ISLAND_TEAHOUSE = [
             {'name': 'apple_juice', 'template': TEMPLATE_APPLE_JUICE, 'var_name': 'apple_juice',
-             'selection': APPLE_JUICE_SELECTION, 'selection_check': APPLE_JUICE_SELECTION_CHECK,
+             'selection': SELECT_APPLE_JUICE, 'selection_check': SELECT_APPLE_JUICE_CHECK,
              'post_action': POST_APPLE_JUICE},
             {'name': 'banana_mango', 'template': TEMPLATE_BANANA_MANGO, 'var_name': 'banana_mango',
-             'selection': BANANA_MANGO_SELECTION, 'selection_check': BANANA_MANGO_SELECTION_CHECK,
+             'selection': SELECT_BANANA_MANGO, 'selection_check': SELECT_BANANA_MANGO_CHECK,
              'post_action': POST_BANANA_MANGO},
             {'name': 'honey_lemon', 'template': TEMPLATE_HONEY_LEMON, 'var_name': 'honey_lemon',
-             'selection': HONEY_LEMON_SELECTION, 'selection_check': HONEY_LEMON_SELECTION_CHECK,
+             'selection': SELECT_HONEY_LEMON, 'selection_check': SELECT_HONEY_LEMON_CHECK,
              'post_action': POST_HONEY_LEMON},
             {'name': 'strawberry_lemon', 'template': TEMPLATE_STRAWBERRY_LEMON, 'var_name': 'strawberry_lemon',
-             'selection': STRAWBERRY_LEMON_SELECTION, 'selection_check': STRAWBERRY_LEMON_SELECTION_CHECK,
+             'selection': SELECT_STRAWBERRY_LEMON, 'selection_check': SELECT_STRAWBERRY_LEMON_CHECK,
              'post_action': POST_STRAWBERRY_LEMON},
             {'name': 'strawberry_honey', 'template': TEMPLATE_STRAWBERRY_HONEY, 'var_name': 'strawberry_honey',
-             'selection': STRAWBERRY_HONEY_SELECTION, 'selection_check': STRAWBERRY_HONEY_SELECTION_CHECK,
+             'selection': SELECT_STRAWBERRY_HONEY, 'selection_check': SELECT_STRAWBERRY_HONEY_CHECK,
              'post_action': POST_STRAWBERRY_HONEY},
             {'name': 'floral_fruity', 'template': TEMPLATE_FLORAL_FRUITY, 'var_name': 'floral_fruity',
-             'selection': FLORAL_FRUITY_SELECTION, 'selection_check': FLORAL_FRUITY_SELECTION_CHECK,
+             'selection': SELECT_FLORAL_FRUITY, 'selection_check': SELECT_FLORAL_FRUITY_CHECK,
              'post_action': POST_FLORAL_FRUITY},
             {'name': 'fruit_paradise', 'template': TEMPLATE_FRUIT_PARADISE, 'var_name': 'fruit_paradise',
-             'selection': FRUIT_PARADISE_SELECTION, 'selection_check': FRUIT_PARADISE_SELECTION_CHECK,
+             'selection': SELECT_FRUIT_PARADISE, 'selection_check': SELECT_FRUIT_PARADISE_CHECK,
              'post_action': POST_FRUIT_PARADISE},
             {'name': 'lavender_tea', 'template': TEMPLATE_LAVENDER_TEA, 'var_name': 'lavender_tea',
-             'selection': LAVENDER_TEA_SELECTION, 'selection_check': LAVENDER_TEA_SELECTION_CHECK,
+             'selection': SELECT_LAVENDER_TEA, 'selection_check': SELECT_LAVENDER_TEA_CHECK,
              'post_action': POST_LAVENDER_TEA},
             {'name': 'sunny_honey', 'template': TEMPLATE_SUNNY_HONEY, 'var_name': 'sunny_honey',
-             'selection': SUNNY_HONEY_SELECTION, 'selection_check': SUNNY_HONEY_SELECTION_CHECK,
+             'selection': SELECT_SUNNY_HONEY, 'selection_check': SELECT_SUNNY_HONEY_CHECK,
              'post_action': POST_SUNNY_HONEY},
         ]
         self.name_to_config = {item['name']: item for item in self.ISLAND_TEAHOUSE}
@@ -77,6 +84,7 @@ class IslandTeahouse(Island, LoginHandler):
         self.to_post_products = {}
         self.doubled = False
         self.task_completed = False
+        self.fresh_honey = 0
 
     def post_check(self, post_id, time_var_name):
         post_button = self.posts[post_id]['button']
@@ -89,7 +97,7 @@ class IslandTeahouse(Island, LoginHandler):
         if self.appear(ISLAND_WORK_COMPLETE,offset=(5,5)):
             while True:
                 self.device.screenshot()
-                if self.appear(ISLAND_POST_SELECT,offset=1):
+                if self.appear(ISLAND_POST_SELECT,offset=(5,5)):
                     break
                 if self.device.click(POST_GET):
                     continue
@@ -143,7 +151,15 @@ class IslandTeahouse(Island, LoginHandler):
             self.warehouse_counts[dish['name']] = self.ocr_item_quantity(image, dish['template'])
             if self.warehouse_counts[dish['name']]:
                 print(f"{dish['name']}", self.warehouse_counts[dish['name']])
+        self.ui_goto(page_island_warehouse_filter)
+        self.appear_then_click(FILTER_RESET)
+        self.appear_then_click(FILTER_BASIC)
+        self.appear_then_click(FILTER_OTHER)
+        self.wait_until_appear(ISLAND_WAREHOUSE_GOTO_WAREHOUSE_FILTER)
+        image = self.device.screenshot()
+        self.fresh_honey = self.ocr_item_quantity(image, TEMPLATE_FRESH_HONEY)
         return self.warehouse_counts
+
 
     def post_tea_house(self, post_id, product, number, time_var_name):
         post_button = self.posts[post_id]['button']
@@ -155,9 +171,13 @@ class IslandTeahouse(Island, LoginHandler):
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
             self.select_character()
+            self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
             for _ in range(number):
                 self.device.click(POST_ADD_ONE)
+            ocr_production_number = Digit(OCR_PRODUCTION_NUMBER, letter=(57, 58, 60), threshold=100,
+                    alphabet='0123456789')
+            number = ocr_production_number
             self.device.click(POST_ADD_ORDER)
             self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
             self.post_manage_up_swipe(450)
@@ -416,12 +436,23 @@ class IslandTeahouse(Island, LoginHandler):
         print(f"生产安排完成，剩余需求: {self.to_post_products}")
 
     def test(self):
-        print(self.post_products, self.post_products_task)
-    def test1(self):
+        if self.appear_then_click(POST_GET, offset=(5, 5)):
+            while True:
+                self.device.screenshot()
+                self.device.click(ISLAND_POST_CHECK)
+                if self.appear(ISLAND_GET):
+                    self.device.click(ISLAND_POST_CHECK)
+                    continue
+                if self.appear(ISLAND_WORKING):
+                    self.device.click(ISLAND_POST_CHECK)
+                    break
+            self.device.click(ISLAND_POST_CHECK)
+        self.device.click(POST_CLOSE)
 
-        print(self.config.IslandTeahouse_PostNumber)
+
+
 if __name__ == "__main__":
     az = IslandTeahouse('alas', task='Alas')
     az.device.screenshot()
-    az.run()
+    az.test()
 

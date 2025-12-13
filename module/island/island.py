@@ -1,5 +1,4 @@
 from module.island.assets import *
-from module.ui.ui import UI
 from module.ui.page import *
 from module.base.timer import Timer
 from module.handler.info_handler import InfoHandler
@@ -8,13 +7,10 @@ from datetime import datetime
 from module.island.island_select_character import *
 from module.island.warehouse import *
 from module.handler.login import LoginHandler
+from module.ui.ui import *
 
 
-
-class Island(UI,Timer,SelectCharacter,WarehouseOCR):
-    def __init__(self, *args, **kwargs):
-        SelectCharacter.__init__(self, *args, **kwargs)
-        WarehouseOCR.__init__(self)
+class Island(UI):
     def goto_management(self):
         self.ui_goto(page_island)
         while True:
@@ -68,16 +64,6 @@ class Island(UI,Timer,SelectCharacter,WarehouseOCR):
                 continue
             elif self.appear(post_manage_mode):
                 break
-
-    def select_worker_juu(self):
-        while True:
-            self.device.screenshot()
-            if self.appear(SELECT_WORKER_JUU_Y):
-                break
-            if self.appear_then_click(SELECT_WORKER_JUU):
-                if self.wait_until_appear(SELECT_WORKER_JUU_Y):
-                    break
-        self.device.click(SELECT_CONFIRM)
 
     def select_product(self,product_selection,product_selection_check):
         while True:

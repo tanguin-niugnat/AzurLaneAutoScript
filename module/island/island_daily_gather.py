@@ -1,8 +1,7 @@
 from module.island.island import *
 from time import sleep
+
 class IslandDailyGather(Island):
-    def __init__(self, *args, **kwargs):
-        Island.__init__(self, *args, **kwargs)
     def run(self):
         now = datetime.now()
         current_hour = now.hour

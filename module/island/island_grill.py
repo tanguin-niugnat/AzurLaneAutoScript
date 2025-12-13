@@ -4,36 +4,36 @@ from module.island.island import *
 from collections import Counter
 from datetime import datetime
 from module.handler.login import LoginHandler
-from module.island.warehouse import *
 from module.ocr.ocr import *
+from module.island.warehouse import *
 from module.island.island_select_character import *
 
 
-class IslandGrill(Island,LoginHandler):
+class IslandGrill(Island, WarehouseOCR, SelectCharacter, LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
         WarehouseOCR.__init__(self)
         self.ISLAND_GRILL = [
             {'name': 'roasted_skewer', 'template': TEMPLATE_ROASTED_SKEWER, 'var_name': 'roasted_skewer',
-             'selection': ROASTED_SKEWER_SELECTION, 'selection_check': ROASTED_SKEWER_SELECTION_CHECK,
+             'selection': SELECT_ROASTED_SKEWER, 'selection_check': SELECT_ROASTED_SKEWER_CHECK,
              'post_action': POST_ROASTED_SKEWER},
             {'name': 'chicken_potato', 'template': TEMPLATE_CHICKEN_POTATO, 'var_name': 'chicken_potato',
-             'selection': CHICKEN_POTATO_SELECTION, 'selection_check': CHICKEN_POTATO_SELECTION_CHECK,
+             'selection': SELECT_CHICKEN_POTATO, 'selection_check': SELECT_CHICKEN_POTATO_CHECK,
              'post_action': POST_CHICKEN_POTATO},
             {'name': 'carrot_omelette', 'template': TEMPLATE_CARROT_OMELETTE, 'var_name': 'carrot_omelette',
-             'selection': CARROT_OMELETTE_SELECTION, 'selection_check': CARROT_OMELETTE_SELECTION_CHECK,
+             'selection': SELECT_CARROT_OMELETTE, 'selection_check': SELECT_CARROT_OMELETTE_CHECK,
              'post_action': POST_CARROT_OMELETTE},
             {'name': 'stir_fried_chicken', 'template': TEMPLATE_STIR_FRIED_CHICKEN, 'var_name': 'stir_fried_chicken',
-             'selection': STIR_FRIED_CHICKEN_SELECTION, 'selection_check': STIR_FRIED_CHICKEN_SELECTION_CHECK,
+             'selection': SELECT_STIR_FRIED_CHICKEN, 'selection_check': SELECT_STIR_FRIED_CHICKEN_CHECK,
              'post_action': POST_STIR_FRIED_CHICKEN},
             {'name': 'steak_bowl', 'template': TEMPLATE_STEAK_BOWL, 'var_name': 'steak_bowl',
-             'selection': STEAK_BOWL_SELECTION, 'selection_check': STEAK_BOWL_SELECTION_CHECK,
+             'selection': SELECT_STEAK_BOWL, 'selection_check': SELECT_STEAK_BOWL_CHECK,
              'post_action': POST_STEAK_BOWL},
             {'name': 'carnival', 'template': TEMPLATE_CARNIVAL, 'var_name': 'carnival',
-             'selection': CARNIVAL_SELECTION, 'selection_check': CARNIVAL_SELECTION_CHECK,
+             'selection': SELECT_CARNIVAL, 'selection_check': SELECT_CARNIVAL_CHECK,
              'post_action': POST_CARNIVAL},
             {'name': 'double_energy', 'template': TEMPLATE_DOUBLE_ENERGY, 'var_name': 'double_energy',
-             'selection': DOUBLE_ENERGY_SELECTION, 'selection_check': DOUBLE_ENERGY_SELECTION_CHECK,
+             'selection': SELECT_DOUBLE_ENERGY, 'selection_check': SELECT_DOUBLE_ENERGY_CHECK,
              'post_action': POST_DOUBLE_ENERGY},
         ]
         self.name_to_config = {item['name']: item for item in self.ISLAND_GRILL}
@@ -52,7 +52,7 @@ class IslandGrill(Island,LoginHandler):
 
         for meal_key, number_key in meal_keys:
             meal_name = getattr(self.config, meal_key, None)
-            if meal_name is not None and meal_name != "None":  # 过滤掉 None
+            if meal_name is not None and meal_name != "None":
                 meal_number = getattr(self.config, number_key, 0)
                 self.post_products[meal_name] = meal_number
 
@@ -69,7 +69,7 @@ class IslandGrill(Island,LoginHandler):
             meal_name = getattr(self.config, task_key, None)
             if meal_name is not None and meal_name != "None":
                 meal_number = getattr(self.config, number_key, 0)
-                if meal_number > 0:  # 只添加数量大于0的
+                if meal_number > 0:
                     self.post_products_task[meal_name] = meal_number
         self.warehouse_counts = {}
         self.to_post_products = {}
@@ -84,7 +84,7 @@ class IslandGrill(Island,LoginHandler):
         ocr_post_number = Digit(OCR_POST_NUMBER, letter=(57, 58, 60), threshold=100,
                                 alphabet='0123456789')
 
-        if self.appear(ISLAND_WORK_COMPLETE,offset=(5,5)):
+        if self.appear(ISLAND_WORK_COMPLETE, offset=(5, 5)):
             while True:
                 self.device.screenshot()
                 if self.appear(ISLAND_POST_SELECT):
@@ -106,7 +106,7 @@ class IslandGrill(Island,LoginHandler):
                 self.post_check_meal[product] += number
             else:
                 self.post_check_meal[product] = number
-            if self.appear_then_click(POST_GET ,offset=(5,5)):
+            if self.appear_then_click(POST_GET, offset=(5, 5)):
                 while True:
                     self.device.screenshot()
                     self.device.click(ISLAND_POST_CHECK)
@@ -123,6 +123,7 @@ class IslandGrill(Island,LoginHandler):
             self.device.click(POST_CLOSE)
             setattr(self, time_var_name, None)
         self.device.click(POST_CLOSE)
+
     def post_product_check(self):
         config = self.ISLAND_GRILL
         for item in config:
@@ -153,9 +154,13 @@ class IslandGrill(Island,LoginHandler):
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
             self.select_character()
+            self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
             for _ in range(number):
                 self.device.click(POST_ADD_ONE)
+            ocr_production_number = Digit(OCR_PRODUCTION_NUMBER, letter=(57, 58, 60), threshold=100,
+                                          alphabet='0123456789')
+            number = ocr_production_number
             self.device.click(POST_ADD_ORDER)
             self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
             self.post_manage_up_swipe(450)
@@ -185,6 +190,11 @@ class IslandGrill(Island,LoginHandler):
             print(f"已安排生产：{product} x{number}")
             self.device.click(POST_CLOSE)
 
+    def get_idle_posts(self):
+        """获取空闲的岗位ID列表"""
+        return [post_id for post_id, post_info in self.posts.items()
+                if post_info['status'] == 'idle']
+
     def run(self):
         self.goto_management()
         self.ui_goto(page_island_postmanage)
@@ -205,74 +215,63 @@ class IslandGrill(Island,LoginHandler):
         self.device.click(POST_CLOSE)
         self.post_manage_up_swipe(450)
 
-        # 保存原始需求
-        original_post_products = self.post_products.copy()
-
+        # 计算当前总库存
         total_subtract = Counter(self.post_check_meal)
         total_subtract.update(self.warehouse_counts)
 
-        # 计算剩余需求，但不删除为0或负数的项
-        remaining_products = {}
-        for item, target_count in self.post_products.items():
-            current_count = total_subtract.get(item, 0)
-            remaining = target_count - current_count
-            if remaining > 0:
-                remaining_products[item] = remaining
+        # 保存为实例变量
+        self.current_totals = {}
+        for item in set(self.post_products.keys()) | set(total_subtract.keys()):
+            self.current_totals[item] = total_subtract.get(item, 0)
 
-        self.post_check_meal.clear()
+        # 清空待生产列表
+        self.to_post_products = {}
 
+        # 根据状态进入不同阶段
         if not self.task_completed:
-            if not self.doubled:
-                # 使用剩余需求
-                self.process_meal_requirements(remaining_products)
-                if not self.to_post_products:
-                    print("正常需求为空，检查是否需要翻倍")
-                    # 检查是否有需求项存在
-                    has_any_demand = any(count > 0 for count in original_post_products.values())
-                    if has_any_demand:
-                        print("存在需求，但库存已满足，尝试翻倍需求")
-                        self.doubled = True
-                        # 翻倍原始需求
-                        doubled_demand = {}
-                        for key, value in original_post_products.items():
-                            doubled_demand[key] = value * 2
+            # 检查是否所有基础需求都已完成
+            all_basic_done = all(
+                self.current_totals.get(item, 0) >= target
+                for item, target in self.post_products.items()
+            )
 
-                        # 重新计算翻倍后的剩余需求
-                        remaining_after_double = {}
-                        for item, target_count in doubled_demand.items():
-                            current_count = total_subtract.get(item, 0)
-                            remaining = target_count - current_count
-                            if remaining > 0:
-                                remaining_after_double[item] = remaining
-
-                        self.process_meal_requirements(remaining_after_double)
-                    else:
-                        print("没有设置任何需求")
-                else:
-                    print(f"需要生产的餐品: {self.to_post_products}")
+            if not all_basic_done:
+                print("阶段：基础需求")
+                # 计算基础需求
+                for item, target in self.post_products.items():
+                    current = self.current_totals.get(item, 0)
+                    if current < target:
+                        self.to_post_products[item] = target - current
             else:
-                # 翻倍模式下，使用翻倍后的需求
-                doubled_demand = {}
-                for key, value in original_post_products.items():
-                    doubled_demand[key] = value * 2
+                # 基础需求已完成，检查是否所有翻倍需求都已完成
+                all_double_done = all(
+                    self.current_totals.get(item, 0) >= target * 2
+                    for item, target in self.post_products.items()
+                )
 
-                # 重新计算翻倍后的剩余需求
-                remaining_after_double = {}
-                for item, target_count in doubled_demand.items():
-                    current_count = total_subtract.get(item, 0)
-                    remaining = target_count - current_count
-                    if remaining > 0:
-                        remaining_after_double[item] = remaining
-
-                self.process_meal_requirements(remaining_after_double)
-
-                if not self.to_post_products:
-                    print("翻倍后需求为空，进入任务模式")
+                if not all_double_done:
+                    print("阶段：翻倍需求")
+                    self.doubled = True
+                    # 计算翻倍需求
+                    for item, target in self.post_products.items():
+                        current = self.current_totals.get(item, 0)
+                        double_target = target * 2
+                        if current < double_target:
+                            self.to_post_products[item] = double_target - current
+                else:
+                    # 翻倍需求已完成，进入任务阶段
+                    print("阶段：任务需求")
                     self.process_task_requirements()
         else:
-            print("任务已完成，进入挂机模式")
+            # 任务已完成，进入挂机模式
+            print("阶段：挂机模式")
             self.process_away_cook()
 
+        # 处理套餐分解
+        if self.to_post_products:
+            self.process_meal_requirements(self.to_post_products)
+
+        # 安排生产
         if self.to_post_products:
             self.schedule_production()
 
@@ -287,6 +286,7 @@ class IslandGrill(Island,LoginHandler):
         else:
             self.config.task_delay(success=True)
         self.ui_goto_main()
+
     def process_meal_requirements(self, source_products):
         meal_compositions = {
             'double_energy': {
@@ -298,28 +298,28 @@ class IslandGrill(Island,LoginHandler):
                 'quantity_per': 1
             }
         }
-        self.to_post_products = {}
+        result = {}
+
+        # 处理套餐需求
         for meal, quantity in source_products.items():
             if meal in meal_compositions:
                 required_meals = meal_compositions[meal]['required']
                 required_quantity = meal_compositions[meal]['quantity_per'] * quantity
                 for req_meal in required_meals:
-                    if req_meal in self.to_post_products:
-                        self.to_post_products[req_meal] += required_quantity
+                    if req_meal in result:
+                        result[req_meal] += required_quantity
                     else:
-                        self.to_post_products[req_meal] = required_quantity
-        for meal, quantity in source_products.items():
-            if meal in meal_compositions:
-                if meal in self.to_post_products:
-                    self.to_post_products[meal] += quantity
-                else:
-                    self.to_post_products[meal] = quantity
+                        result[req_meal] = required_quantity
+
+        # 添加非套餐需求
         for meal, quantity in source_products.items():
             if meal not in meal_compositions:
-                if meal in self.to_post_products:
-                    self.to_post_products[meal] += quantity
+                if meal in result:
+                    result[meal] += quantity
                 else:
-                    self.to_post_products[meal] = quantity
+                    result[meal] = quantity
+
+        self.to_post_products = result
         print(f"转换完成：source_products -> to_post_products")
         print(f"原始需求: {source_products}")
         print(f"生产计划: {self.to_post_products}")
@@ -331,8 +331,11 @@ class IslandGrill(Island,LoginHandler):
                 task_products[item] -= quantity
                 if task_products[item] <= 0:
                     del task_products[item]
-        self.process_meal_requirements(task_products)
-        if not self.to_post_products:
+
+        if task_products:
+            self.process_meal_requirements(task_products)
+        else:
+            self.to_post_products = {}
             self.task_completed = True
             print("任务需求已完成")
 
@@ -346,22 +349,38 @@ class IslandGrill(Island,LoginHandler):
             print("未设置挂机餐品")
 
     def schedule_production(self):
+        """根据to_post_products安排生产"""
         if not self.to_post_products:
             print("没有需要生产的餐品")
             return
-        idle_posts = [post_id for post_id, post_info in self.posts.items()
-                      if post_info['status'] == 'idle']
+
+        # 获取空闲岗位
+        idle_posts = self.get_idle_posts()
         if not idle_posts:
             print("没有空闲的岗位")
             return
-        for product, required_quantity in list(self.to_post_products.items()):
+
+        # 按需求数量排序（需求大的优先）
+        sorted_products = sorted(
+            self.to_post_products.items(),
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+        # 复制一份需求，用于遍历
+        products_to_process = sorted_products.copy()
+
+        for product, required_quantity in products_to_process:
             if required_quantity <= 0:
                 continue
-            idle_posts = [post_id for post_id, post_info in self.posts.items()
-                          if post_info['status'] == 'idle']
+
+            # 重新获取空闲岗位（因为可能已经安排了）
+            idle_posts = self.get_idle_posts()
             if not idle_posts:
                 print("所有岗位都在工作中")
                 break
+
+            # 检查套餐前置材料
             batch_size = min(5, required_quantity)
             if product in ['double_energy', 'carnival']:
                 if product == 'double_energy':
@@ -372,8 +391,6 @@ class IslandGrill(Island,LoginHandler):
                         print(f"套餐 {product} 的前置材料不足，跳过")
                         continue
                     batch_size = possible_batch
-                    self.warehouse_counts['stir_fried_chicken'] -= batch_size
-                    self.warehouse_counts['steak_bowl'] -= batch_size
                 elif product == 'carnival':
                     potato_stock = self.warehouse_counts.get('chicken_potato', 0)
                     skewer_stock = self.warehouse_counts.get('roasted_skewer', 0)
@@ -382,21 +399,18 @@ class IslandGrill(Island,LoginHandler):
                         print(f"套餐 {product} 的前置材料不足，跳过")
                         continue
                     batch_size = possible_batch
-                    self.warehouse_counts['chicken_potato'] -= batch_size
-                    self.warehouse_counts['roasted_skewer'] -= batch_size
 
+            # 分配生产
             post_id = idle_posts[0]
             post_num = post_id[-1]
             time_var_name = f'time_meal{post_num}'
 
             self.post_grill(post_id, product, batch_size, time_var_name)
+
         print(f"生产安排完成，剩余需求: {self.to_post_products}")
 
-    def test(self):
-        print(self.post_products, self.post_products_task)
 
 if __name__ == "__main__":
-    az =IslandGrill('alas', task='Alas')
+    az = IslandGrill('alas', task='Alas')
     az.device.screenshot()
     az.run()
-

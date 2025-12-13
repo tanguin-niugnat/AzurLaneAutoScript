@@ -1,5 +1,7 @@
 from module.ocr.ocr import *
 from module.base.button import *
+from module.ui.ui import *
+
 
 class WarehouseOCR:
     def __init__(self):

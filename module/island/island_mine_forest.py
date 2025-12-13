@@ -6,19 +6,20 @@ from module.config.utils import *
 from module.island.warehouse import *
 
 
-class IslandMineForest(Island, LoginHandler):
+class IslandMineForest(Island,SelectCharacter,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
+
     PRODUCT_CONFIGS = {
-        "Copper": (COPPER_SELECTION, COPPER_SELECTION_CHECK, POST_COPPER),
-        "Aluminium": (ALUMINIUM_SELECTION, ALUMINIUM_SELECTION_CHECK, POST_ALUMINIUM),
-        "Iron": (IRON_SELECTION, IRON_SELECTION_CHECK, POST_IRON),
-        "Sulphur": (SULPHUR_SELECTION, SULPHUR_SELECTION_CHECK, POST_SULPHUR),
-        "Silver": (SILVER_SELECTION, SILVER_SELECTION_CHECK, POST_SILVER),
-        "Elegant": (ELEGANT_SELECTION, ELEGANT_SELECTION_CHECK, POST_ELEGANT),
-        "Practical": (PRACTICAL_SELECTION, PRACTICAL_SELECTION_CHECK, POST_PRACTICAL),
-        "Selected": (SELECTED_SELECTION, SELECTED_SELECTION_CHECK, POST_SELECTED),
-        "Natural": (NATURAL_SELECTION, NATURAL_SELECTION_CHECK, POST_NATURAL),
+        "Copper": (SELECT_COPPER, SELECT_COPPER_CHECK, POST_COPPER),
+        "Aluminium": (SELECT_ALUMINIUM, SELECT_ALUMINIUM_CHECK, POST_ALUMINIUM),
+        "Iron": (SELECT_IRON, SELECT_IRON_CHECK, POST_IRON),
+        "Sulphur": (SELECT_SULPHUR, SELECT_SULPHUR_CHECK, POST_SULPHUR),
+        "Silver": (SELECT_SILVER, SELECT_SILVER_CHECK, POST_SILVER),
+        "Elegant": (SELECT_ELEGANT, SELECT_ELEGANT_CHECK, POST_ELEGANT),
+        "Practical": (SELECT_PRACTICAL, SELECT_PRACTICAL_CHECK, POST_PRACTICAL),
+        "Selected": (SELECT_SELECTED, SELECT_SELECTED_CHECK, POST_SELECTED),
+        "Natural": (SELECT_NATURAL, SELECT_NATURAL_CHECK, POST_NATURAL),
     }
 
     def get_product_config(self, product_name):
@@ -51,7 +52,7 @@ class IslandMineForest(Island, LoginHandler):
 
     def _select_product(self, selection_buttons):
         """选择产品的通用流程"""
-        self.select_worker_juu()
+        self.select_character()
         product_selection, product_selection_check, _ = selection_buttons
         self.select_product(product_selection, product_selection_check)
         self._handle_max_check()

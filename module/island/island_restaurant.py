@@ -5,31 +5,35 @@ from collections import Counter
 from datetime import datetime
 from module.handler.login import LoginHandler
 from module.ocr.ocr import *
+from module.island.island_select_character import *
+from module.island.warehouse import *
 
-class IslandRestaurant(Island, LoginHandler):
+
+class IslandRestaurant(Island,WarehouseOCR,SelectCharacter,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
+        WarehouseOCR.__init__(self)
         self.ISLAND_RESTAURANT = [
             {'name': 'tofu', 'template': TEMPLATE_TOFU, 'var_name': 'tofu',
-             'selection': TOFU_SELECTION, 'selection_check': TOFU_SELECTION_CHECK,
+             'selection': SELECT_TOFU, 'selection_check': SELECT_TOFU_CHECK,
              'post_action': POST_TOFU},
             {'name': 'omurice', 'template': TEMPLATE_OMURICE, 'var_name': 'omurice',
-             'selection': OMURICE_SELECTION, 'selection_check': OMURICE_SELECTION_CHECK,
+             'selection': SELECT_OMURICE, 'selection_check': SELECT_OMURICE_CHECK,
              'post_action': POST_OMURICE},
             {'name': 'cabbage_tofu', 'template': TEMPLATE_CABBAGE_TOFU, 'var_name': 'cabbage_tofu',
-             'selection': CABBAGE_TOFU_SELECTION, 'selection_check': CABBAGE_TOFU_SELECTION_CHECK,
+             'selection': SELECT_CABBAGE_TOFU, 'selection_check': SELECT_CABBAGE_TOFU_CHECK,
              'post_action': POST_CABBAGE_TOFU},
             {'name': 'salad', 'template': TEMPLATE_SALAD, 'var_name': 'salad',
-             'selection': SALAD_SELECTION, 'selection_check': SALAD_SELECTION_CHECK,
+             'selection': SELECT_SALAD, 'selection_check': SELECT_SALAD_CHECK,
              'post_action': POST_SALAD},
             {'name': 'tofu_meat', 'template': TEMPLATE_TOFU_MEAT, 'var_name': 'tofu_meat',
-             'selection': TOFU_MEAT_SELECTION, 'selection_check': TOFU_MEAT_SELECTION_CHECK,
+             'selection': SELECT_TOFU_MEAT, 'selection_check': SELECT_TOFU_MEAT_CHECK,
              'post_action': POST_TOFU_MEAT},
             {'name': 'tofu_combo', 'template': TEMPLATE_TOFU_COMBO, 'var_name': 'tofu_combo',
-             'selection': TOFU_COMBO_SELECTION, 'selection_check': TOFU_COMBO_SELECTION_CHECK,
+             'selection': SELECT_TOFU_COMBO, 'selection_check': SELECT_TOFU_COMBO_CHECK,
              'post_action': POST_TOFU_COMBO},
             {'name': 'hearty_meal', 'template': TEMPLATE_HEARTY_MEAL, 'var_name': 'hearty_meal',
-             'selection': HEARTY_MEAL_SELECTION, 'selection_check': HEARTY_MEAL_SELECTION_CHECK,
+             'selection': SELECT_HEARTY_MEAL, 'selection_check': SELECT_HEARTY_MEAL_CHECK,
              'post_action': POST_HEARTY_MEAL},
         ]
         self.name_to_config = {item['name']: item for item in self.ISLAND_RESTAURANT}
@@ -82,7 +86,7 @@ class IslandRestaurant(Island, LoginHandler):
         if self.appear(ISLAND_WORK_COMPLETE,offset=(5,5)):
             while True:
                 self.device.screenshot()
-                if self.appear(ISLAND_POST_SELECT,offset=1):
+                if self.appear(ISLAND_POST_SELECT,offset=(5,5)):
                     break
                 if self.device.click(POST_GET):
                     continue
@@ -148,9 +152,13 @@ class IslandRestaurant(Island, LoginHandler):
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
             self.select_character()
+            self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
             for _ in range(number):
                 self.device.click(POST_ADD_ONE)
+            ocr_production_number = Digit(OCR_PRODUCTION_NUMBER, letter=(57, 58, 60), threshold=100,
+                    alphabet='0123456789')
+            number = ocr_production_number
             self.device.click(POST_ADD_ORDER)
             self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
             self.post_manage_up_swipe(450)
