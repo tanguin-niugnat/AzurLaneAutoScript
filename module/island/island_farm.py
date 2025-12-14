@@ -4,7 +4,7 @@ from datetime import datetime
 from module.handler.login import LoginHandler
 from module.island.warehouse import *
 
-class IslandFarm(Island,WarehouseOCR,SelectCharacter,LoginHandler):
+class IslandFarm(Island,WarehouseOCR,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
         WarehouseOCR.__init__(self)

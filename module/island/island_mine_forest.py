@@ -6,7 +6,7 @@ from module.config.utils import *
 from module.island.warehouse import *
 
 
-class IslandMineForest(Island,SelectCharacter,LoginHandler):
+class IslandMineForest(Island,LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
 

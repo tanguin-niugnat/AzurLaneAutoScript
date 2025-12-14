@@ -1,21 +1,16 @@
-# island_shop_base.py
-from module.island.assets import *
 from module.island.island import *
 from collections import Counter
 from datetime import datetime
 from module.handler.login import LoginHandler
-from module.ocr.ocr import *
 from module.island.warehouse import *
-from module.island.island_select_character import *
 
 
-class IslandShopBase(Island, WarehouseOCR, SelectCharacter, LoginHandler):
+class IslandShopBase(Island, WarehouseOCR, LoginHandler):
     """所有岛屿商店的基类"""
 
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
         WarehouseOCR.__init__(self)
-        SelectCharacter.__init__(self, *args, **kwargs)
 
         # 子类必须设置的属性
         self.shop_items = []  # 商品列表

@@ -2,8 +2,7 @@ from module.island_select_character.assets import *
 from module.base.button import *
 
 class SelectCharacter:
-    def __init__(self, device):
-        self.device = device
+    def __init__(self):
         self.grid = ButtonGrid(
             origin=(58, 141),
             delta=(140, 180),
@@ -156,9 +155,8 @@ class SelectCharacter:
                 return char_info
         return None
 
-    def select_character(self, character_name="WorkerJuu"):
+    def select_character_base(self,screenshot, character_name="WorkerJuu"):
         """选择指定角色，如果不可用则选择WorkerJuu"""
-        screenshot = self.device.screenshot()
         all_status = self.recognize_all_characters(screenshot)
         target_row, target_col = None, None
         if character_name != "WorkerJuu":
@@ -172,16 +170,9 @@ class SelectCharacter:
                 if char_info["character_name"] == "WorkerJuu":
                     target_row, target_col = char_info["grid_position"]
                     break
-        if target_row is not None and target_col is not None:
-            button = self.grid[target_row, target_col]
-            while True:
-                screenshot = self.device.screenshot()
-                current_char_info = self.get_character_by_position(screenshot, target_row, target_col)
-                if current_char_info and current_char_info["is_selected"]:
-                    break
-                else:
-                    self.device.click(button)
-                self.device.sleep(0.3)
+
+        button = self.grid[target_row, target_col]
+        return button, target_row, target_col
 
 
 
