@@ -166,7 +166,7 @@ class IslandShopBase(Island, WarehouseOCR, SelectCharacter, LoginHandler):
         """获取仓库数量（通用）"""
         self.ui_goto(page_island_warehouse_filter)
         self.appear_then_click(FILTER_RESET)
-        self.appear_then_click(self.filter_asset)
+        self.device.click(self.filter_asset)
         self.appear_then_click(FILTER_CONFIRM)
         self.wait_until_appear(ISLAND_WAREHOUSE_GOTO_WAREHOUSE_FILTER)
         image = self.device.screenshot()
