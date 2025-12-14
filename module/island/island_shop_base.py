@@ -15,6 +15,7 @@ class IslandShopBase(Island, WarehouseOCR, SelectCharacter, LoginHandler):
     def __init__(self, *args, **kwargs):
         Island.__init__(self, *args, **kwargs)
         WarehouseOCR.__init__(self)
+        SelectCharacter.__init__(self, *args, **kwargs)
 
         # 子类必须设置的属性
         self.shop_items = []  # 商品列表
