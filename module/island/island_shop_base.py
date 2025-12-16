@@ -5,12 +5,11 @@ from module.handler.login import LoginHandler
 from module.island.warehouse import *
 
 
-class IslandShopBase(Island, WarehouseOCR, LoginHandler):
-    """所有岛屿商店的基类"""
-
-    def __init__(self, *args, **kwargs):
-        Island.__init__(self, *args, **kwargs)
-        WarehouseOCR.__init__(self)
+class IslandShopBase(Island, WarehouseOCR):
+    def __init__(self, config, device=None, task=None):
+        # 分别初始化每个父类
+        Island.__init__(self, config=config, device=device, task=task)
+        WarehouseOCR.__init__(self)  # WarehouseOCR 可能不需要参数   # LoginHandler 可能也不需要参数
 
         # 子类必须设置的属性
         self.shop_items = []  # 商品列表
@@ -20,6 +19,7 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
         self.time_prefix = "time_meal"  # 时间变量前缀
 
         # 通用属性
+        self.high_priority_products = {}
         self.name_to_config = {}
         self.posts = {}
         self.post_check_meal = {}
@@ -129,10 +129,11 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
             finish_time = datetime.now() + time_value
             setattr(self, time_var_name, finish_time)
             self.posts[post_id]['status'] = 'working'
-            if product in self.post_check_meal:
-                self.post_check_meal[product] += number
-            else:
-                self.post_check_meal[product] = number
+            if product is not None:
+                if product in self.post_check_meal:
+                    self.post_check_meal[product] += number
+                else:
+                    self.post_check_meal[product] = number
             if self.appear_then_click(POST_GET, offset=(5, 5)):
                 while True:
                     self.device.screenshot()
@@ -171,7 +172,6 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
             self.warehouse_counts[dish['name']] = self.ocr_item_quantity(image, dish['template'])
             if self.warehouse_counts[dish['name']]:
                 print(f"{dish['name']}", self.warehouse_counts[dish['name']])
-
         return self.warehouse_counts
 
     def post_produce(self, post_id, product, number, time_var_name):
@@ -185,36 +185,29 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
         selection_check = self.name_to_config[product]['selection_check']
 
         if self.appear_then_click(ISLAND_POST_SELECT):
+            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
             self.select_character()
             self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
 
-            for _ in range(number):
+            for _ in range(number-1):
                 self.device.click(POST_ADD_ONE)
-
-            # 截图识别实际生产的数量
-            self.device.screenshot()
-            ocr_production_number = Digit(OCR_PRODUCTION_NUMBER, letter=(57, 58, 60), threshold=100,
-                                          alphabet='0123456789')
-            actual_number = ocr_production_number.ocr(self.device.image)
-
             self.device.click(POST_ADD_ORDER)
             self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
-
             # 滑动以看到岗位（使用post_produce_swipe_count配置）
             for _ in range(self.post_produce_swipe_count):
                 self.post_manage_up_swipe(450)
-
             self.post_open(post_button)
-
+            image = self.device.screenshot()
+            ocr_post_number = Digit(OCR_POST_NUMBER, letter=(57, 58, 60), threshold=100,
+                                    alphabet='0123456789')
+            actual_number = ocr_post_number.ocr(image)
             time_value = time_work.ocr(self.device.image)
             finish_time = datetime.now() + time_value
             setattr(self, time_var_name, finish_time)
             self.posts[post_id]['status'] = 'working'
-
             # 扣除前置材料（子类可覆盖）
             self.deduct_materials(product, actual_number)
-
             # 更新需求
             if product in self.to_post_products:
                 self.to_post_products[product] -= actual_number
@@ -241,7 +234,7 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
     # ============ 核心逻辑 ============
 
     def run(self):
-        """运行店铺逻辑（通用）"""
+        """运行店铺逻辑（通用）- 修改版本，支持高优先级"""
         self.goto_postmanage()
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.device.click(POST_CLOSE)
@@ -282,6 +275,39 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
 
         # 清空待生产列表
         self.to_post_products = {}
+
+        # ============ 新增：优先处理高优先级任务 ============
+        if self.high_priority_products:
+            print("=== 优先处理高优先级任务 ===")
+            # 将高优先级任务合并到待生产列表
+            for product, quantity in self.high_priority_products.items():
+                if product in self.to_post_products:
+                    self.to_post_products[product] += quantity
+                else:
+                    self.to_post_products[product] = quantity
+
+            # 处理套餐分解
+            if self.to_post_products:
+                self.process_meal_requirements(self.to_post_products)
+                print(f"高优先级生产计划: {self.to_post_products}")
+
+                # 安排高优先级任务的生产
+                self.schedule_production()
+
+                # 清空高优先级任务（避免重复处理）
+                self.high_priority_products = {}
+
+                # 如果有安排了生产，直接设置延迟并返回
+                finish_times = []
+                for var in time_vars:
+                    time_value = getattr(self, var)
+                    if time_value is not None:
+                        finish_times.append(time_value)
+                if finish_times:
+                    finish_times.sort()
+                    self.config.task_delay(target=finish_times)
+                    return
+            print("=== 高优先级任务处理完成 ===")
 
         # 根据状态进入不同阶段
         if not self.task_completed:
@@ -400,12 +426,19 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
     def process_away_cook(self):
         """处理挂机模式（通用）"""
         away_cook = getattr(self.config, self.config_away_cook, None)
-        if away_cook:
+
+        # 检查 away_cook 是否有效
+        if away_cook and away_cook != "None" and away_cook in self.name_to_config:
             self.to_post_products = {away_cook: 9999}
             print(f"挂机模式：生产 {away_cook}，无限数量")
         else:
             self.to_post_products = {}
-            print("未设置挂机餐品")
+            if away_cook is None or away_cook == "None":
+                print("挂机模式：未设置挂机餐品，跳过生产")
+            elif away_cook not in self.name_to_config:
+                print(f"挂机模式：餐品 '{away_cook}' 不在商品列表中，跳过生产")
+            else:
+                print("挂机模式：跳过生产")
 
     def schedule_production(self):
         """安排生产（通用）"""
@@ -478,3 +511,11 @@ class IslandShopBase(Island, WarehouseOCR, LoginHandler):
         """检查特殊材料（子类可覆盖）"""
         # 默认实现不检查特殊材料
         return batch_size
+
+    def add_high_priority_product(self, product, quantity):
+        """添加高优先级餐品（子类调用）"""
+        if product in self.high_priority_products:
+            self.high_priority_products[product] += quantity
+        else:
+            self.high_priority_products[product] = quantity
+        print(f"添加高优先级任务: {product} x{quantity}")

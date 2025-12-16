@@ -435,6 +435,36 @@ class GeneratedConfig:
     # Group `OpsiHazard1Leveling`
     OpsiHazard1Leveling_TargetZone = 0  # 0, 44, 22
 
+    # Group `PersonnelManagement`
+    PersonnelManagement_BusinessStatus = 0  # 0, 1, 2
+    PersonnelManagement_AmagiChanRubber = False
+    PersonnelManagement_YingSwei = True
+
+    # Group `IslandRestaurantBusiness`
+    IslandRestaurantBusiness_time = 'None'  # None, one, two
+    IslandRestaurantBusiness_Waiter1 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+    IslandRestaurantBusiness_Waiter2 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+
+    # Group `IslandTeahouseBusiness`
+    IslandTeahouseBusiness_time = 'None'  # None, one, two
+    IslandTeahouseBusiness_Waiter1 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+    IslandTeahouseBusiness_Waiter2 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+
+    # Group `IslandGrillBusiness`
+    IslandGrillBusiness_time = 'None'  # None, one, two
+    IslandGrillBusiness_Waiter1 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+    IslandGrillBusiness_Waiter2 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+
+    # Group `IslandJuuEateryBusiness`
+    IslandJuuEateryBusiness_time = 'None'  # None, one, two
+    IslandJuuEateryBusiness_Waiter1 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+    IslandJuuEateryBusiness_Waiter2 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+
+    # Group `IslandJuuCoffeeBusiness`
+    IslandJuuCoffeeBusiness_time = 'None'  # None, one, two
+    IslandJuuCoffeeBusiness_Waiter1 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+    IslandJuuCoffeeBusiness_Waiter2 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
+
     # Group `IslandFarm`
     IslandFarm_MinFarm = 300
     IslandFarm_PlantPotatoes = True
@@ -490,6 +520,7 @@ class GeneratedConfig:
     # Group `IslandTeahouse`
     IslandTeahouse_PostNumber = 2  # 1, 2
     IslandTeahouse_MealNumber = 6  # 5, 6, 7
+    IslandTeahouse_SunnyHoney = True
     IslandTeahouse_Meal1 = 'floral_fruity'  # None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey
     IslandTeahouse_Meal2 = 'lavender_tea'  # None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey
     IslandTeahouse_Meal3 = 'strawberry_lemon'  # None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey

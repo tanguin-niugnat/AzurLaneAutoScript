@@ -4,8 +4,8 @@ from module.ui.ui import *
 
 
 class WarehouseOCR:
-    def __init__(self):
-        self.grid = ButtonGrid(
+    def __init__(self, *args, **kwargs):
+        self.warehouse_grid = ButtonGrid(
             origin=(301, 150),
             delta=(142, 167),
             button_shape=(104, 110),
@@ -14,7 +14,7 @@ class WarehouseOCR:
         )
         self.number_area_relative = (45, 90, 99, 110)
     def ocr_item_quantity(self, screenshot, template):
-        for _, _, button in self.grid.generate():
+        for _, _, button in self.warehouse_grid.generate():
             cell_image = crop(screenshot, button.area)
             if template.match(cell_image, similarity=0.85):
                 number_area = self._get_number_area(button)

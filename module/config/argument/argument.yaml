@@ -733,7 +733,62 @@ OpsiHazard1Leveling:
     option: [ 0, 44, 22 ]
 
 # ==================== Island ====================
-
+PersonnelManagement:
+  BusinessStatus:
+    value: 0
+    option: [ 0, 1, 2 ]
+  AmagiChanRubber: false
+  YingSwei: true
+IslandRestaurantBusiness:
+  time:
+    value: None
+    option: [ None, one, two ]
+  Waiter1:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+  Waiter2:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+IslandTeahouseBusiness:
+  time:
+    value: None
+    option: [ None, one, two ]
+  Waiter1:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+  Waiter2:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+IslandGrillBusiness:
+  time:
+    value: None
+    option: [ None, one, two ]
+  Waiter1:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+  Waiter2:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+IslandJuuEateryBusiness:
+  time:
+    value: None
+    option: [ None, one, two ]
+  Waiter1:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+  Waiter2:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+IslandJuuCoffeeBusiness:
+  time:
+    value: None
+    option: [ None, one, two ]
+  Waiter1:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
+  Waiter2:
+    value: WorkerJuu
+    option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
 IslandFarm:
   MinFarm: 300
   PlantPotatoes: true
@@ -829,6 +884,7 @@ IslandTeahouse:
   MealNumber:
     value: 6
     option: [ 5, 6, 7 ]
+  SunnyHoney: True
   Meal1:
     value: floral_fruity
     option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]

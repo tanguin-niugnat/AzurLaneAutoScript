@@ -40,6 +40,18 @@ class IslandDailyGather(Island):
         sleep(0.1)
         self.device.click(ISLAND_GATHER_C)
         sleep(1.8)
+    def island_air_drop(self):
+        self.device.click(ISLAND_AIR_DROP_A)
+        sleep(0.1)
+        self.device.click(ISLAND_AIR_DROP_B)
+        sleep(0.1)
+        self.device.click(ISLAND_AIR_DROP_C)
+        sleep(0.5)
+        self.device.click(ISLAND_AIR_DROP_A)
+        sleep(0.1)
+        self.device.click(ISLAND_AIR_DROP_B)
+        sleep(0.1)
+        self.device.click(ISLAND_AIR_DROP_C)
     def gather_wood(self):
         self.island_map_goto('mine_forest')
         self.island_up(2500)
@@ -177,8 +189,16 @@ class IslandDailyGather(Island):
         self.island_up(4500)
         self.island_right(1000)
         self.island_gathering()
+    def test(self):
+        image = self.device.screenshot()
+        ocr_air_drop = Digit(OCR_AIR_DROP, name='air_drop', letter=(170, 170, 170), threshold=80,
+                                    alphabet='0123456789')
+        x= ocr_air_drop.ocr(image)
+        print(x)
+
+
 
 if __name__ == "__main__":
     az =IslandDailyGather('alas', task='Alas')
     az.device.screenshot()
-    az.run()
+    az.test()

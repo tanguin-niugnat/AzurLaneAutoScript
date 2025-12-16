@@ -52,6 +52,7 @@ class IslandMineForest(Island,LoginHandler):
 
     def _select_product(self, selection_buttons):
         """选择产品的通用流程"""
+        self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
         self.select_character()
         product_selection, product_selection_check, _ = selection_buttons
         self.select_product(product_selection, product_selection_check)

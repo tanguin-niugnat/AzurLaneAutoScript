@@ -1,9 +1,12 @@
 from module.island_select_character.assets import *
 from module.base.button import *
+from module.ui.ui import UI
 
-class SelectCharacter:
-    def __init__(self):
-        self.grid = ButtonGrid(
+
+class SelectCharacter(UI):
+    def __init__(self, *args, **kwargs):
+        UI.__init__(self, *args, **kwargs)
+        self.select_character_grid = ButtonGrid(
             origin=(58, 141),
             delta=(140, 180),
             button_shape=(120, 160),
@@ -36,7 +39,7 @@ class SelectCharacter:
         """识别网格中所有角色的状态"""
         results = []
 
-        for row, col, button in self.grid.generate():
+        for row, col, button in self.select_character_grid.generate():
             # 获取角色按钮区域
             character_status = self._recognize_character_status(screenshot, button)
             if character_status:
@@ -155,8 +158,9 @@ class SelectCharacter:
                 return char_info
         return None
 
-    def select_character_base(self,screenshot, character_name="WorkerJuu"):
+    def select_character(self, character_name="WorkerJuu"):
         """选择指定角色，如果不可用则选择WorkerJuu"""
+        screenshot = self.device.screenshot()
         all_status = self.recognize_all_characters(screenshot)
         target_row, target_col = None, None
         if character_name != "WorkerJuu":
@@ -170,27 +174,157 @@ class SelectCharacter:
                 if char_info["character_name"] == "WorkerJuu":
                     target_row, target_col = char_info["grid_position"]
                     break
+        if target_row is not None and target_col is not None:
+            button = self.select_character_grid[target_row, target_col]
+            while True:
+                screenshot = self.device.screenshot()
+                current_char_info = self.get_character_by_position(screenshot, target_row, target_col)
+                if current_char_info and current_char_info["is_selected"]:
+                    break
+                else:
+                    self.device.click(button)
+                self.device.sleep(0.3)
 
-        button = self.grid[target_row, target_col]
-        return button, target_row, target_col
+    def _is_character_available_by_config(self, character_name):
+        """
+        根据玩家配置判断角色是否可用于选择
+        返回True表示角色可用于选择，False表示不可用
+        """
+        if character_name == "WorkerJuu":
+            return True
+        # 特殊角色配置检查
+        if character_name == "YingSwei" and self.config.PersonnelManagement_YingSwei:
+            return False  # 不可用
+        if character_name == "Amagi_chan" and self.config.PersonnelManagement_AmagiChanRubber:
+            return False  # 不可用
+        # 获取营业状态
+        business_status = self.config.PersonnelManagement_BusinessStatus
+        # 检查角色是否在店铺配置中以及对应的波次
+        business_configs = [
+            "IslandRestaurantBusiness",
+            "IslandTeahouseBusiness",
+            "IslandGrillBusiness",
+            "IslandJuuEateryBusiness",
+            "IslandJuuCoffeeBusiness"
+        ]
+        # 记录角色出现在哪个波次的店铺中
+        appears_in_wave1 = False
+        appears_in_wave2 = False
+        for business in business_configs:
+            # 检查该角色是否是此店铺的店员
+            waiter1 = getattr(self.config, f"{business}_Waiter1", None)
+            waiter2 = getattr(self.config, f"{business}_Waiter2", None)
+
+            if waiter1 == character_name or waiter2 == character_name:
+                # 获取店铺波次
+                time_attr = getattr(self.config, f"{business}_time", 0)
+                if time_attr == 1:
+                    appears_in_wave1 = True
+                elif time_attr == 2:
+                    appears_in_wave2 = True
+        # 根据营业状态判断
+        if business_status == 0:  # 所有店铺角色不可选
+            # 如果角色出现在任何店铺中，都不可选
+            if appears_in_wave1 or appears_in_wave2:
+                return False
+            # 不在任何店铺中，可用
+            return True
+        elif business_status == 1:  # 只有波次为1且不在波次2的店铺角色可选
+            # 如果出现在波次2中，不可选
+            if appears_in_wave2:
+                return False
+            # 如果只出现在波次1中，可选
+            if appears_in_wave1:
+                return True
+            # 不出现在任何店铺中，可用
+            return True
+        elif business_status == 2:  # 所有店铺角色可选
+            # 无论出现在哪个波次，都可用
+            return True
+        # 默认情况
+        return True
+
+    def _select_first_available_character(self, screenshot, character_list):
+        """
+        从指定角色列表中选择第一个空闲且体力充沛的角色
+        如果无可选角色则选择WorkerJuu
+        """
+        all_characters = self.recognize_all_characters(screenshot)
+
+        # 构建角色名到状态的映射
+        character_dict = {}
+        for char_info in all_characters:
+            character_dict[char_info["character_name"]] = char_info
+        # 优先按列表顺序检查指定角色
+        for char_name in character_list:
+            if char_name in character_dict:
+                char_info = character_dict[char_name]
+                # 检查角色状态和配置可用性
+                if (not char_info["is_working"] and
+                        char_info["has_stamina"] and
+                        self._is_character_available_by_config(char_name)):
+                    return char_info["grid_position"]
+        # 如果没有找到可用角色，查找WorkerJuu
+        if "WorkerJuu" in character_dict:
+            worker_info = character_dict["WorkerJuu"]
+            return worker_info["grid_position"]
+        return None
+    def select_character_a(self):
+        """
+        选择第一个可用的A类角色，否则选择WorkerJuu
+        角色列表: "Amagi_chan", "NewJersey", "Unicorn", "LeMalin"
+        """
+        character_list = ["LeMalin", "Unicorn", "NewJersey", "Amagi_chan"]
+
+        screenshot = self.device.screenshot()
+        position = self._select_first_available_character(screenshot, character_list)
 
 
+        row, col = position
+        button = self.select_character_grid[row, col]
+        while True:
+            screenshot = self.device.screenshot()
+            current_char_info = self.get_character_by_position(screenshot, row, col)
+            if current_char_info and current_char_info["is_selected"]:
+                break
+            else:
+                self.device.click(button)
+            self.device.sleep(0.3)
 
-    def select_character_b(self,screenshot):
-        all_status = self.recognize_all_characters(screenshot)
-        for status in all_status:
-            print(f"位置: {status['grid_position']}")
-            print(f"角色: {status['character_name']}")
-            print(f"工作中: {status['is_working']}")
-            print(f"体力充沛: {status['has_stamina']}")
-            print(f"已选中: {status['is_selected']}")
-            print("-" * 30)
+    def select_character_b(self):
+        """
+        选择第一个可用的B类角色，否则选择WorkerJuu
+        角色列表: "Cheshire", "YingSwei"
+        """
+        character_list = ["Cheshire", "YingSwei"]
+        screenshot = self.device.screenshot()
+        position = self._select_first_available_character(screenshot, character_list)
+        row, col = position
+        button = self.select_character_grid[row, col]
+        while True:
+            screenshot = self.device.screenshot()
+            current_char_info = self.get_character_by_position(screenshot, row, col)
+            if current_char_info and current_char_info["is_selected"]:
+                break
+            else:
+                self.device.click(button)
+            self.device.sleep(0.3)
 
-        available_chars = self.find_available_characters(screenshot)
-        print(f"可用角色数量: {len(available_chars)}")
-        # 查找工作中的角色
-        working_chars = self.find_working_characters(screenshot)
-        print(f"工作中的角色数量: {len(working_chars)}")
+    def select_character_c(self):
+        character_list = ["Shimakaze", "Saratoga", "Tashkent", "Akashi"]
+        screenshot = self.device.screenshot()
+        position = self._select_first_available_character(screenshot, character_list)
+        row, col = position
+        button = self.select_character_grid[row, col]
+        while True:
+            screenshot = self.device.screenshot()
+            current_char_info = self.get_character_by_position(screenshot, row, col)
+            if current_char_info and current_char_info["is_selected"]:
+                break
+            else:
+                self.device.click(button)
+            self.device.sleep(0.3)
+
 
 
 

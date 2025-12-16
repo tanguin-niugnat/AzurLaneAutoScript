@@ -18,15 +18,15 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
             'nursery_threshold': 50,  # 苗圃库存阈值
             'plant_config': {  # 默认作物配置
                 'farm': {
-                    'plant_default': True,
+                    'plant_default': self.config.IslandFarm_PlantPotatoes,
                     'default_crop': 'potato'
                 },
                 'orchard': {
-                    'plant_default': False,  # 果园不种植默认作物
+                    'plant_default': self.config.IslandOrchard_PlantRubber,
                     'default_crop': 'rubber'  # 即使有默认作物也不种
                 },
                 'nursery': {
-                    'plant_default': True,
+                    'plant_default': self.config.IslandNursery_PlantLavender,
                     'default_crop': 'lavender'
                 }
             }
@@ -137,6 +137,28 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
                      'post_action': POST_LAVENDER, 'category': 'nursery', 'seed_number': 12,
                      'shop': SHOP_SEED_LAVENDER},
                 ]
+            },
+            'ranch':{
+                'items': [
+                    {'name': 'chicken_feed', 'template': TEMPLATE_CATTLE_FEED, 'var_name': 'chicken_feed',
+                     'category': 'ranch', 'number': 11,
+                     'mill': MILL_CHICKEN_FEED},
+                    {'name': 'pig_feed', 'template': TEMPLATE_PIG_FEED, 'var_name': 'pig_feed',
+                     'category': 'ranch', 'number': 11,
+                     'mill': MILL_PIG_FEED},
+                    {'name': 'cattle_feed', 'template': TEMPLATE_CATTLE_FEED, 'var_name': 'cattle_feed',
+                     'category': 'ranch', 'number': 11,
+                     'mill': MILL_CATTLE_FEED},
+                    {'name': 'sheep_feed', 'template': TEMPLATE_SHEEP_FEED, 'var_name': 'sheep_feed',
+                     'category': 'ranch', 'number': 11,
+                     'mill': MILL_SHEEP_FEED},
+
+                    {'name': 'chicken', 'template': TEMPLATE_CHICKEN, 'var_name': 'chicken',
+                     'category': 'ranch'},
+                    {'name': 'pork', 'template': TEMPLATE_PORK, 'var_name': 'pork',
+                     'category': 'ranch'},
+
+                ]
             }
         }
         self.posts = {
@@ -155,6 +177,12 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
             # 苗圃岗位
             'ISLAND_NURSERY_POST1': {'status': 'none', 'button': ISLAND_NURSERY_POST1},
             'ISLAND_NURSERY_POST2': {'status': 'none', 'button': ISLAND_NURSERY_POST2}
+        }
+        self.posts_ranch = {
+            'ISLAND_RANCH_POST1': ISLAND_RANCH_POST1,
+            'ISLAND_RANCH_POST2': ISLAND_RANCH_POST2,
+            'ISLAND_RANCH_POST3': ISLAND_RANCH_POST3,
+            'ISLAND_RANCH_POST4': ISLAND_RANCH_POST4
         }
         self.to_plant_lists = {
             'farm': [],
@@ -260,7 +288,10 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
         selection = self.name_to_config[product]['selection']
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
-            self.select_character()
+            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
+            if product == 'rubber' and self.config.PersonnelManagement_AmagiChanRubber:
+                self.select_character(character_name="Amagi_chan")
+            else: self.select_character()
             self.select_product(selection, selection_check)
             self.appear_then_click(POST_MAX)
             self.device.click(POST_ADD_ORDER)
@@ -331,6 +362,7 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
                 break
             self.device.click(ADD_ONE_C)
             add_one_clicks -= 1
+
 
     def run(self):
         self.check_inventory_and_prepare_lists()
@@ -541,7 +573,10 @@ class IslandFarm(Island,WarehouseOCR,LoginHandler):
             print('没有找到农田岗位计时器')
             self.config.task_delay(success=True)
 
+    def test(self):
+        self.select_character_c()
+
 if __name__ == "__main__":
     az =IslandFarm('alas', task='Alas')
     az.device.screenshot()
-    az.run()
+    az.test()

@@ -10,7 +10,12 @@ from module.handler.login import LoginHandler
 from module.ui.ui import *
 
 
-class Island(UI,SelectCharacter):
+class Island(SelectCharacter):
+    def __init__(self, *args, **kwargs):
+        # 调用两个父类的初始化
+        UI.__init__(self, *args, **kwargs)
+        SelectCharacter.__init__(self, *args, **kwargs)
+
     def goto_postmanage(self):
         page = self.ui_get_current_page()
         valid_pages = ['page_island_management', 'page_island_postmanage', 'page_island']
@@ -35,17 +40,7 @@ class Island(UI,SelectCharacter):
                 continue
             if self.appear(ISLAND_MAP_CHECK):
                 break
-    def select_character(self,character_name="WorkerJuu"):
-        screenshot = self.device.screenshot()
-        button,target_row, target_col = self.select_character_base(screenshot, character_name)
-        while True:
-            screenshot = self.device.screenshot()
-            current_char_info = self.get_character_by_position(screenshot, target_row, target_col)
-            if current_char_info and current_char_info["is_selected"]:
-                break
-            else:
-                self.device.click(button)
-            self.device.sleep(0.3)
+
     def island_map_goto(self,destination):
         button_map = {
             'mine_forest': {

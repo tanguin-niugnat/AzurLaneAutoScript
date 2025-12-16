@@ -1906,6 +1906,41 @@
       "Storage": {}
     }
   },
+  "PersonnelManagement": {
+    "PersonnelManagement": {
+      "BusinessStatus": 0,
+      "AmagiChanRubber": false,
+      "YingSwei": true
+    },
+    "IslandRestaurantBusiness": {
+      "time": "None",
+      "Waiter1": "WorkerJuu",
+      "Waiter2": "WorkerJuu"
+    },
+    "IslandTeahouseBusiness": {
+      "time": "None",
+      "Waiter1": "WorkerJuu",
+      "Waiter2": "WorkerJuu"
+    },
+    "IslandGrillBusiness": {
+      "time": "None",
+      "Waiter1": "WorkerJuu",
+      "Waiter2": "WorkerJuu"
+    },
+    "IslandJuuEateryBusiness": {
+      "time": "None",
+      "Waiter1": "WorkerJuu",
+      "Waiter2": "WorkerJuu"
+    },
+    "IslandJuuCoffeeBusiness": {
+      "time": "None",
+      "Waiter1": "WorkerJuu",
+      "Waiter2": "WorkerJuu"
+    },
+    "Storage": {
+      "Storage": {}
+    }
+  },
   "IslandFarm": {
     "Scheduler": {
       "Enable": false,
@@ -2009,6 +2044,7 @@
     "IslandTeahouse": {
       "PostNumber": 2,
       "MealNumber": 6,
+      "SunnyHoney": true,
       "Meal1": "floral_fruity",
       "Meal2": "lavender_tea",
       "Meal3": "strawberry_lemon",

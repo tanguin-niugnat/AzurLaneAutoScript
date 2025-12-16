@@ -5,8 +5,8 @@ from module.ui.page import *
 
 
 class IslandTeahouse(IslandShopBase):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, config, device=None, task=None):
+        super().__init__(config=config, device=device, task=task)
 
         # 设置店铺类型
         self.shop_type = "teahouse"
@@ -80,12 +80,11 @@ class IslandTeahouse(IslandShopBase):
 
         # 特殊材料：蜂蜜
         self.fresh_honey = 0
-
-        # 初始化店铺
         self.initialize_shop()
 
     def get_warehouse_counts(self):
         """覆盖：获取仓库数量，包括蜂蜜"""
+        # 先调用父类方法获取基础库存
         super().get_warehouse_counts()
 
         # 额外获取蜂蜜数量
@@ -98,6 +97,22 @@ class IslandTeahouse(IslandShopBase):
         image = self.device.screenshot()
         self.fresh_honey = self.ocr_item_quantity(image, TEMPLATE_FRESH_HONEY)
         print(f"蜂蜜数量: {self.fresh_honey}")
+
+        # ============ 新增：检查蜂蜜任务并添加到高优先级 ============
+        if (self.config.IslandTeahouse_SunnyHoney and
+                self.fresh_honey > 0):
+
+            # 计算可以生产的sunny_honey数量
+            strawberry_lemon_stock = self.warehouse_counts.get('strawberry_lemon', 0)
+            max_by_honey = self.fresh_honey
+            max_by_strawberry = strawberry_lemon_stock
+            max_sunny_honey = min(max_by_honey, max_by_strawberry)
+
+            if max_sunny_honey > 0:
+                # 添加到高优先级任务
+                self.add_high_priority_product('sunny_honey', max_sunny_honey)
+                print(f"检测到蜂蜜任务，高优先级生产: sunny_honey x{max_sunny_honey}")
+        # ========================================================
 
         return self.warehouse_counts
 
