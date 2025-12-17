@@ -359,7 +359,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
             setattr(self, time_var_name, datetime.now() + time_value)
             self.device.click(POST_CLOSE)
 
-        elif self.appear(ISLAND_POST_SELECT):
+        elif self.appear_then_click(ISLAND_POST_SELECT):
             self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
             self.select_character()
             self.appear_then_click(SELECT_UI_CONFIRM)
