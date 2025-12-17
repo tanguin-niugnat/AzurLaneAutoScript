@@ -168,6 +168,7 @@ class IslandShopBase(Island, WarehouseOCR):
             if not self.appear(ISLAND_POST_CHECK):
                 break
             self.device.click(POST_CLOSE)
+        self.device.sleep(0.3)
 
     def post_product_check(self):
         """检查岗位生产的产品（通用）"""
@@ -182,7 +183,7 @@ class IslandShopBase(Island, WarehouseOCR):
         self.appear_then_click(FILTER_RESET)
         self.device.click(self.filter_asset)
         self.appear_then_click(FILTER_CONFIRM)
-        self.wait_until_appear(ISLAND_WAREHOUSE_GOTO_WAREHOUSE_FILTER)
+        self.device.sleep(0.3)
         image = self.device.screenshot()
 
         for dish in self.shop_items:
@@ -232,6 +233,7 @@ class IslandShopBase(Island, WarehouseOCR):
                     del self.to_post_products[product]
 
             print(f"已安排生产：{product} x{actual_number}")
+            self.device.sleep(0.3)
             self.device.click(POST_CLOSE)
 
     def deduct_materials(self, product, number):

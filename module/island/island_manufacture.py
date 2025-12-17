@@ -113,109 +113,106 @@ class IslandManufacture(IslandShopBase):
         self.device.click(POST_CLOSE)
         self.post_open(post_button)
 
-        if not self.appear_then_click(ISLAND_POST_SELECT):
-            print(f"无法进入岗位选择界面: {post_id}")
-            return None
+        if self.appear_then_click(ISLAND_POST_SELECT):
+            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
+            self.select_character()
+            self.appear_then_click(SELECT_UI_CONFIRM)
 
-        self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
-        self.select_character()
-        self.appear_then_click(SELECT_UI_CONFIRM)
+            selected_product = None
+            for product_info in product_list:
+                product_name = product_info['name']
+                selection = product_info['selection']
+                selection_check = product_info['selection_check']
 
-        selected_product = None
-        for product_info in product_list:
-            product_name = product_info['name']
-            selection = product_info['selection']
-            selection_check = product_info['selection_check']
+                print(f"尝试选择产品: {product_name}")
 
-            print(f"尝试选择产品: {product_name}")
+                # 点击产品选择按钮
+                self.select_product(selection, selection_check)
+                self.device.sleep(0.3)
 
-            # 点击产品选择按钮
-            self.select_product(selection, selection_check)
-            self.device.sleep(0.3)
+                # 检查确认按钮状态
+                image = self.device.screenshot()
+                # 确认按钮区域 (493, 597, 621, 643)
+                area = (493, 597, 621, 643)
+                color = get_color(image, area)
 
-            # 检查确认按钮状态
-            image = self.device.screenshot()
-            # 确认按钮区域 (493, 597, 621, 643)
-            area = (493, 597, 621, 643)
-            color = get_color(image, area)
-
-            # 如果确认按钮是灰色（153, 156, 156），表示材料不足
-            if color_similar(color, (153, 156, 156), 80):
-                print(f"材料不足，跳过产品: {product_name}")
-                continue
-            else:
-                selected_product = product_info
-                self.appear_then_click(POST_MAX)
-                self.device.click(POST_ADD_ORDER)
-                print(f"选择产品成功: {product_name}")
-                break
-
-        if not selected_product:
-            print("所有产品材料都不足，点击返回")
-            self.device.click(SELECT_UI_BACK)
-            self.device.sleep(0.3)
-
-            # 清空该岗位的时间变量
-            for key in list(self.__dict__.keys()):
-                if key.startswith(self.time_prefix) and hasattr(self, key):
-                    # 找到对应的post_id
-                    post_num = None
-                    for post_key, post_info in self.posts.items():
-                        if post_info['button'] == post_button:
-                            # 提取岗位编号
-                            if 'POST1' in post_key:
-                                post_num = 1
-                            elif 'POST2' in post_key:
-                                post_num = 2
-                            break
-
-                    if post_num is not None:
-                        time_var_name = f'{self.time_prefix}{post_num}'
-                        if key == time_var_name:
-                            setattr(self, key, None)
-                            print(f"清空岗位时间变量: {key}")
-
-            # 关闭岗位界面
-            while True:
-                self.device.screenshot()
-                if not self.appear(ISLAND_POST_CHECK) or self.appear(ISLAND_GET):
+                # 如果确认按钮是灰色（153, 156, 156），表示材料不足
+                if color_similar(color, (153, 156, 156), 80):
+                    print(f"材料不足，跳过产品: {product_name}")
+                    continue
+                else:
+                    selected_product = product_info
+                    self.appear_then_click(POST_MAX)
+                    self.device.click(POST_ADD_ORDER)
+                    print(f"选择产品成功: {product_name}")
                     break
+
+            if not selected_product:
+                print("所有产品材料都不足，点击返回")
+                self.device.click(SELECT_UI_BACK)
+                self.device.sleep(0.3)
+
+                # 清空该岗位的时间变量
+                for key in list(self.__dict__.keys()):
+                    if key.startswith(self.time_prefix) and hasattr(self, key):
+                        # 找到对应的post_id
+                        post_num = None
+                        for post_key, post_info in self.posts.items():
+                            if post_info['button'] == post_button:
+                                # 提取岗位编号
+                                if 'POST1' in post_key:
+                                    post_num = 1
+                                elif 'POST2' in post_key:
+                                    post_num = 2
+                                break
+
+                        if post_num is not None:
+                            time_var_name = f'{self.time_prefix}{post_num}'
+                            if key == time_var_name:
+                                setattr(self, key, None)
+                                print(f"清空岗位时间变量: {key}")
+
+                # 关闭岗位界面
+                while True:
+                    self.device.screenshot()
+                    if not self.appear(ISLAND_POST_CHECK) or self.appear(ISLAND_GET):
+                        break
+                    self.device.click(POST_CLOSE)
                 self.device.click(POST_CLOSE)
+
+                return None
+
+            # ============ 新增：委派后滑动以看到岗位 ============
+            # 等待出现岗位管理界面
+            self.wait_until_appear(ISLAND_POSTMANAGE_CHECK, offset=(1, 1))
+
+            # 滑动以看到岗位（使用post_produce_swipe_count配置）
+            for _ in range(self.post_produce_swipe_count):
+                self.post_manage_up_swipe(450)
+            # =================================================
+
+            # 打开岗位
+            self.post_open(post_button)
+
+            # 获取生产时间和数量
+            image = self.device.screenshot()
+            ocr_post_number = Digit(OCR_POST_NUMBER, letter=(57, 58, 60), threshold=100,
+                                    alphabet='0123456789')
+            actual_number = ocr_post_number.ocr(image)
+            time_work = Duration(ISLAND_WORKING_TIME)
+            time_value = time_work.ocr(self.device.image)
+            finish_time = datetime.now() + time_value
+
+            # 设置时间变量
+            post_num = post_id[-1]
+            time_var_name = f'{self.time_prefix}{post_num}'
+            setattr(self, time_var_name, finish_time)
+            self.posts[post_id]['status'] = 'working'
+
+            print(f"已安排生产：{selected_product['name']} x{actual_number}")
             self.device.click(POST_CLOSE)
 
-            return None
-
-        # ============ 新增：委派后滑动以看到岗位 ============
-        # 等待出现岗位管理界面
-        self.wait_until_appear(ISLAND_POSTMANAGE_CHECK, offset=(1, 1))
-
-        # 滑动以看到岗位（使用post_produce_swipe_count配置）
-        for _ in range(self.post_produce_swipe_count):
-            self.post_manage_up_swipe(450)
-        # =================================================
-
-        # 打开岗位
-        self.post_open(post_button)
-
-        # 获取生产时间和数量
-        image = self.device.screenshot()
-        ocr_post_number = Digit(OCR_POST_NUMBER, letter=(57, 58, 60), threshold=100,
-                                alphabet='0123456789')
-        actual_number = ocr_post_number.ocr(image)
-        time_work = Duration(ISLAND_WORKING_TIME)
-        time_value = time_work.ocr(self.device.image)
-        finish_time = datetime.now() + time_value
-
-        # 设置时间变量
-        post_num = post_id[-1]
-        time_var_name = f'{self.time_prefix}{post_num}'
-        setattr(self, time_var_name, finish_time)
-        self.posts[post_id]['status'] = 'working'
-
-        print(f"已安排生产：{selected_product['name']} x{actual_number}")
-        self.device.click(POST_CLOSE)
-
-        return selected_product
+            return selected_product
 
     def schedule_manufacture(self):
         """安排制造业生产"""

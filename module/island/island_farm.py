@@ -228,7 +228,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(config['filter'])
         self.appear_then_click(FILTER_CONFIRM)
-        self.wait_until_appear(ISLAND_WAREHOUSE_GOTO_WAREHOUSE_FILTER)
+        self.device.sleep(0.3)
         image = self.device.screenshot()
 
         results = {}
@@ -246,7 +246,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(FILTER_PROCESSED)
         self.appear_then_click(FILTER_CONFIRM)
-        self.wait_until_appear(ISLAND_WAREHOUSE_GOTO_WAREHOUSE_FILTER)
+        self.device.sleep(0.3)
         image = self.device.screenshot()
         self.inventory_counts['mill'] = {}
 
@@ -258,7 +258,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(FILTER_RANCH)
         self.appear_then_click(FILTER_CONFIRM)
-        self.wait_until_appear(ISLAND_WAREHOUSE_GOTO_WAREHOUSE_FILTER)
+        self.device.sleep(0.3)
         image = self.device.screenshot()
         self.inventory_counts['ranch'] = {}
 
