@@ -84,7 +84,7 @@ class Island(SelectCharacter):
                 break
             if self.appear_then_click(product_selection,offset=300):
                 continue
-            self.device.swipe_vector(vector=(0, -300), box=(333, 142, 431, 602), name="SelectionUpSwipe")
+            self.device.swipe_vector(vector=(0, -200), box=(333, 142, 431, 602), name="SelectionUpSwipe")
 
 
     def post_open(self,post):
@@ -121,7 +121,7 @@ class Island(SelectCharacter):
         p1 = (218, 507)
         p2 = (152, 507)
         self.device.island_swipe_hold(p1, p2,hold_time)
-    def goto_buy_feed(self):
+    def goto_mill(self):
         self.island_map_goto('farm')
         self.island_up(800)
         self.island_left(1300)

@@ -1951,14 +1951,18 @@
       "ServerUpdate": "00:00"
     },
     "IslandFarm": {
+      "Positions": 3,
       "MinFarm": 300,
       "PlantPotatoes": true
     },
     "IslandOrchard": {
+      "Positions": 4,
       "MinOrchard": 300,
+      "IgnoreAvocado": true,
       "PlantRubber": true
     },
     "IslandNursery": {
+      "Positions": 2,
       "MinNursery": 0,
       "PlantLavender": true
     },
@@ -2197,6 +2201,15 @@
       "SuccessInterval": 0,
       "FailureInterval": 120,
       "ServerUpdate": "00:00"
+    },
+    "WoodProcessing": {
+      "Positions": 2
+    },
+    "Industrial": {
+      "Positions": 2
+    },
+    "Handmade": {
+      "Positions": 2
     },
     "Storage": {
       "Storage": {}

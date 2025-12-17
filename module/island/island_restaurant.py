@@ -152,9 +152,10 @@ class IslandRestaurant(IslandShopBase):
             if 'tofu' in self.warehouse_counts:
                 self.warehouse_counts['tofu'] -= tofu_needed
                 print(f"扣除豆腐：tofu -{tofu_needed} (用于制作 {product})")
-
+    def test(self):
+        self.post_open(ISLAND_RESTAURANT_POST1)
 
 if __name__ == "__main__":
     az = IslandRestaurant('alas', task='Alas')
     az.device.screenshot()
-    az.run()
+    az.test()

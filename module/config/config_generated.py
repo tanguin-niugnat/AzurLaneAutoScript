@@ -466,14 +466,18 @@ class GeneratedConfig:
     IslandJuuCoffeeBusiness_Waiter2 = 'WorkerJuu'  # None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn
 
     # Group `IslandFarm`
+    IslandFarm_Positions = 3  # 1, 2, 3, 4
     IslandFarm_MinFarm = 300
     IslandFarm_PlantPotatoes = True
 
     # Group `IslandOrchard`
+    IslandOrchard_Positions = 4  # 1, 2, 3, 4
     IslandOrchard_MinOrchard = 300
+    IslandOrchard_IgnoreAvocado = True
     IslandOrchard_PlantRubber = True
 
     # Group `IslandNursery`
+    IslandNursery_Positions = 2  # 1, 2
     IslandNursery_MinNursery = 0
     IslandNursery_PlantLavender = True
 
@@ -608,6 +612,15 @@ class GeneratedConfig:
 
     # Group `IslandDailyGather`
     IslandDailyGather_Daily = True
+
+    # Group `WoodProcessing`
+    WoodProcessing_Positions = 2  # 0, 1, 2
+
+    # Group `Industrial`
+    Industrial_Positions = 2  # 0, 1, 2
+
+    # Group `Handmade`
+    Handmade_Positions = 2  # 0, 1, 2
 
     # Group `Daemon`
     Daemon_EnterMap = True

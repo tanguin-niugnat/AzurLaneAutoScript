@@ -118,7 +118,6 @@ class IslandShopBase(Island, WarehouseOCR):
                     break
                 if self.device.click(POST_GET):
                     continue
-            self.device.click(POST_CLOSE)
             self.posts[post_id]['status'] = 'idle'
             setattr(self, time_var_name, None)
         elif self.appear(ISLAND_WORKING):
@@ -145,12 +144,14 @@ class IslandShopBase(Island, WarehouseOCR):
                         self.device.click(ISLAND_POST_CHECK)
                         break
                 self.device.click(ISLAND_POST_CHECK)
-            self.device.click(POST_CLOSE)
         elif self.appear(ISLAND_POST_SELECT):
             self.posts[post_id]['status'] = 'idle'
-            self.device.click(POST_CLOSE)
             setattr(self, time_var_name, None)
-        self.device.click(POST_CLOSE)
+        while True:
+            self.device.screenshot()
+            if not self.appear(ISLAND_POST_CHECK):
+                break
+            self.device.click(POST_CLOSE)
 
     def post_product_check(self):
         """检查岗位生产的产品（通用）"""
@@ -193,7 +194,7 @@ class IslandShopBase(Island, WarehouseOCR):
             for _ in range(number-1):
                 self.device.click(POST_ADD_ONE)
             self.device.click(POST_ADD_ORDER)
-            self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
+            self.wait_until_appear(ISLAND_POSTMANAGE_CHECK,offset=(1,1))
             # 滑动以看到岗位（使用post_produce_swipe_count配置）
             for _ in range(self.post_produce_swipe_count):
                 self.post_manage_up_swipe(450)

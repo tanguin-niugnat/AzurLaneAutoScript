@@ -790,12 +790,22 @@ IslandJuuCoffeeBusiness:
     value: WorkerJuu
     option: [ None, WorkerJuu, NewJersey, Tashkent, YingSwei, Saratoga, Akashi, LeMalin, Shimakaze, Amagi_chan, Cheshire, Unicorn ]
 IslandFarm:
+  Positions:
+    value: 3
+    option: [ 1, 2, 3, 4 ]
   MinFarm: 300
   PlantPotatoes: true
 IslandOrchard:
+  Positions:
+    value: 4
+    option: [ 1, 2, 3, 4 ]
   MinOrchard: 300
+  IgnoreAvocado: true
   PlantRubber: true
 IslandNursery:
+  Positions:
+    value: 2
+    option: [ 1, 2 ]
   MinNursery: 0
   PlantLavender: true
 IslandRanch:
@@ -1072,7 +1082,18 @@ IslandJuuCoffeeNextTask:
     option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]
 IslandDailyGather:
   Daily: true
-IslandManufacture:
+WoodProcessing:
+  Positions:
+    value: 2
+    option: [ 0, 1, 2 ]
+Industrial:
+  Positions:
+    value: 2
+    option: [ 0, 1, 2 ]
+Handmade:
+  Positions:
+    value: 2
+    option: [ 0, 1, 2 ]
 
 # ==================== Tools ====================
 

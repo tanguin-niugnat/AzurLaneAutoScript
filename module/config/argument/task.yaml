@@ -373,7 +373,9 @@ Island:
       - IslandDailyGather
     IslandManufacture:
       - Scheduler
-      - IslandManufacture
+      - WoodProcessing
+      - Industrial
+      - Handmade
 # ==================== Tool ====================
 
 Tool:

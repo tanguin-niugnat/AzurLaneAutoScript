@@ -2835,6 +2835,14 @@
       "name": "农田",
       "help": ""
     },
+    "Positions": {
+      "name": "农田岗位",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4"
+    },
     "MinFarm": {
       "name": "农田作物底线",
       "help": ""
@@ -2849,8 +2857,20 @@
       "name": "果园",
       "help": ""
     },
+    "Positions": {
+      "name": "果园岗位",
+      "help": "",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4"
+    },
     "MinOrchard": {
       "name": "水果底线",
+      "help": ""
+    },
+    "IgnoreAvocado": {
+      "name": "忽视牛油果",
       "help": ""
     },
     "PlantRubber": {
@@ -2862,6 +2882,12 @@
     "_info": {
       "name": "苗圃",
       "help": ""
+    },
+    "Positions": {
+      "name": "苗圃岗位",
+      "help": "",
+      "1": "1",
+      "2": "2"
     },
     "MinNursery": {
       "name": "苗圃作物底线",
@@ -3984,6 +4010,45 @@
     "Daily": {
       "name": "每日任务",
       "help": "延后挖煤做第二天的每日任务"
+    }
+  },
+  "WoodProcessing": {
+    "_info": {
+      "name": "木料加工",
+      "help": ""
+    },
+    "Positions": {
+      "name": "岗位数",
+      "help": "",
+      "0": "0",
+      "1": "1",
+      "2": "2"
+    }
+  },
+  "Industrial": {
+    "_info": {
+      "name": "工业加工",
+      "help": ""
+    },
+    "Positions": {
+      "name": "岗位数",
+      "help": "",
+      "0": "0",
+      "1": "1",
+      "2": "2"
+    }
+  },
+  "Handmade": {
+    "_info": {
+      "name": "手工制作",
+      "help": ""
+    },
+    "Positions": {
+      "name": "岗位数",
+      "help": "",
+      "0": "0",
+      "1": "1",
+      "2": "2"
     }
   },
   "Daemon": {

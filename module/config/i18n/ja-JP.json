@@ -2835,6 +2835,14 @@
       "name": "IslandFarm._info.name",
       "help": "IslandFarm._info.help"
     },
+    "Positions": {
+      "name": "IslandFarm.Positions.name",
+      "help": "IslandFarm.Positions.help",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4"
+    },
     "MinFarm": {
       "name": "IslandFarm.MinFarm.name",
       "help": "IslandFarm.MinFarm.help"
@@ -2849,9 +2857,21 @@
       "name": "IslandOrchard._info.name",
       "help": "IslandOrchard._info.help"
     },
+    "Positions": {
+      "name": "IslandOrchard.Positions.name",
+      "help": "IslandOrchard.Positions.help",
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4"
+    },
     "MinOrchard": {
       "name": "IslandOrchard.MinOrchard.name",
       "help": "IslandOrchard.MinOrchard.help"
+    },
+    "IgnoreAvocado": {
+      "name": "IslandOrchard.IgnoreAvocado.name",
+      "help": "IslandOrchard.IgnoreAvocado.help"
     },
     "PlantRubber": {
       "name": "IslandOrchard.PlantRubber.name",
@@ -2862,6 +2882,12 @@
     "_info": {
       "name": "IslandNursery._info.name",
       "help": "IslandNursery._info.help"
+    },
+    "Positions": {
+      "name": "IslandNursery.Positions.name",
+      "help": "IslandNursery.Positions.help",
+      "1": "1",
+      "2": "2"
     },
     "MinNursery": {
       "name": "IslandNursery.MinNursery.name",
@@ -3984,6 +4010,45 @@
     "Daily": {
       "name": "IslandDailyGather.Daily.name",
       "help": "IslandDailyGather.Daily.help"
+    }
+  },
+  "WoodProcessing": {
+    "_info": {
+      "name": "WoodProcessing._info.name",
+      "help": "WoodProcessing._info.help"
+    },
+    "Positions": {
+      "name": "WoodProcessing.Positions.name",
+      "help": "WoodProcessing.Positions.help",
+      "0": "0",
+      "1": "1",
+      "2": "2"
+    }
+  },
+  "Industrial": {
+    "_info": {
+      "name": "Industrial._info.name",
+      "help": "Industrial._info.help"
+    },
+    "Positions": {
+      "name": "Industrial.Positions.name",
+      "help": "Industrial.Positions.help",
+      "0": "0",
+      "1": "1",
+      "2": "2"
+    }
+  },
+  "Handmade": {
+    "_info": {
+      "name": "Handmade._info.name",
+      "help": "Handmade._info.help"
+    },
+    "Positions": {
+      "name": "Handmade.Positions.name",
+      "help": "Handmade.Positions.help",
+      "0": "0",
+      "1": "1",
+      "2": "2"
     }
   },
   "Daemon": {

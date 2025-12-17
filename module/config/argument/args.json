@@ -9485,6 +9485,16 @@
       }
     },
     "IslandFarm": {
+      "Positions": {
+        "type": "select",
+        "value": 3,
+        "option": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
       "MinFarm": {
         "type": "input",
         "value": 300
@@ -9495,9 +9505,23 @@
       }
     },
     "IslandOrchard": {
+      "Positions": {
+        "type": "select",
+        "value": 4,
+        "option": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
       "MinOrchard": {
         "type": "input",
         "value": 300
+      },
+      "IgnoreAvocado": {
+        "type": "checkbox",
+        "value": true
       },
       "PlantRubber": {
         "type": "checkbox",
@@ -9505,6 +9529,14 @@
       }
     },
     "IslandNursery": {
+      "Positions": {
+        "type": "select",
+        "value": 2,
+        "option": [
+          1,
+          2
+        ]
+      },
       "MinNursery": {
         "type": "input",
         "value": 0
@@ -11086,6 +11118,39 @@
         "type": "input",
         "value": "00:00",
         "display": "hide"
+      }
+    },
+    "WoodProcessing": {
+      "Positions": {
+        "type": "select",
+        "value": 2,
+        "option": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    "Industrial": {
+      "Positions": {
+        "type": "select",
+        "value": 2,
+        "option": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    "Handmade": {
+      "Positions": {
+        "type": "select",
+        "value": 2,
+        "option": [
+          0,
+          1,
+          2
+        ]
       }
     },
     "Storage": {
