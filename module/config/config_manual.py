@@ -12,7 +12,7 @@ class ManualConfig:
     Restart
     > OpsiCrossMonth
     > IslandRestaurant > IslandJuuCoffee > IslandJuuEatery > IslandGrill > IslandTeahouse
-    > IslandFarm > IslandMineForest > IslandDailyGather
+    > IslandFarm > IslandMineForest > IslandDailyGather > IslandManufacture
     > Commission > Tactical > Research
     > Exercise
     > Dorm > Meowfficer > Guild > Gacha

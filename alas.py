@@ -463,6 +463,10 @@ class AzurLaneAutoScript:
         from module.island.island_daily_gather import IslandDailyGather
         IslandDailyGather(config=self.config, device=self.device).run()
 
+    def island_manufacture(self):
+        from module.island.island_manufacture import IslandManufacture
+        IslandManufacture(config=self.config, device=self.device).run()
+
     def wait_until(self, future):
         """
         Wait until a specific time.
