@@ -52,7 +52,7 @@ class IslandMineForest(Island,LoginHandler):
 
     def _select_product(self, selection_buttons):
         """选择产品的通用流程"""
-        self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
+        self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
         self.select_character()
         self.appear_then_click(SELECT_UI_CONFIRM)
         product_selection, product_selection_check, _ = selection_buttons
@@ -84,11 +84,11 @@ class IslandMineForest(Island,LoginHandler):
                 self.device.screenshot()
                 if self.appear_then_click(POST_GET):
                     continue
+            self.appear_then_click(ISLAND_POST_CHECK)
 
             if self.appear_then_click(ISLAND_POST_SELECT):
                 self._select_product(config)
-
-            self._update_time_and_close(time_work, post_id, time_var_name)
+                self._update_time_and_close(time_work, post_id, time_var_name)
 
         elif self.appear_then_click(ISLAND_POST_SELECT):
             self._select_product(config)

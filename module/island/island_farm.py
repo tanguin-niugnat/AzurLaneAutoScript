@@ -348,9 +348,10 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 self.device.screenshot()
                 if self.appear_then_click(POST_GET):
                     continue
+            self.appear_then_click(ISLAND_POST_CHECK)
 
             if self.appear_then_click(ISLAND_POST_SELECT):
-                self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
+                self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
                 self.select_character()
                 self.appear_then_click(SELECT_UI_CONFIRM)
                 self.ranch_max()
@@ -360,7 +361,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
             self.device.click(POST_CLOSE)
 
         elif self.appear_then_click(ISLAND_POST_SELECT):
-            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
+            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
             self.select_character()
             self.appear_then_click(SELECT_UI_CONFIRM)
             self.ranch_max()
@@ -397,7 +398,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         selection = self.name_to_config[product]['selection']
         selection_check = self.name_to_config[product]['selection_check']
         if self.appear_then_click(ISLAND_POST_SELECT):
-            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
+            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
             if product == 'rubber' and self.config.PersonnelManagement_AmagiChanRubber:
                 self.select_character(character_name="Amagi_chan")
             else:

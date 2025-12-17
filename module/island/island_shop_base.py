@@ -202,7 +202,7 @@ class IslandShopBase(Island, WarehouseOCR):
         selection_check = self.name_to_config[product]['selection_check']
 
         if self.appear_then_click(ISLAND_POST_SELECT):
-            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK)
+            self.wait_until_appear(ISLAND_SELECT_CHARACTER_CHECK,offset=(1,1))
             self.select_character_for_shop()
             self.appear_then_click(SELECT_UI_CONFIRM)
             self.select_product(selection, selection_check)
