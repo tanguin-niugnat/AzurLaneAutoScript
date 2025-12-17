@@ -262,6 +262,8 @@ class IslandShopBase(Island, WarehouseOCR):
         self.ui_goto(page_island_postmanage)
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.device.click(POST_CLOSE)
+        self.post_manage_down_swipe(450)
+        self.post_manage_down_swipe(450)
 
         # 滑动以看到岗位（使用post_manage_swipe_count配置）
         for _ in range(self.post_manage_swipe_count):
