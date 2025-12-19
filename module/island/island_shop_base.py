@@ -193,6 +193,7 @@ class IslandShopBase(Island, WarehouseOCR):
                     self.device.click(POST_ADD_ONE)
                 self.device.click(POST_ADD_ORDER)
                 break
+        self.device.sleep(0.3)
         for _ in range(self.post_produce_swipe_count):
             self.post_manage_up_swipe(450)
         self.post_open(post_button)

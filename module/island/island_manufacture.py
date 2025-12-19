@@ -173,7 +173,7 @@ class IslandManufacture(IslandShopBase):
                         if hasattr(self, time_var_name):
                             setattr(self, time_var_name, None)
                             print(f"清空岗位时间变量: {time_var_name}")
-
+                self.device.sleep(0.3)
                 self.post_close()
 
                 for _ in range(self.post_produce_swipe_count):
