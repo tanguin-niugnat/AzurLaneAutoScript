@@ -173,6 +173,7 @@ class IslandManufacture(IslandShopBase):
                         if hasattr(self, time_var_name):
                             setattr(self, time_var_name, None)
                             print(f"清空岗位时间变量: {time_var_name}")
+                self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
                 self.device.sleep(0.3)
                 self.post_close()
 

@@ -100,7 +100,7 @@ class Island(SelectCharacter):
     def post_get_and_close(self):
         while 1:
             self.device.screenshot()
-            if self.appear(ISLAND_POSTMANAGE_CHECK,offset=1) and self.appear(POST_MANAGE_GETTED_CHECK,threshold=1) and not self.appear(ISLAND_POST_CHECK):
+            if self.appear(ISLAND_POSTMANAGE_CHECK,offset=1) and self.appear(POST_MANAGE_GETTED_CHECK,threshold=5) and not self.appear(ISLAND_POST_CHECK):
                 break
             if self.appear(ERROR1,offset=30):
                 self.device.click(POST_CLOSE)
@@ -119,14 +119,14 @@ class Island(SelectCharacter):
     def post_get_and_add(self,product_selection,product_selection_check):
         while 1:
             self.device.screenshot()
-            if self.appear(ISLAND_POSTMANAGE_CHECK, offset=1) and self.appear(POST_MANAGE_GETTED_CHECK,threshold=1) and not self.appear(ISLAND_POST_CHECK):
-                break
             if self.appear(ERROR1,offset=30):
                 self.device.click(POST_CLOSE)
                 self.island_error = True
                 continue
             if self.appear(ISLAND_GET,offset=1):
                 self.device.click(ISLAND_POST_SAFE_AREA)
+                continue
+            if self.appear_then_click(POST_ADD,offset=1):
                 continue
             if self.appear_then_click(POST_GET,offset=(50,0)):
                 continue
@@ -140,7 +140,10 @@ class Island(SelectCharacter):
                 self.select_product(product_selection,product_selection_check)
                 self.appear_then_click(POST_MAX)
                 self.device.click(POST_ADD_ORDER)
-                continue
+                break
+            if  self.appear(ISLAND_POST_CHECK,offset=1) and not self.appear(POST_GET,offset=(50,0)) and not self.appear(POST_ADD,offset=1):
+                self.device.click(POST_CLOSE)
+                break
 
 
 

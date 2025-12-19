@@ -193,9 +193,11 @@ class IslandShopBase(Island, WarehouseOCR):
                     self.device.click(POST_ADD_ONE)
                 self.device.click(POST_ADD_ORDER)
                 break
+        self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
         self.device.sleep(0.3)
         for _ in range(self.post_produce_swipe_count):
             self.post_manage_up_swipe(450)
+        print(post_button)
         self.post_open(post_button)
         image = self.device.screenshot()
         ocr_post_number = Digit(OCR_POST_NUMBER, letter=(57, 58, 60), threshold=100,
