@@ -141,7 +141,12 @@ class Island(SelectCharacter):
                 self.appear_then_click(POST_MAX)
                 self.device.click(POST_ADD_ORDER)
                 break
-            if  self.appear(ISLAND_POST_CHECK,offset=1) and not self.appear(POST_GET,offset=(50,0)) and not self.appear(POST_ADD,offset=1):
+            if (
+                    self.appear(ISLAND_POST_CHECK, offset=1)
+                    and not self.appear(POST_GET, offset=(50, 0))
+                    and not self.appear(POST_ADD, offset=1)
+                    and not self.appear(ISLAND_POST_SELECT, offset=1)
+            ):
                 self.device.click(POST_CLOSE)
                 break
 

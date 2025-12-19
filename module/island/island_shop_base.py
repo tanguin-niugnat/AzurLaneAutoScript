@@ -279,26 +279,34 @@ class IslandShopBase(Island, WarehouseOCR):
         # 清空待生产列表
         self.to_post_products = {}
 
-        # ============ 新增：优先处理高优先级任务 ============
+        # ============ 修正：高优先级任务应该考虑当前库存 ============
         if self.high_priority_products:
-            print("=== 优先处理高优先级任务 ===")
-            # 将高优先级任务合并到待生产列表
-            for product, quantity in self.high_priority_products.items():
-                if product in self.to_post_products:
-                    self.to_post_products[product] += quantity
-                else:
-                    self.to_post_products[product] = quantity
+            print("=== 处理高优先级任务 ===")
 
-            # 处理套餐分解
+            # 清空待生产列表
+            self.to_post_products = {}
+
+            # 计算高优先级任务的净需求（减去已有库存）
+            for product, required_quantity in self.high_priority_products.items():
+                current_quantity = self.current_totals.get(product, 0)
+                still_needed = required_quantity - current_quantity
+
+                if still_needed > 0:
+                    self.to_post_products[product] = still_needed
+                    print(f"高优先级任务 {product}: 需要{required_quantity}，已有{current_quantity}，还需{still_needed}")
+                else:
+                    print(f"高优先级任务 {product}: 已满足需求 (已有{current_quantity}，需要{required_quantity})")
+
+            # 清空高优先级任务（避免重复处理）
+            self.high_priority_products = {}
+
             if self.to_post_products:
+                # 处理套餐分解
                 self.process_meal_requirements(self.to_post_products)
                 print(f"高优先级生产计划: {self.to_post_products}")
 
                 # 安排高优先级任务的生产
                 self.schedule_production()
-
-                # 清空高优先级任务（避免重复处理）
-                self.high_priority_products = {}
 
                 # 如果有安排了生产，直接设置延迟并返回
                 finish_times = []
@@ -310,6 +318,8 @@ class IslandShopBase(Island, WarehouseOCR):
                     finish_times.sort()
                     self.config.task_delay(target=finish_times)
                     return
+            else:
+                print("所有高优先级任务已满足")
             print("=== 高优先级任务处理完成 ===")
 
         # 根据状态进入不同阶段
