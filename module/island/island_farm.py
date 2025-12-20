@@ -301,14 +301,6 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
     def ranch_post_get_and_add(self):
         while 1:
             self.device.screenshot()
-            if (
-                    self.appear(ISLAND_POST_CHECK, offset=1)
-                    and not self.appear(POST_GET, offset=(50, 0))
-                    and not self.appear(POST_ADD, offset=1)
-                    and not self.appear(ISLAND_POST_SELECT, offset=1)
-            ):
-                self.device.click(POST_CLOSE)
-                break
             if self.appear(ERROR1,offset=30):
                 self.device.click(POST_CLOSE)
                 self.island_error = True
@@ -318,7 +310,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 continue
             if self.appear_then_click(POST_GET,offset=(50,0)):
                 continue
-            if self.appear_then_click(POST_ADD,offset=1):
+            if self.appear_then_click(POST_ADD):
                 continue
             if self.appear_then_click(ISLAND_POST_SELECT,offset=1):
                 continue
@@ -330,6 +322,14 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 self.device.click(POST_MAX)
                 self.device.click(POST_MAX)
                 self.device.click(POST_ADD_ORDER)
+                break
+            if (
+                    self.appear(ISLAND_POST_CHECK, offset=1)
+                    and not self.appear(POST_GET, offset=(50, 0))
+                    and not self.appear(POST_ADD, offset=1)
+                    and not self.appear(ISLAND_POST_SELECT, offset=1)
+            ):
+                self.device.click(POST_CLOSE)
                 break
 
     def ranch_post(self, post_id, time_var_name):

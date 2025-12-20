@@ -115,8 +115,6 @@ class IslandManufacture(IslandShopBase):
 
         while 1:
             self.device.screenshot()
-            if self.appear_then_click(ISLAND_POST_SELECT):
-                continue
             if self.appear_then_click(ISLAND_POST_SELECT, offset=1):
                 continue
             if self.appear(ISLAND_SELECT_CHARACTER_CHECK, offset=1):
