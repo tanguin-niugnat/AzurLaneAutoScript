@@ -144,6 +144,16 @@ class IslandJuuEatery(IslandShopBase):
                 else:
                     result[meal] = quantity
 
+        for material in list(result.keys()):
+            if material in self.current_totals:
+                existing = self.current_totals[material]
+                if existing >= result[material]:
+                    # 已有库存满足需求，不需要生产
+                    del result[material]
+                else:
+                    # 扣除已有库存
+                    result[material] -= existing
+
         # 考虑芝士限制：strawberry_charlotte需求不能超过可用芝士
         if 'strawberry_charlotte' in result and result['strawberry_charlotte'] > 0:
             strawberry_needed = result['strawberry_charlotte']
