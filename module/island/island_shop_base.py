@@ -1,15 +1,18 @@
 from module.island.island import *
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 from module.handler.login import LoginHandler
 from module.island.warehouse import *
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class IslandShopBase(Island, WarehouseOCR):
     def __init__(self, config, device=None, task=None):
         # 分别初始化每个父类
         Island.__init__(self, config=config, device=device, task=task)
-        WarehouseOCR.__init__(self)  # WarehouseOCR 可能不需要参数   # LoginHandler 可能也不需要参数
+        WarehouseOCR.__init__(self)  # WarehouseOCR 可能不需要参数
 
         # 子类必须设置的属性
         self.shop_items = []  # 商品列表
@@ -25,10 +28,10 @@ class IslandShopBase(Island, WarehouseOCR):
         self.high_priority_products = {}
         self.name_to_config = {}
         self.posts = {}
-        self.post_check_meal = {}
+        self.post_check_meal = {}  # 岗位生产中的产品
         self.post_products = {}
         self.post_products_task = {}
-        self.warehouse_counts = {}
+        self.warehouse_counts = {}  # 仓库识别到的产品
         self.to_post_products = {}
         self.doubled = False
         self.task_completed = False
@@ -181,14 +184,14 @@ class IslandShopBase(Island, WarehouseOCR):
         selection_check = self.name_to_config[product]['selection_check']
         while 1:
             self.device.screenshot()
-            if self.appear_then_click(ISLAND_POST_SELECT,offset=1):
+            if self.appear_then_click(ISLAND_POST_SELECT, offset=1):
                 continue
-            if self.appear(ISLAND_SELECT_CHARACTER_CHECK,offset=1):
+            if self.appear(ISLAND_SELECT_CHARACTER_CHECK, offset=1):
                 self.select_character_for_shop()
                 self.appear_then_click(SELECT_UI_CONFIRM)
                 continue
-            if self.appear(ISAND_SELECT_PRODUCT_CHECK,offset=1):
-                self.select_product(selection,selection_check)
+            if self.appear(ISAND_SELECT_PRODUCT_CHECK, offset=1):
+                self.select_product(selection, selection_check)
                 for _ in range(number - 1):
                     self.device.click(POST_ADD_ONE)
                 self.device.click(POST_ADD_ORDER)
@@ -218,13 +221,16 @@ class IslandShopBase(Island, WarehouseOCR):
         self.post_close()
 
     def deduct_materials(self, product, number):
-        """扣除前置材料（可被子类覆盖）"""
-        if self.meal_compositions and product in self.meal_compositions:
+        """扣除前置材料（包括套餐原材料）"""
+        # 扣除套餐原材料
+        if product in self.meal_compositions:
             composition = self.meal_compositions[product]
+            quantity_per = composition.get('quantity_per', 1)
             for material in composition['required']:
+                material_needed = number * quantity_per
                 if material in self.warehouse_counts:
-                    self.warehouse_counts[material] -= number
-                    print(f"扣除前置材料：{material} -{number}")
+                    self.warehouse_counts[material] -= material_needed
+                    print(f"扣除原材料：{material} -{material_needed} (用于制作 {product})")
 
     def get_idle_posts(self):
         """获取空闲的岗位ID列表（通用）"""
@@ -279,30 +285,23 @@ class IslandShopBase(Island, WarehouseOCR):
         # 清空待生产列表
         self.to_post_products = {}
 
-        # ============ 修正：高优先级任务应该考虑当前库存 ============
+        # ============ 修复：高优先级任务处理 ============
         if self.high_priority_products:
             print("=== 处理高优先级任务 ===")
 
             # 清空待生产列表
             self.to_post_products = {}
 
-            # 计算高优先级任务的净需求（减去已有库存）
+            # 直接使用高优先级需求，不重复扣减库存
             for product, required_quantity in self.high_priority_products.items():
-                current_quantity = self.current_totals.get(product, 0)
-                still_needed = required_quantity - current_quantity
-
-                if still_needed > 0:
-                    self.to_post_products[product] = still_needed
-                    print(f"高优先级任务 {product}: 需要{required_quantity}，已有{current_quantity}，还需{still_needed}")
-                else:
-                    print(f"高优先级任务 {product}: 已满足需求 (已有{current_quantity}，需要{required_quantity})")
+                self.to_post_products[product] = required_quantity
 
             # 清空高优先级任务（避免重复处理）
             self.high_priority_products = {}
 
             if self.to_post_products:
-                # 处理套餐分解
-                self.process_meal_requirements(self.to_post_products)
+                # 处理套餐需求（只处理一次）
+                self.to_post_products = self.process_meal_requirements(self.to_post_products)
                 print(f"高优先级生产计划: {self.to_post_products}")
 
                 # 安排高优先级任务的生产
@@ -370,7 +369,7 @@ class IslandShopBase(Island, WarehouseOCR):
 
         # 处理套餐分解
         if self.to_post_products:
-            self.process_meal_requirements(self.to_post_products)
+            self.to_post_products = self.process_meal_requirements(self.to_post_products)
 
         # 安排生产
         if self.to_post_products:
@@ -394,50 +393,126 @@ class IslandShopBase(Island, WarehouseOCR):
             raise GameBugError("检测到岛屿ERROR1，需要重启")
 
     def process_meal_requirements(self, source_products):
-        """处理套餐分解（通用）"""
+        """修复版本：智能需求处理，避免重复扣减库存"""
         result = {}
 
-        # 处理套餐需求
-        for meal, quantity in source_products.items():
-            if meal in self.meal_compositions:
+        # 1. 将需求分为套餐需求和基础餐品需求
+        meal_demands = {}
+        base_demands = {}
+
+        for product, quantity in source_products.items():
+            if quantity <= 0:
+                continue
+            if product in self.meal_compositions:
+                meal_demands[product] = quantity
+            else:
+                base_demands[product] = quantity
+
+        # 2. 处理套餐需求
+        material_needs = {}
+
+        for meal, meal_quantity in meal_demands.items():
+            # 计算套餐净需求（减去当前总库存）
+            meal_stock = self.current_totals.get(meal, 0)
+            net_meal_needed = max(0, meal_quantity - meal_stock)
+
+            if net_meal_needed > 0:
+                # 套餐需求加入结果
+                result[meal] = net_meal_needed
+
+                # 计算套餐所需原材料
                 composition = self.meal_compositions[meal]
-                required_materials = composition['required']
-                required_quantity = composition['quantity_per'] * quantity
-                for req_material in required_materials:
-                    if req_material in result:
-                        result[req_material] += required_quantity
-                    else:
-                        result[req_material] = required_quantity
+                for material in composition['required']:
+                    material_needs[material] = material_needs.get(material, 0) + (
+                            net_meal_needed * composition.get('quantity_per', 1)
+                    )
 
-        # 添加非套餐需求
-        for meal, quantity in source_products.items():
-            if meal not in self.meal_compositions:
-                if meal in result:
-                    result[meal] += quantity
-                else:
-                    result[meal] = quantity
+        # 3. 处理基础需求，并合并原材料需求（一次性计算）
+        for base_product, base_quantity in base_demands.items():
+            # 获取当前库存
+            warehouse_stock = self.warehouse_counts.get(base_product, 0)
 
-        self.to_post_products = result
-        print(f"转换完成：source_products -> to_post_products")
-        print(f"原始需求: {source_products}")
-        print(f"生产计划: {self.to_post_products}")
+            # 总需求 = 基础需求 + 套餐原材料需求（如果该产品是原材料）
+            total_needed = base_quantity
+            if base_product in material_needs:
+                total_needed += material_needs[base_product]
+                # 从material_needs中移除，避免重复计算
+                del material_needs[base_product]
+
+            # 计算净需求（一次性扣减库存）
+            net_needed = max(0, total_needed - warehouse_stock)
+            if net_needed > 0:
+                result[base_product] = net_needed
+
+        # 4. 处理剩余的原材料需求（非基础产品的原材料）
+        for material, material_quantity in material_needs.items():
+            warehouse_stock = self.warehouse_counts.get(material, 0)
+            net_needed = max(0, material_quantity - warehouse_stock)
+            if net_needed > 0:
+                result[material] = net_needed
+
+        # 5. 考虑特殊材料限制
+        result = self.apply_special_material_constraints(result)
+
+        print(f"需求处理结果:")
+        print(f"  原始需求: {source_products}")
+        print(f"  生产计划: {result}")
+
+        return result
+
+    def get_max_producible(self, product, requested_quantity):
+        """获取最大可生产数量"""
+        max_producible = requested_quantity
+
+        # 1. 如果是套餐，检查原材料库存
+        if product in self.meal_compositions:
+            composition = self.meal_compositions[product]
+            for material in composition['required']:
+                # 使用仓库实际库存
+                material_stock = self.warehouse_counts.get(material, 0)
+                quantity_per = composition.get('quantity_per', 1)
+                if quantity_per == 0:
+                    continue
+                max_by_material = material_stock // quantity_per
+                max_producible = min(max_producible, max_by_material)
+                if max_by_material <= 0:
+                    print(f"  {product} 缺少原材料: {material}")
+                    return 0
+
+        # 2. 检查岗位数量限制（每个岗位最多5个）
+        max_producible = min(max_producible, 5)
+
+        # 3. 检查特殊材料（被子类覆盖）
+        max_producible = self.check_special_materials(product, max_producible)
+
+        return max_producible
+
+    def apply_special_material_constraints(self, requirements):
+        """应用特殊材料限制（需求阶段）。子类可覆盖此方法。
+
+        Args:
+            requirements: 字典，{产品名: 需求数量}
+
+        Returns:
+            调整后的需求字典
+        """
+        return requirements
 
     def process_task_requirements(self):
-        """处理任务需求（通用）"""
+        """修复：处理任务需求"""
         task_products = self.post_products_task.copy()
 
         # 使用 current_totals 减去库存
-        for item, quantity in self.current_totals.items():
-            if item in task_products:
-                task_products[item] -= quantity
-                if task_products[item] <= 0:
-                    del task_products[item]
+        for item, target_quantity in task_products.items():
+            current_quantity = self.current_totals.get(item, 0)
+            still_needed = target_quantity - current_quantity
 
-        if task_products:
-            self.process_meal_requirements(task_products)
-            print(f"任务需求剩余: {task_products}")
+            if still_needed > 0:
+                self.to_post_products[item] = still_needed
+
+        if self.to_post_products:
+            print(f"任务需求剩余: {self.to_post_products}")
         else:
-            self.to_post_products = {}
             self.task_completed = True
             print("任务需求已完成")
 
@@ -459,7 +534,7 @@ class IslandShopBase(Island, WarehouseOCR):
                 print("挂机模式：跳过生产")
 
     def schedule_production(self):
-        """安排生产（通用）"""
+        """修复：智能安排生产"""
         if not self.to_post_products:
             print("没有需要生产的餐品")
             return
@@ -484,7 +559,7 @@ class IslandShopBase(Island, WarehouseOCR):
             for post_id in idle_posts:
                 # 检查材料限制
                 batch_size = min(5, 9999)  # 最大5个
-                batch_size = self.check_material_limits(away_cook_product, batch_size)
+                batch_size = self.get_max_producible(away_cook_product, batch_size)
 
                 if batch_size <= 0:
                     print(f"生产 {away_cook_product} 的前置材料不足，跳过岗位 {post_id}")
@@ -503,32 +578,44 @@ class IslandShopBase(Island, WarehouseOCR):
             print("挂机模式：已为所有空闲岗位安排生产")
             return
 
-        # 按需求数量排序（需求大的优先）
-        sorted_products = sorted(
-            self.to_post_products.items(),
-            key=lambda x: x[1],
-            reverse=True
-        )
+        products_to_process = list(self.to_post_products.items())
 
-        # 复制一份需求，用于遍历
-        products_to_process = sorted_products.copy()
+        # 智能排序：先生产可立即生产的，再处理需要原材料的
+        def production_priority(item):
+            product, quantity = item
+            if product in self.meal_compositions:
+                # 检查套餐原材料是否充足
+                max_producible = self.get_max_producible(product, min(5, quantity))
+                if max_producible > 0:
+                    return 0  # 最高优先级：可立即生产的套餐
+                else:
+                    return 2  # 低优先级：原材料不足的套餐
+            else:
+                # 基础餐品：检查是否可以生产
+                max_producible = self.get_max_producible(product, min(5, quantity))
+                if max_producible > 0:
+                    return 1  # 中等优先级：可生产的基础餐品
+                else:
+                    return 3  # 最低优先级：无法生产的基础餐品
 
-        for product, required_quantity in products_to_process:
+        sorted_products = sorted(products_to_process, key=production_priority)
+
+        # 处理每个产品需求
+        for product, required_quantity in sorted_products:
             if required_quantity <= 0:
                 continue
 
-            # 重新获取空闲岗位（因为可能已经安排了）
+            # 重新获取空闲岗位
             idle_posts = self.get_idle_posts()
             if not idle_posts:
                 print("所有岗位都在工作中")
                 break
 
-            # 检查前置材料限制
-            batch_size = min(5, required_quantity)
-            batch_size = self.check_material_limits(product, batch_size)
+            # 计算最大可生产数量
+            max_producible = self.get_max_producible(product, min(5, required_quantity))
 
-            if batch_size <= 0:
-                print(f"生产 {product} 的前置材料不足，跳过")
+            if max_producible <= 0:
+                print(f"生产 {product} 的材料不足，跳过")
                 continue
 
             # 分配生产
@@ -536,27 +623,19 @@ class IslandShopBase(Island, WarehouseOCR):
             post_num = post_id[-1]
             time_var_name = f'{self.time_prefix}{post_num}'
 
-            self.post_produce(post_id, product, batch_size, time_var_name)
+            # 安排生产
+            self.post_produce(post_id, product, max_producible, time_var_name)
+
+            # 更新需求
+            self.to_post_products[product] -= max_producible
+            if self.to_post_products[product] <= 0:
+                del self.to_post_products[product]
 
         print(f"生产安排完成，剩余需求: {self.to_post_products}")
 
     def check_material_limits(self, product, batch_size):
-        """检查材料限制（可被子类覆盖）"""
-        if product in self.meal_compositions:
-            composition = self.meal_compositions[product]
-            required_materials = composition['required']
-
-            # 检查所有前置材料是否足够
-            for material in required_materials:
-                material_stock = self.warehouse_counts.get(material, 0)
-                if material_stock < batch_size:
-                    batch_size = min(batch_size, material_stock)
-
-            # 如果检查特殊材料
-            if hasattr(self, 'check_special_materials'):
-                batch_size = self.check_special_materials(product, batch_size)
-
-        return batch_size
+        """检查材料限制（通用）"""
+        return self.get_max_producible(product, batch_size)
 
     def check_special_materials(self, product, batch_size):
         """检查特殊材料（子类可覆盖）"""

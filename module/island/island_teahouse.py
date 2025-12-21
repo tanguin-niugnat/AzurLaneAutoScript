@@ -99,15 +99,21 @@ class IslandTeahouse(IslandShopBase):
         self.fresh_honey = self.ocr_item_quantity(image, TEMPLATE_FRESH_HONEY)
         print(f"蜂蜜数量: {self.fresh_honey}")
 
+        # 将蜂蜜库存存入warehouse_counts，便于统一处理
+        self.warehouse_counts['fresh_honey'] = self.fresh_honey
+
         # ============ 新增：检查蜂蜜任务并添加到高优先级 ============
         if (self.config.IslandTeahouse_SunnyHoney and
                 self.fresh_honey > 0):
 
             # 计算可以生产的sunny_honey数量
             strawberry_lemon_stock = self.warehouse_counts.get('strawberry_lemon', 0)
-            max_by_honey = self.fresh_honey
+            honey_lemon_stock = self.warehouse_counts.get('honey_lemon', 0)
+
+            # sunny_honey需要strawberry_lemon和honey_lemon各1个
             max_by_strawberry = strawberry_lemon_stock
-            max_sunny_honey = min(max_by_honey, max_by_strawberry)
+            max_by_honey_lemon = honey_lemon_stock
+            max_sunny_honey = min(max_by_strawberry, max_by_honey_lemon)
 
             if max_sunny_honey > 0:
                 # 添加到高优先级任务
@@ -117,70 +123,13 @@ class IslandTeahouse(IslandShopBase):
 
         return self.warehouse_counts
 
-    def deduct_materials(self, product, number):
-        """覆盖：扣除前置材料，包括蜂蜜"""
-        super().deduct_materials(product, number)
-
-        # 蜂蜜柠檬需要扣除蜂蜜
-        if product == 'honey_lemon':
-            self.fresh_honey -= number
-            print(f"扣除蜂蜜：fresh_honey -{number}")
-
-    def process_meal_requirements(self, source_products):
-        """覆盖：处理套餐分解，考虑蜂蜜限制"""
-        result = {}
-
-        # 处理套餐需求
-        for meal, quantity in source_products.items():
-            if meal in self.meal_compositions:
-                composition = self.meal_compositions[meal]
-                required_materials = composition['required']
-                required_quantity = composition['quantity_per'] * quantity
-                for req_material in required_materials:
-                    if req_material in result:
-                        result[req_material] += required_quantity
-                    else:
-                        result[req_material] = required_quantity
-
-        # 添加非套餐需求
-        for meal, quantity in source_products.items():
-            if meal not in self.meal_compositions:
-                if meal in result:
-                    result[meal] += quantity
-                else:
-                    result[meal] = quantity
-
-        # 考虑蜂蜜限制
-        if 'honey_lemon' in result and result['honey_lemon'] > 0:
-            honey_needed = result['honey_lemon']
-            honey_available = self.fresh_honey
-
-            # 检查是否有sunny_honey需求
-            if 'sunny_honey' in source_products:
-                sunny_honey_needs_honey_lemon = source_products['sunny_honey']
-                honey_lemon_for_sunny = sunny_honey_needs_honey_lemon
-                honey_lemon_needed = max(0, honey_needed - honey_lemon_for_sunny)
-
-                if honey_lemon_needed > honey_available:
-                    print(f"警告：蜂蜜不足！需要{honey_lemon_needed}个蜂蜜柠檬，但只有{honey_available}个蜂蜜")
-                    result['honey_lemon'] = honey_available + honey_lemon_for_sunny
-                else:
-                    result['honey_lemon'] = honey_needed
-            else:
-                if honey_needed > honey_available:
-                    print(f"警告：蜂蜜不足！需要{honey_needed}个蜂蜜柠檬，但只有{honey_available}个蜂蜜")
-                    result['honey_lemon'] = honey_available
-                else:
-                    result['honey_lemon'] = honey_needed
-
-        self.to_post_products = result
-        print(f"转换完成：source_products -> to_post_products")
-        print(f"原始需求: {source_products}")
-        print(f"生产计划: {self.to_post_products}")
-
     def check_material_limits(self, product, batch_size):
-        """覆盖：检查材料限制，包括蜂蜜"""
+        """覆盖：检查材料限制，包括蜂蜜和蜂蜜柠檬原材料"""
+        # 先调用父类方法检查套餐原材料
         batch_size = super().check_material_limits(product, batch_size)
+
+        if batch_size <= 0:
+            return 0
 
         # 蜂蜜柠檬需要检查蜂蜜
         if product == 'honey_lemon':
@@ -190,7 +139,60 @@ class IslandTeahouse(IslandShopBase):
                 return 0
             batch_size = possible_batch
 
+        # sunny_honey套餐中的honey_lemon需要蜂蜜
+        if product == 'sunny_honey':
+            # sunny_honey需要honey_lemon和strawberry_lemon
+            # 已经通过父类检查了这两种原材料
+            # 还需要检查honey_lemon是否有足够的蜂蜜
+            honey_lemon_needed = batch_size
+            honey_needed = honey_lemon_needed  # 1个honey_lemon需要1个蜂蜜
+            possible_by_honey = min(batch_size, self.fresh_honey // 1)
+            batch_size = possible_by_honey
+
         return batch_size
+
+    def deduct_materials(self, product, number):
+        """覆盖：扣除前置材料，包括蜂蜜和套餐原材料"""
+        # 先调用父类方法扣除套餐原材料
+        super().deduct_materials(product, number)
+
+        # 蜂蜜柠檬需要扣除蜂蜜
+        if product == 'honey_lemon':
+            honey_needed = number
+            self.fresh_honey -= honey_needed
+            if 'fresh_honey' in self.warehouse_counts:
+                self.warehouse_counts['fresh_honey'] -= honey_needed
+            print(f"扣除蜂蜜：fresh_honey -{honey_needed}")
+
+        # sunny_honey套餐中的honey_lemon也需要扣除蜂蜜
+        if product == 'sunny_honey':
+            # sunny_honey需要honey_lemon，每个需要1个蜂蜜
+            honey_needed = number
+            self.fresh_honey -= honey_needed
+            if 'fresh_honey' in self.warehouse_counts:
+                self.warehouse_counts['fresh_honey'] -= honey_needed
+            print(f"扣除蜂蜜（用于sunny_honey）：fresh_honey -{honey_needed}")
+
+    def apply_special_material_constraints(self, requirements):
+        """覆盖：根据蜂蜜库存调整需求"""
+        result = requirements.copy()
+
+        # 处理蜂蜜限制
+        # 检查所有需要蜂蜜的产品
+        for product in ['honey_lemon', 'sunny_honey']:
+            if product in result and result[product] > 0:
+                if product == 'honey_lemon':
+                    honey_needed = result[product]
+                elif product == 'sunny_honey':
+                    honey_needed = result[product]  # 每个sunny_honey需要1个蜂蜜（通过honey_lemon）
+
+                if self.fresh_honey < honey_needed:
+                    # 调整需求
+                    max_by_honey = self.fresh_honey
+                    result[product] = max_by_honey
+                    print(f"蜂蜜不足，将{product}需求从{honey_needed}调整为{max_by_honey}")
+
+        return result
 
 
 if __name__ == "__main__":

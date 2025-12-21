@@ -81,7 +81,7 @@ class Island(SelectCharacter):
     def select_product(self,product_selection,product_selection_check):
         while True:
             self.device.screenshot()
-            if self.appear(product_selection_check):
+            if self.appear(product_selection_check,offset=1):
                 break
             if self.appear_then_click(product_selection,offset=300):
                 continue
@@ -134,11 +134,14 @@ class Island(SelectCharacter):
                 continue
             if self.appear(ISLAND_SELECT_CHARACTER_CHECK,offset=1):
                 self.select_character()
-                self.appear_then_click(SELECT_UI_CONFIRM)
+                self.device.sleep(0.5)
+                self.device.click(SELECT_UI_CONFIRM)
                 continue
             if self.appear(ISAND_SELECT_PRODUCT_CHECK,offset=1):
                 self.select_product(product_selection,product_selection_check)
+                self.device.sleep(0.5)
                 self.appear_then_click(POST_MAX)
+                self.device.sleep(0.5)
                 self.device.click(POST_ADD_ORDER)
                 break
             if (

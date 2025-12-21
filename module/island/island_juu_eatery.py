@@ -106,76 +106,17 @@ class IslandJuuEatery(IslandShopBase):
         self.cheese_stock = self.ocr_item_quantity(image, TEMPLATE_CHEESE)
         print(f"芝士数量: {self.cheese_stock}")
 
+        # 将cheese库存也存入warehouse_counts，便于统一处理
+        self.warehouse_counts['cheese'] = self.cheese_stock
+
         return self.warehouse_counts
 
-    def process_meal_requirements(self, source_products):
-        """覆盖：处理套餐分解和特殊餐品需求"""
-        result = {}
-
-        # 处理套餐需求
-        for meal, quantity in source_products.items():
-            if meal in self.meal_compositions:
-                composition = self.meal_compositions[meal]
-                required_materials = composition['required']
-                required_quantity = composition['quantity_per'] * quantity
-                for req_material in required_materials:
-                    if req_material in result:
-                        result[req_material] += required_quantity
-                    else:
-                        result[req_material] = required_quantity
-
-        # 处理特殊餐品需求
-        for meal, quantity in source_products.items():
-            if meal in self.special_meal_requirements:
-                requirement = self.special_meal_requirements[meal]
-                required_materials = requirement['required']
-                required_quantity = requirement['quantity_per'] * quantity
-                for req_material in required_materials:
-                    if req_material in result:
-                        result[req_material] += required_quantity
-                    else:
-                        result[req_material] = required_quantity
-
-        # 添加非套餐需求
-        for meal, quantity in source_products.items():
-            if meal not in self.meal_compositions and meal not in self.special_meal_requirements:
-                if meal in result:
-                    result[meal] += quantity
-                else:
-                    result[meal] = quantity
-
-        for material in list(result.keys()):
-            if material in self.current_totals:
-                existing = self.current_totals[material]
-                if existing >= result[material]:
-                    # 已有库存满足需求，不需要生产
-                    del result[material]
-                else:
-                    # 扣除已有库存
-                    result[material] -= existing
-
-        # 考虑芝士限制：strawberry_charlotte需求不能超过可用芝士
-        if 'strawberry_charlotte' in result and result['strawberry_charlotte'] > 0:
-            strawberry_needed = result['strawberry_charlotte']
-            cheese_needed = strawberry_needed * 2  # 每个需要2个芝士
-            cheese_available = self.cheese_stock
-
-            if cheese_needed > cheese_available:
-                print(f"警告：芝士不足！需要{cheese_needed}个芝士，但只有{cheese_available}个芝士")
-                max_strawberry = cheese_available // 2
-                result['strawberry_charlotte'] = max_strawberry
-                print(f"调整strawberry_charlotte需求为: {max_strawberry}")
-
-        self.to_post_products = result
-        print(f"转换完成：source_products -> to_post_products")
-        print(f"原始需求: {source_products}")
-        print(f"生产计划: {self.to_post_products}")
-
     def check_material_limits(self, product, batch_size):
-        """覆盖：检查材料限制，包括芝士"""
-        batch_size = super().check_material_limits(product, batch_size)
+        """覆盖：检查材料限制，包括芝士和套餐原材料"""
+        if batch_size <= 0:
+            return 0
 
-        # 处理strawberry_charlotte的芝士需求
+        # 先检查特殊材料（芝士）
         if product == 'strawberry_charlotte':
             cheese_needed_per_batch = 2
             possible_batch = min(batch_size, self.cheese_stock // cheese_needed_per_batch)
@@ -184,17 +125,55 @@ class IslandJuuEatery(IslandShopBase):
                 return 0
             batch_size = possible_batch
 
+        # 检查套餐的原材料
+        if product in self.meal_compositions:
+            composition = self.meal_compositions[product]
+            for material in composition['required']:
+                material_stock = self.warehouse_counts.get(material, 0)
+                possible_batch = min(batch_size, material_stock // composition.get('quantity_per', 1))
+                if possible_batch <= 0:
+                    print(f"生产 {product} 的原材料 {material} 不足")
+                    return 0
+                batch_size = possible_batch
+
         return batch_size
 
     def deduct_materials(self, product, number):
         """覆盖：扣除前置材料"""
-        super().deduct_materials(product, number)
+        # 先调用父类方法扣除套餐原材料
+        if product in self.meal_compositions:
+            composition = self.meal_compositions[product]
+            quantity_per = composition.get('quantity_per', 1)
+            for material in composition['required']:
+                material_needed = number * quantity_per
+                if material in self.warehouse_counts:
+                    self.warehouse_counts[material] -= material_needed
+                    print(f"扣除原材料：{material} -{material_needed} (用于制作 {product})")
 
         # 处理strawberry_charlotte的芝士扣除
         if product == 'strawberry_charlotte':
             cheese_needed = number * 2
             self.cheese_stock -= cheese_needed
+            if 'cheese' in self.warehouse_counts:
+                self.warehouse_counts['cheese'] -= cheese_needed
             print(f"扣除芝士：cheese -{cheese_needed} (用于制作 {product})")
+
+    def apply_special_material_constraints(self, requirements):
+        """覆盖：根据芝士库存调整需求"""
+        result = requirements.copy()
+
+        # 处理芝士限制
+        if 'strawberry_charlotte' in result and result['strawberry_charlotte'] > 0:
+            strawberry_needed = result['strawberry_charlotte']
+            cheese_needed = strawberry_needed * 2
+
+            if self.cheese_stock < cheese_needed:
+                # 调整需求
+                max_strawberry = self.cheese_stock // 2
+                result['strawberry_charlotte'] = max_strawberry
+                print(f"芝士不足，将strawberry_charlotte需求从{strawberry_needed}调整为{max_strawberry}")
+
+        return result
 
 
 if __name__ == "__main__":

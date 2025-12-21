@@ -319,8 +319,9 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 self.appear_then_click(SELECT_UI_CONFIRM)
                 continue
             if self.appear(ISAND_SELECT_PRODUCT_CHECK,offset=1):
+                self.device.sleep(0.5)
                 self.device.click(POST_MAX)
-                self.device.click(POST_MAX)
+                self.device.sleep(0.5)
                 self.device.click(POST_ADD_ORDER)
                 break
             if (
