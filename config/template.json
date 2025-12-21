@@ -2019,14 +2019,6 @@
       "Meal4": "None"
     },
     "IslandRestaurantNextTask": {
-      "MealTask1": "None",
-      "MealTaskNumber1": 0,
-      "MealTask2": "None",
-      "MealTaskNumber2": 0,
-      "MealTask3": "None",
-      "MealTaskNumber3": 0,
-      "MealTask4": "None",
-      "MealTaskNumber4": 0,
       "AwayCook": "None"
     },
     "Storage": {
@@ -2046,21 +2038,12 @@
       "PostNumber": 2,
       "MealNumber": 6,
       "Chef": "WorkerJuu",
-      "SunnyHoney": true,
       "Meal1": "floral_fruity",
       "Meal2": "lavender_tea",
       "Meal3": "strawberry_lemon",
       "Meal4": "None"
     },
     "IslandTeahouseNextTask": {
-      "MealTask1": "None",
-      "MealTaskNumber1": 0,
-      "MealTask2": "None",
-      "MealTaskNumber2": 0,
-      "MealTask3": "None",
-      "MealTaskNumber3": 0,
-      "MealTask4": "None",
-      "MealTaskNumber4": 0,
       "AwayCook": "None"
     },
     "Storage": {
@@ -2086,14 +2069,6 @@
       "Meal4": "None"
     },
     "IslandGrillNextTask": {
-      "MealTask1": "stir_fried_chicken",
-      "MealTaskNumber1": 100,
-      "MealTask2": "None",
-      "MealTaskNumber2": 0,
-      "MealTask3": "None",
-      "MealTaskNumber3": 0,
-      "MealTask4": "None",
-      "MealTaskNumber4": 0,
       "AwayCook": "None"
     },
     "Storage": {
@@ -2119,14 +2094,6 @@
       "Meal4": "None"
     },
     "IslandJuuEateryNextTask": {
-      "MealTask1": "None",
-      "MealTaskNumber1": 0,
-      "MealTask2": "None",
-      "MealTaskNumber2": 0,
-      "MealTask3": "None",
-      "MealTaskNumber3": 0,
-      "MealTask4": "None",
-      "MealTaskNumber4": 0,
       "AwayCook": "None"
     },
     "Storage": {
@@ -2152,14 +2119,6 @@
       "Meal4": "None"
     },
     "IslandJuuCoffeeNextTask": {
-      "MealTask1": "cheese",
-      "MealTaskNumber1": 250,
-      "MealTask2": "None",
-      "MealTaskNumber2": 0,
-      "MealTask3": "None",
-      "MealTaskNumber3": 0,
-      "MealTask4": "None",
-      "MealTaskNumber4": 0,
       "AwayCook": "None"
     },
     "Storage": {

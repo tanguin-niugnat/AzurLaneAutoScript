@@ -74,10 +74,8 @@ class IslandJuuEatery(IslandShopBase):
         self.setup_config(
             config_meal_prefix="IslandJuuEatery_Meal",
             config_number_prefix="IslandJuuEatery_MealNumber",
-            config_task_prefix="IslandJuuEateryNextTask_MealTask",
-            config_task_number_prefix="IslandJuuEateryNextTask_MealTaskNumber",
-            config_post_number="IslandJuuEatery_PostNumber",
-            config_away_cook="IslandJuuEateryNextTask_AwayCook"
+            config_away_cook="IslandJuuEateryNextTask_AwayCook",
+            config_post_number="IslandJuuEatery_PostNumber"
         )
 
         # 特殊材料：cheese

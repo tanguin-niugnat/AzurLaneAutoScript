@@ -861,22 +861,6 @@ IslandRestaurant:
     value: None
     option: [ None, tofu, omurice, cabbage_tofu, salad, tofu_meat, tofu_combo, hearty_meal ]
 IslandRestaurantNextTask:
-  MealTask1:
-    value: None
-    option: [ None, tofu, omurice, cabbage_tofu, salad, tofu_meat, tofu_combo, hearty_meal ]
-  MealTaskNumber1: 0
-  MealTask2:
-    value: None
-    option: [ None, tofu, omurice, cabbage_tofu, salad, tofu_meat, tofu_combo, hearty_meal ]
-  MealTaskNumber2: 0
-  MealTask3:
-    value: None
-    option: [ None, tofu, omurice, cabbage_tofu, salad, tofu_meat, tofu_combo, hearty_meal ]
-  MealTaskNumber3: 0
-  MealTask4:
-    value: None
-    option: [ None, tofu, omurice, cabbage_tofu, salad, tofu_meat, tofu_combo, hearty_meal ]
-  MealTaskNumber4: 0
   AwayCook:
     value: None
     option: [ None, tofu, omurice, cabbage_tofu, salad, tofu_meat, tofu_combo, hearty_meal ]
@@ -890,7 +874,6 @@ IslandTeahouse:
   Chef:
     value: WorkerJuu
     option: [ WorkerJuu, a, b ]
-  SunnyHoney: True
   Meal1:
     value: floral_fruity
     option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
@@ -904,22 +887,6 @@ IslandTeahouse:
     value: None
     option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
 IslandTeahouseNextTask:
-  MealTask1:
-    value: None
-    option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
-  MealTaskNumber1: 0
-  MealTask2:
-    value: None
-    option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
-  MealTaskNumber2: 0
-  MealTask3:
-    value: None
-    option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
-  MealTaskNumber3: 0
-  MealTask4:
-    value: None
-    option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
-  MealTaskNumber4: 0
   AwayCook:
     value: None
     option: [ None, apple_juice, banana_mango, honey_lemon, strawberry_lemon, strawberry_honey, floral_fruity, fruit_paradise, lavender_tea, sunny_honey ]
@@ -946,22 +913,6 @@ IslandGrill:
     value: None
     option: [ None, roasted_skewer, chicken_potato, carrot_omelette, stir_fried_chicken, steak_bowl, carnival, double_energy ]
 IslandGrillNextTask:
-  MealTask1:
-    value: stir_fried_chicken
-    option: [ None, roasted_skewer, chicken_potato, carrot_omelette, stir_fried_chicken, steak_bowl, carnival, double_energy ]
-  MealTaskNumber1: 100
-  MealTask2:
-    value: None
-    option: [ None, roasted_skewer, chicken_potato, carrot_omelette, stir_fried_chicken, steak_bowl, carnival, double_energy ]
-  MealTaskNumber2: 0
-  MealTask3:
-    value: None
-    option: [ None, roasted_skewer, chicken_potato, carrot_omelette, stir_fried_chicken, steak_bowl, carnival, double_energy ]
-  MealTaskNumber3: 0
-  MealTask4:
-    value: None
-    option: [ None, roasted_skewer, chicken_potato, carrot_omelette, stir_fried_chicken, steak_bowl, carnival, double_energy ]
-  MealTaskNumber4: 0
   AwayCook:
     value: None
     option: [ None, roasted_skewer, chicken_potato, carrot_omelette, stir_fried_chicken, steak_bowl, carnival, double_energy ]
@@ -988,22 +939,6 @@ IslandJuuEatery:
     value: None
     option: [ None, apple_pie, corn_cup, orange_pie, banana_crepe, orchard_duo, rice_mango, succulently_sweet, berry_orange, strawberry_charlotte ]
 IslandJuuEateryNextTask:
-  MealTask1:
-    value: None
-    option: [ None, apple_pie, corn_cup, orange_pie, banana_crepe, orchard_duo, rice_mango, succulently_sweet, berry_orange, strawberry_charlotte ]
-  MealTaskNumber1: 0
-  MealTask2:
-    value: None
-    option: [ None, apple_pie, corn_cup, orange_pie, banana_crepe, orchard_duo, rice_mango, succulently_sweet, berry_orange, strawberry_charlotte ]
-  MealTaskNumber2: 0
-  MealTask3:
-    value: None
-    option: [ None, apple_pie, corn_cup, orange_pie, banana_crepe, orchard_duo, rice_mango, succulently_sweet, berry_orange, strawberry_charlotte ]
-  MealTaskNumber3: 0
-  MealTask4:
-    value: None
-    option: [ None, apple_pie, corn_cup, orange_pie, banana_crepe, orchard_duo, rice_mango, succulently_sweet, berry_orange, strawberry_charlotte ]
-  MealTaskNumber4: 0
   AwayCook:
     value: None
     option: [ None, apple_pie, corn_cup, orange_pie, banana_crepe, orchard_duo, rice_mango, succulently_sweet, berry_orange, strawberry_charlotte ]
@@ -1030,22 +965,6 @@ IslandJuuCoffee:
     value: None
     option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]
 IslandJuuCoffeeNextTask:
-  MealTask1:
-    value: cheese
-    option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]
-  MealTaskNumber1: 250
-  MealTask2:
-    value: None
-    option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]
-  MealTaskNumber2: 0
-  MealTask3:
-    value: None
-    option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]
-  MealTaskNumber3: 0
-  MealTask4:
-    value: None
-    option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]
-  MealTaskNumber4: 0
   AwayCook:
     value: None
     option: [ None, iced_coffee, omelette, cheese, latte, citrus_coffee, strawberry_milkshake, morning_light, wake_up_call, fruity_fruitier ]

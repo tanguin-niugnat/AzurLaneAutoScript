@@ -73,15 +73,12 @@ class IslandJuuCoffee(IslandShopBase):
         self.setup_config(
             config_meal_prefix="IslandJuuCoffee_Meal",
             config_number_prefix="IslandJuuCoffee_MealNumber",
-            config_task_prefix="IslandJuuCoffeeNextTask_MealTask",
-            config_task_number_prefix="IslandJuuCoffeeNextTask_MealTaskNumber",
-            config_post_number="IslandJuuCoffee_PostNumber",
-            config_away_cook="IslandJuuCoffeeNextTask_AwayCook"
+            config_away_cook="IslandJuuCoffeeNextTask_AwayCook",
+            config_post_number="IslandJuuCoffee_PostNumber"
         )
 
         # 设置滑动次数（JuuCoffee需要滑动两次）
         self.post_manage_swipe_count = 2  # run方法中滑动2次450
-        self.post_produce_swipe_count = 2  # post_produce方法中滑动2次450
 
         # 初始化店铺
         self.initialize_shop()

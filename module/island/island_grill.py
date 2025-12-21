@@ -62,10 +62,8 @@ class IslandGrill(IslandShopBase):
         self.setup_config(
             config_meal_prefix="IslandGrill_Meal",
             config_number_prefix="IslandGrill_MealNumber",
-            config_task_prefix="IslandGrillNextTask_MealTask",
-            config_task_number_prefix="IslandGrillNextTask_MealTaskNumber",
-            config_post_number="IslandGrill_PostNumber",
-            config_away_cook="IslandGrillNextTask_AwayCook"
+            config_away_cook="IslandGrillNextTask_AwayCook",
+            config_post_number="IslandGrill_PostNumber"
         )
 
         # 初始化店铺

@@ -25,16 +25,12 @@ class IslandShopBase(Island, WarehouseOCR):
         self.chef_config = None
 
         # 通用属性
-        self.high_priority_products = {}
         self.name_to_config = {}
         self.posts = {}
         self.post_check_meal = {}  # 岗位生产中的产品
         self.post_products = {}
-        self.post_products_task = {}
         self.warehouse_counts = {}  # 仓库识别到的产品
         self.to_post_products = {}
-        self.doubled = False
-        self.task_completed = False
         self.current_totals = {}
 
         # 特殊材料（子类可覆盖）
@@ -46,26 +42,20 @@ class IslandShopBase(Island, WarehouseOCR):
         # 配置前缀（子类可覆盖）
         self.config_meal_prefix = "Island_Meal"
         self.config_number_prefix = "Island_MealNumber"
-        self.config_task_prefix = "IslandNextTask_MealTask"
-        self.config_task_number_prefix = "IslandNextTask_MealTaskNumber"
-        self.config_post_number = "Island_PostNumber"
         self.config_away_cook = "IslandNextTask_AwayCook"
+        self.config_post_number = "Island_PostNumber"
 
         # 滑动配置（子类可覆盖）
         self.post_manage_swipe_count = 1  # 默认滑动1次450
-        self.post_produce_swipe_count = 1  # post_produce中滑动次数，默认1次450
 
     def setup_config(self, config_meal_prefix, config_number_prefix,
-                     config_task_prefix, config_task_number_prefix,
-                     config_post_number, config_away_cook):
+                     config_away_cook, config_post_number):
         """从配置中读取餐品需求"""
         # 设置配置前缀
         self.config_meal_prefix = config_meal_prefix
         self.config_number_prefix = config_number_prefix
-        self.config_task_prefix = config_task_prefix
-        self.config_task_number_prefix = config_task_number_prefix
-        self.config_post_number = config_post_number
         self.config_away_cook = config_away_cook
+        self.config_post_number = config_post_number
 
         # 读取正常餐品需求
         self.post_products = {}
@@ -81,22 +71,6 @@ class IslandShopBase(Island, WarehouseOCR):
             if meal_name is not None and meal_name != "None":
                 meal_number = getattr(self.config, number_key, 0)
                 self.post_products[meal_name] = meal_number
-
-        # 读取任务餐品需求
-        self.post_products_task = {}
-        task_keys = [
-            (f'{self.config_task_prefix}1', f'{self.config_task_number_prefix}1'),
-            (f'{self.config_task_prefix}2', f'{self.config_task_number_prefix}2'),
-            (f'{self.config_task_prefix}3', f'{self.config_task_number_prefix}3'),
-            (f'{self.config_task_prefix}4', f'{self.config_task_number_prefix}4')
-        ]
-
-        for task_key, number_key in task_keys:
-            meal_name = getattr(self.config, task_key, None)
-            if meal_name is not None and meal_name != "None":
-                meal_number = getattr(self.config, number_key, 0)
-                if meal_number > 0:
-                    self.post_products_task[meal_name] = meal_number
 
     def initialize_shop(self):
         """初始化店铺，子类必须在__init__中调用"""
@@ -198,8 +172,7 @@ class IslandShopBase(Island, WarehouseOCR):
                 break
         self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
         self.device.sleep(0.3)
-        for _ in range(self.post_produce_swipe_count):
-            self.post_manage_up_swipe(450)
+        self.post_manage_swipe()
         print(post_button)
         self.post_open(post_button)
         image = self.device.screenshot()
@@ -233,22 +206,32 @@ class IslandShopBase(Island, WarehouseOCR):
         """获取空闲的岗位ID列表（通用）"""
         return [post_id for post_id, post_info in self.posts.items()
                 if post_info['status'] == 'idle']
+    def post_manage_swipe(self):
+        count = self.post_manage_swipe_count
+        if count >= 2:
+            for _ in range(count):
+                self.post_manage_up_swipe(450)
+        elif count == 1:
+            if self.appear(ISLAND_FARM_POST1, offset=50):
+                for _ in range(count):
+                    self.post_manage_up_swipe(450)
+            else:
+                self.post_manage_down_swipe(450)
+                self.device.sleep(0.3)
+                self.post_manage_down_swipe(450)
+                self.device.sleep(0.3)
+                for _ in range(count):
+                    self.post_manage_up_swipe(450)
 
     # ============ 核心逻辑 ============
 
     def run(self):
         self.island_error = False
-        """运行店铺逻辑（通用）- 修改版本，支持高优先级"""
+        """运行店铺逻辑（简化版本）- 只保留基础模式和常驻餐品"""
         self.goto_postmanage()
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.post_close()
-        self.post_manage_down_swipe(450)
-        self.post_manage_down_swipe(450)
-
-        # 滑动以看到岗位（使用post_manage_swipe_count配置）
-        for _ in range(self.post_manage_swipe_count):
-            self.post_manage_up_swipe(450)
-
+        self.post_manage_swipe()
         # 检查岗位状态
         post_count = getattr(self.config, self.config_post_number, 2)
         time_vars = []
@@ -261,16 +244,10 @@ class IslandShopBase(Island, WarehouseOCR):
 
         # 获取仓库数量
         self.get_warehouse_counts()
-
         self.goto_postmanage()
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.post_close()
-        self.post_manage_down_swipe(450)
-        self.post_manage_down_swipe(450)
-
-        # 滑动以看到岗位（使用post_manage_swipe_count配置）
-        for _ in range(self.post_manage_swipe_count):
-            self.post_manage_up_swipe(450)
+        self.post_manage_swipe()
 
         # 计算当前总库存
         total_subtract = Counter(self.post_check_meal)
@@ -279,120 +256,45 @@ class IslandShopBase(Island, WarehouseOCR):
         for item in set(self.post_products.keys()) | set(total_subtract.keys()):
             self.current_totals[item] = total_subtract.get(item, 0)
 
-        # ============ 添加调试信息 ============
+        # ============ 调试信息 ============
         print(f"=== 调试信息 ===")
         print(f"仓库库存: {self.warehouse_counts}")
         print(f"生产中库存: {self.post_check_meal}")
         print(f"当前总库存: {self.current_totals}")
         print(f"基础需求配置: {self.post_products}")
-        print(f"任务需求配置: {self.post_products_task}")
-        print(f"是否翻倍: {self.doubled}")
-        print(f"任务是否完成: {self.task_completed}")
-
-        # 计算各个餐品的状态
-        print("=== 各餐品状态 ===")
-        for product, target in self.post_products.items():
-            current = self.current_totals.get(product, 0)
-            double_target = target * 2
-            print(
-                f"{product}: 基础需求={target}, 当前库存={current}, 翻倍需求={double_target}, 差值={double_target - current}")
-
         print("===============")
 
         # 清空待生产列表
         self.to_post_products = {}
 
-        # ============ 修复：高优先级任务处理 ============
-        if self.high_priority_products:
-            print("=== 处理高优先级任务 ===")
+        # ============ 基础需求计算 ============
+        print("阶段：基础需求")
+        # 计算基础需求
+        for item, target in self.post_products.items():
+            current = self.current_totals.get(item, 0)
+            if current < target:
+                self.to_post_products[item] = target - current
 
-            # 清空待生产列表
-            self.to_post_products = {}
-
-            # 直接使用高优先级需求，不重复扣减库存
-            for product, required_quantity in self.high_priority_products.items():
-                self.to_post_products[product] = required_quantity
-
-            # 清空高优先级任务（避免重复处理）
-            self.high_priority_products = {}
-
-            if self.to_post_products:
-                # 处理套餐需求（只处理一次）
-                self.to_post_products = self.process_meal_requirements(self.to_post_products)
-                print(f"高优先级生产计划: {self.to_post_products}")
-
-                # 安排高优先级任务的生产
-                self.schedule_production()
-
-                # 如果有安排了生产，直接设置延迟并返回
-                finish_times = []
-                for var in time_vars:
-                    time_value = getattr(self, var)
-                    if time_value is not None:
-                        finish_times.append(time_value)
-                if finish_times:
-                    finish_times.sort()
-                    self.config.task_delay(target=finish_times)
-                    return
-            else:
-                print("所有高优先级任务已满足")
-            print("=== 高优先级任务处理完成 ===")
-
-        # 根据状态进入不同阶段
-        if not self.task_completed:
-            # 检查是否所有基础需求都已完成
-            all_basic_done = all(
-                self.current_totals.get(item, 0) >= target
-                for item, target in self.post_products.items()
-            )
-
-            if not all_basic_done:
-                print("阶段：基础需求")
-                # 计算基础需求
-                for item, target in self.post_products.items():
-                    current = self.current_totals.get(item, 0)
-                    if current < target:
-                        self.to_post_products[item] = target - current
-            else:
-                # 基础需求已完成，检查是否所有翻倍需求都已完成
-                all_double_done = all(
-                    self.current_totals.get(item, 0) >= target * 2
-                    for item, target in self.post_products.items()
-                )
-
-                if not all_double_done:
-                    print("阶段：翻倍需求")
-                    self.doubled = True
-                    # 计算翻倍需求
-                    for item, target in self.post_products.items():
-                        current = self.current_totals.get(item, 0)
-                        double_target = target * 2
-                        if current < double_target:
-                            self.to_post_products[item] = double_target - current
-                else:
-                    # 翻倍需求已完成，检查是否有任务需求
-                    print("阶段：任务需求")
-                    if self.post_products_task:  # 如果有任务需求
-                        self.process_task_requirements()
-                    else:
-                        # 没有任务需求，直接进入挂机模式
-                        self.task_completed = True
-                        print("没有设置任务需求，进入挂机模式")
-                        self.process_away_cook()
-        else:
-            # 任务已完成，进入挂机模式
-            print("阶段：挂机模式")
-            self.process_away_cook()
-
-        # 处理套餐分解
+        # ============ 处理套餐分解 ============
         if self.to_post_products:
             self.to_post_products = self.process_meal_requirements(self.to_post_products)
+            print(f"基础需求生产计划: {self.to_post_products}")
 
-        # 安排生产
+        # ============ 安排生产 ============
         if self.to_post_products:
             self.schedule_production()
+        else:
+            # 如果生产列表为空，检查是否有常驻餐品
+            print("基础需求已满足，检查常驻餐品")
+            self.process_away_cook()
 
-        # 设置任务延迟
+            # 如果有常驻餐品，安排生产
+            if self.to_post_products:
+                self.schedule_production()
+            else:
+                print("没有常驻餐品设置，保持空闲状态")
+
+        # ============ 设置任务延迟 ============
         finish_times = []
         for var in time_vars:
             time_value = getattr(self, var)
@@ -410,11 +312,9 @@ class IslandShopBase(Island, WarehouseOCR):
             raise GameBugError("检测到岛屿ERROR1，需要重启")
 
     def process_meal_requirements(self, source_products):
-        """修复版本：智能需求处理，避免重复扣减库存"""
+        """处理套餐需求"""
         print(f"=== 进入process_meal_requirements ===")
         print(f"传入的需求: {source_products}")
-        print(f"当前总库存: {self.current_totals}")
-        print(f"仓库库存: {self.warehouse_counts}")
 
         result = {}
 
@@ -439,11 +339,11 @@ class IslandShopBase(Island, WarehouseOCR):
         material_needs = {}
 
         for meal, meal_quantity in meal_demands.items():
-            # 重要：source_products中传入的已经是净需求
-            # 所以直接使用meal_quantity作为净需求
-            net_meal_needed = meal_quantity
+            # 使用仓库实际库存
+            meal_stock = self.warehouse_counts.get(meal, 0)
+            net_meal_needed = max(0, meal_quantity - meal_stock)
 
-            print(f"  处理套餐 {meal}: 需求={meal_quantity}, 净需求={net_meal_needed}")
+            print(f"  处理套餐 {meal}: 需求={meal_quantity}, 库存={meal_stock}, 净需求={net_meal_needed}")
 
             if net_meal_needed > 0:
                 # 套餐需求加入结果
@@ -545,43 +445,23 @@ class IslandShopBase(Island, WarehouseOCR):
         """
         return requirements
 
-    def process_task_requirements(self):
-        """修复：处理任务需求"""
-        task_products = self.post_products_task.copy()
-
-        # 使用 current_totals 减去库存
-        for item, target_quantity in task_products.items():
-            current_quantity = self.current_totals.get(item, 0)
-            still_needed = target_quantity - current_quantity
-
-            if still_needed > 0:
-                self.to_post_products[item] = still_needed
-
-        if self.to_post_products:
-            print(f"任务需求剩余: {self.to_post_products}")
-        else:
-            self.task_completed = True
-            print("任务需求已完成")
-
     def process_away_cook(self):
-        """处理挂机模式（通用）"""
+        """处理常驻餐品"""
         away_cook = getattr(self.config, self.config_away_cook, None)
 
         # 检查 away_cook 是否有效
         if away_cook and away_cook != "None" and away_cook in self.name_to_config:
             self.to_post_products = {away_cook: 9999}
-            print(f"挂机模式：生产 {away_cook}，无限数量")
+            print(f"常驻餐品模式：生产 {away_cook}")
         else:
             self.to_post_products = {}
             if away_cook is None or away_cook == "None":
-                print("挂机模式：未设置挂机餐品，跳过生产")
+                print("未设置常驻餐品，保持空闲")
             elif away_cook not in self.name_to_config:
-                print(f"挂机模式：餐品 '{away_cook}' 不在商品列表中，跳过生产")
-            else:
-                print("挂机模式：跳过生产")
+                print(f"常驻餐品 '{away_cook}' 不在商品列表中，保持空闲")
 
     def schedule_production(self):
-        """修复：智能安排生产，利用所有空闲岗位"""
+        """安排生产，利用所有空闲岗位"""
         if not self.to_post_products:
             print("没有需要生产的餐品")
             return
@@ -592,17 +472,17 @@ class IslandShopBase(Island, WarehouseOCR):
             print("没有空闲的岗位")
             return
 
-        # 检查是否为挂机模式（无限数量生产）
+        # 检查是否为常驻餐品模式（无限数量生产）
         is_away_cook_mode = False
         away_cook_product = None
         for product, quantity in self.to_post_products.items():
-            if quantity == 9999:  # 挂机模式的标识
+            if quantity == 9999:  # 常驻餐品模式的标识
                 is_away_cook_mode = True
                 away_cook_product = product
                 break
 
         if is_away_cook_mode:
-            print(f"挂机模式：为所有空闲岗位安排生产 {away_cook_product}")
+            print(f"常驻餐品模式：为所有空闲岗位安排生产 {away_cook_product}")
             # 为每个空闲岗位安排生产
             for post_id in idle_posts:
                 # 检查材料限制
@@ -618,10 +498,10 @@ class IslandShopBase(Island, WarehouseOCR):
                 time_var_name = f'{self.time_prefix}{post_num}'
                 self.post_produce(post_id, away_cook_product, batch_size, time_var_name)
 
-            print("挂机模式：已为所有空闲岗位安排生产")
+            print("常驻餐品模式：已为所有空闲岗位安排生产")
             return
 
-        # 非挂机模式：处理所有产品需求
+        # 非常驻餐品模式：处理所有产品需求
         products_to_process = list(self.to_post_products.items())
 
         # 如果有多个产品需求，按优先级排序
@@ -694,43 +574,7 @@ class IslandShopBase(Island, WarehouseOCR):
 
         print(f"生产安排完成，剩余需求: {self.to_post_products}")
 
-        # 如果还有空闲岗位且没有其他需求，可以安排挂机产品
-        if post_index < total_idle_posts and not self.to_post_products:
-            # 检查是否有挂机产品配置
-            away_cook = getattr(self.config, self.config_away_cook, None)
-            if away_cook and away_cook != "None" and away_cook in self.name_to_config:
-                print(f"仍有空闲岗位，安排挂机产品: {away_cook}")
-
-                # 为剩余的空闲岗位安排挂机生产
-                for i in range(post_index, total_idle_posts):
-                    post_id = idle_posts[i]
-
-                    # 检查材料限制
-                    batch_size = min(5, 9999)
-                    batch_size = self.get_max_producible(away_cook, batch_size)
-
-                    if batch_size <= 0:
-                        print(f"生产 {away_cook} 的前置材料不足，跳过岗位 {post_id}")
-                        continue
-
-                    # 分配生产
-                    post_num = post_id[-1]
-                    time_var_name = f'{self.time_prefix}{post_num}'
-                    self.post_produce(post_id, away_cook, batch_size, time_var_name)
-
-    def check_material_limits(self, product, batch_size):
-        """检查材料限制（通用）"""
-        return self.get_max_producible(product, batch_size)
-
     def check_special_materials(self, product, batch_size):
         """检查特殊材料（子类可覆盖）"""
         # 默认实现不检查特殊材料
         return batch_size
-
-    def add_high_priority_product(self, product, quantity):
-        """添加高优先级餐品（子类调用）"""
-        if product in self.high_priority_products:
-            self.high_priority_products[product] += quantity
-        else:
-            self.high_priority_products[product] = quantity
-        print(f"添加高优先级任务: {product} x{quantity}")

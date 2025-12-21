@@ -69,23 +69,17 @@ class IslandManufacture(IslandShopBase):
 
         # 初始化需求列表（制造业不需要外部配置的需求）
         self.post_products = {}
-        self.post_products_task = {}
 
-        # 设置配置（使用默认值）
+        # 设置配置（使用4个参数，删除任务相关配置）
         self.setup_config(
             config_meal_prefix="IslandManufacture_Meal",
             config_number_prefix="IslandManufacture_MealNumber",
-            config_task_prefix="IslandManufactureNextTask_MealTask",
-            config_task_number_prefix="IslandManufactureNextTask_MealTaskNumber",
-            config_post_number="IslandManufacture_PostNumber",
-            config_away_cook="IslandManufactureNextTask_AwayCook"
+            config_away_cook="IslandManufactureNextTask_AwayCook",
+            config_post_number="IslandManufacture_PostNumber"
         )
 
         # 初始化店铺
         self.initialize_shop()
-
-        # 设置任务标志
-        self.task_completed = False
 
     def _init_post_buttons(self):
         """根据配置初始化岗位按钮"""
@@ -358,33 +352,31 @@ class IslandManufacture(IslandShopBase):
             from module.exception import GameBugError
             raise GameBugError("检测到岛屿ERROR1，需要重启")
 
-    # 以下方法重写以禁用基类的相关逻辑
+    # 以下方法重写以适配基类
     def process_meal_requirements(self, source_products):
         """制造业不需要处理套餐需求"""
         return source_products
 
-    def process_task_requirements(self):
-        """制造业没有任务需求"""
-        pass
-
-    def process_away_cook(self):
-        """制造业没有挂机模式"""
-        pass
-
     def schedule_production(self):
-        """制造业使用自己的生产调度"""
+        """覆盖：制造业使用自己的生产调度"""
         self.schedule_manufacture()
 
+    def process_away_cook(self):
+        """覆盖：制造业不需要常驻餐品模式"""
+        # 制造业有自己的生产规则，不依赖常驻餐品
+        self.to_post_products = {}
+        print("制造业使用内置生产规则，不设置常驻餐品")
+
     def get_max_producible(self, product, requested_quantity):
-        """制造业的生产数量由材料检查决定"""
+        """覆盖：制造业的生产数量由材料检查决定"""
         return requested_quantity
 
     def check_special_materials(self, product, batch_size):
-        """制造业没有特殊材料检查"""
+        """覆盖：制造业没有特殊材料检查"""
         return batch_size
 
     def apply_special_material_constraints(self, requirements):
-        """制造业没有特殊材料限制"""
+        """覆盖：制造业没有特殊材料限制"""
         return requirements
 
     def test(self):

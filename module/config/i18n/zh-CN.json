@@ -3081,70 +3081,6 @@
       "name": "候补任务",
       "help": ""
     },
-    "MealTask1": {
-      "name": "任务餐品1",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "tofu": "豆腐",
-      "omurice": "蛋包饭",
-      "cabbage_tofu": "白菜豆腐汤",
-      "salad": "蔬菜沙拉",
-      "tofu_meat": "肉末烧豆腐",
-      "tofu_combo": "经典豆腐套餐",
-      "hearty_meal": "绵玉定食"
-    },
-    "MealTaskNumber1": {
-      "name": "任务物品1数量",
-      "help": ""
-    },
-    "MealTask2": {
-      "name": "任务餐品2",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "tofu": "豆腐",
-      "omurice": "蛋包饭",
-      "cabbage_tofu": "白菜豆腐汤",
-      "salad": "蔬菜沙拉",
-      "tofu_meat": "肉末烧豆腐",
-      "tofu_combo": "经典豆腐套餐",
-      "hearty_meal": "绵玉定食"
-    },
-    "MealTaskNumber2": {
-      "name": "任务物品2数量",
-      "help": ""
-    },
-    "MealTask3": {
-      "name": "任务餐品3",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "tofu": "豆腐",
-      "omurice": "蛋包饭",
-      "cabbage_tofu": "白菜豆腐汤",
-      "salad": "蔬菜沙拉",
-      "tofu_meat": "肉末烧豆腐",
-      "tofu_combo": "经典豆腐套餐",
-      "hearty_meal": "绵玉定食"
-    },
-    "MealTaskNumber3": {
-      "name": "任务物品3数量",
-      "help": ""
-    },
-    "MealTask4": {
-      "name": "任务餐品4",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "tofu": "豆腐",
-      "omurice": "蛋包饭",
-      "cabbage_tofu": "白菜豆腐汤",
-      "salad": "蔬菜沙拉",
-      "tofu_meat": "肉末烧豆腐",
-      "tofu_combo": "经典豆腐套餐",
-      "hearty_meal": "绵玉定食"
-    },
-    "MealTaskNumber4": {
-      "name": "任务物品4数量",
-      "help": ""
-    },
     "AwayCook": {
       "name": "常驻餐品",
       "help": "以上全做完则做常驻餐品",
@@ -3182,10 +3118,6 @@
       "WorkerJuu": "工作啾",
       "a": "方案a",
       "b": "方案b"
-    },
-    "SunnyHoney": {
-      "name": "阳光蜜水",
-      "help": ""
     },
     "Meal1": {
       "name": "餐品1",
@@ -3247,78 +3179,6 @@
   "IslandTeahouseNextTask": {
     "_info": {
       "name": "候补任务",
-      "help": ""
-    },
-    "MealTask1": {
-      "name": "任务餐品1",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_juice": "苹果汁",
-      "banana_mango": "香蕉芒果汁",
-      "honey_lemon": "蜂蜜柠檬水",
-      "strawberry_lemon": "草莓蜜沁",
-      "strawberry_honey": "草莓蜂蜜冰沙",
-      "floral_fruity": "花香果韵",
-      "fruit_paradise": "缤纷果乐园",
-      "lavender_tea": "薰衣草茶",
-      "sunny_honey": "阳光蜜水"
-    },
-    "MealTaskNumber1": {
-      "name": "任务物品1数量",
-      "help": ""
-    },
-    "MealTask2": {
-      "name": "任务餐品2",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_juice": "苹果汁",
-      "banana_mango": "香蕉芒果汁",
-      "honey_lemon": "蜂蜜柠檬水",
-      "strawberry_lemon": "草莓蜜沁",
-      "strawberry_honey": "草莓蜂蜜冰沙",
-      "floral_fruity": "花香果韵",
-      "fruit_paradise": "缤纷果乐园",
-      "lavender_tea": "薰衣草茶",
-      "sunny_honey": "阳光蜜水"
-    },
-    "MealTaskNumber2": {
-      "name": "任务物品2数量",
-      "help": ""
-    },
-    "MealTask3": {
-      "name": "任务餐品3",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_juice": "苹果汁",
-      "banana_mango": "香蕉芒果汁",
-      "honey_lemon": "蜂蜜柠檬水",
-      "strawberry_lemon": "草莓蜜沁",
-      "strawberry_honey": "草莓蜂蜜冰沙",
-      "floral_fruity": "花香果韵",
-      "fruit_paradise": "缤纷果乐园",
-      "lavender_tea": "薰衣草茶",
-      "sunny_honey": "阳光蜜水"
-    },
-    "MealTaskNumber3": {
-      "name": "任务物品3数量",
-      "help": ""
-    },
-    "MealTask4": {
-      "name": "任务餐品4",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_juice": "苹果汁",
-      "banana_mango": "香蕉芒果汁",
-      "honey_lemon": "蜂蜜柠檬水",
-      "strawberry_lemon": "草莓蜜沁",
-      "strawberry_honey": "草莓蜂蜜冰沙",
-      "floral_fruity": "花香果韵",
-      "fruit_paradise": "缤纷果乐园",
-      "lavender_tea": "薰衣草茶",
-      "sunny_honey": "阳光蜜水"
-    },
-    "MealTaskNumber4": {
-      "name": "任务物品4数量",
       "help": ""
     },
     "AwayCook": {
@@ -3413,70 +3273,6 @@
   "IslandGrillNextTask": {
     "_info": {
       "name": "候补任务",
-      "help": ""
-    },
-    "MealTask1": {
-      "name": "任务餐品1",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "roasted_skewer": "碳烤肉串",
-      "chicken_potato": "禽肉土豆拼盘",
-      "carrot_omelette": "胡萝卜厚蛋烧",
-      "stir_fried_chicken": "爆炒禽肉",
-      "steak_bowl": "汉堡肉饭",
-      "carnival": "烤肉狂欢",
-      "double_energy": "能量双拼套餐"
-    },
-    "MealTaskNumber1": {
-      "name": "任务餐品1数量",
-      "help": ""
-    },
-    "MealTask2": {
-      "name": "任务餐品2",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "roasted_skewer": "碳烤肉串",
-      "chicken_potato": "禽肉土豆拼盘",
-      "carrot_omelette": "胡萝卜厚蛋烧",
-      "stir_fried_chicken": "爆炒禽肉",
-      "steak_bowl": "汉堡肉饭",
-      "carnival": "烤肉狂欢",
-      "double_energy": "能量双拼套餐"
-    },
-    "MealTaskNumber2": {
-      "name": "任务餐品2数量",
-      "help": ""
-    },
-    "MealTask3": {
-      "name": "任务餐品3",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "roasted_skewer": "碳烤肉串",
-      "chicken_potato": "禽肉土豆拼盘",
-      "carrot_omelette": "胡萝卜厚蛋烧",
-      "stir_fried_chicken": "爆炒禽肉",
-      "steak_bowl": "汉堡肉饭",
-      "carnival": "烤肉狂欢",
-      "double_energy": "能量双拼套餐"
-    },
-    "MealTaskNumber3": {
-      "name": "任务餐品3数量",
-      "help": ""
-    },
-    "MealTask4": {
-      "name": "任务餐品4",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "roasted_skewer": "碳烤肉串",
-      "chicken_potato": "禽肉土豆拼盘",
-      "carrot_omelette": "胡萝卜厚蛋烧",
-      "stir_fried_chicken": "爆炒禽肉",
-      "steak_bowl": "汉堡肉饭",
-      "carnival": "烤肉狂欢",
-      "double_energy": "能量双拼套餐"
-    },
-    "MealTaskNumber4": {
-      "name": "任务餐品4数量",
       "help": ""
     },
     "AwayCook": {
@@ -3579,78 +3375,6 @@
       "name": "候补任务",
       "help": ""
     },
-    "MealTask1": {
-      "name": "任务餐品1",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_pie": "苹果派",
-      "corn_cup": "玉米杯",
-      "orange_pie": "香橙派",
-      "banana_crepe": "香蕉可丽饼",
-      "orchard_duo": "果园二重奏",
-      "rice_mango": "芒果糯米饭",
-      "succulently_sweet": "香甜组合",
-      "berry_orange": "莓果香橙甜点组",
-      "strawberry_charlotte": "草莓夏洛特"
-    },
-    "MealTaskNumber1": {
-      "name": "任务餐品1数量",
-      "help": ""
-    },
-    "MealTask2": {
-      "name": "任务餐品2",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_pie": "苹果派",
-      "corn_cup": "玉米杯",
-      "orange_pie": "香橙派",
-      "banana_crepe": "香蕉可丽饼",
-      "orchard_duo": "果园二重奏",
-      "rice_mango": "芒果糯米饭",
-      "succulently_sweet": "香甜组合",
-      "berry_orange": "莓果香橙甜点组",
-      "strawberry_charlotte": "草莓夏洛特"
-    },
-    "MealTaskNumber2": {
-      "name": "任务餐品2数量",
-      "help": ""
-    },
-    "MealTask3": {
-      "name": "任务餐品3",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_pie": "苹果派",
-      "corn_cup": "玉米杯",
-      "orange_pie": "香橙派",
-      "banana_crepe": "香蕉可丽饼",
-      "orchard_duo": "果园二重奏",
-      "rice_mango": "芒果糯米饭",
-      "succulently_sweet": "香甜组合",
-      "berry_orange": "莓果香橙甜点组",
-      "strawberry_charlotte": "草莓夏洛特"
-    },
-    "MealTaskNumber3": {
-      "name": "任务餐品3数量",
-      "help": ""
-    },
-    "MealTask4": {
-      "name": "任务餐品4",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "apple_pie": "苹果派",
-      "corn_cup": "玉米杯",
-      "orange_pie": "香橙派",
-      "banana_crepe": "香蕉可丽饼",
-      "orchard_duo": "果园二重奏",
-      "rice_mango": "芒果糯米饭",
-      "succulently_sweet": "香甜组合",
-      "berry_orange": "莓果香橙甜点组",
-      "strawberry_charlotte": "草莓夏洛特"
-    },
-    "MealTaskNumber4": {
-      "name": "任务餐品4数量",
-      "help": ""
-    },
     "AwayCook": {
       "name": "常驻餐品",
       "help": "以上全做完则做常驻餐品",
@@ -3751,78 +3475,6 @@
   "IslandJuuCoffeeNextTask": {
     "_info": {
       "name": "候补任务",
-      "help": ""
-    },
-    "MealTask1": {
-      "name": "任务餐品1",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "iced_coffee": "冰咖啡",
-      "omelette": "欧姆蛋",
-      "cheese": "芝士",
-      "latte": "拿铁",
-      "citrus_coffee": "柑橘咖啡",
-      "strawberry_milkshake": "草莓奶绿",
-      "morning_light": "晨光活力组合",
-      "wake_up_call": "醒神套餐",
-      "fruity_fruitier": "果香双杯乐"
-    },
-    "MealTaskNumber1": {
-      "name": "任务餐品1数量",
-      "help": ""
-    },
-    "MealTask2": {
-      "name": "任务餐品2",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "iced_coffee": "冰咖啡",
-      "omelette": "欧姆蛋",
-      "cheese": "芝士",
-      "latte": "拿铁",
-      "citrus_coffee": "柑橘咖啡",
-      "strawberry_milkshake": "草莓奶绿",
-      "morning_light": "晨光活力组合",
-      "wake_up_call": "醒神套餐",
-      "fruity_fruitier": "果香双杯乐"
-    },
-    "MealTaskNumber2": {
-      "name": "任务餐品2数量",
-      "help": ""
-    },
-    "MealTask3": {
-      "name": "任务餐品3",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "iced_coffee": "冰咖啡",
-      "omelette": "欧姆蛋",
-      "cheese": "芝士",
-      "latte": "拿铁",
-      "citrus_coffee": "柑橘咖啡",
-      "strawberry_milkshake": "草莓奶绿",
-      "morning_light": "晨光活力组合",
-      "wake_up_call": "醒神套餐",
-      "fruity_fruitier": "果香双杯乐"
-    },
-    "MealTaskNumber3": {
-      "name": "任务餐品3数量",
-      "help": ""
-    },
-    "MealTask4": {
-      "name": "任务餐品4",
-      "help": "双倍备餐后开始做任务餐品",
-      "None": "None",
-      "iced_coffee": "冰咖啡",
-      "omelette": "欧姆蛋",
-      "cheese": "芝士",
-      "latte": "拿铁",
-      "citrus_coffee": "柑橘咖啡",
-      "strawberry_milkshake": "草莓奶绿",
-      "morning_light": "晨光活力组合",
-      "wake_up_call": "醒神套餐",
-      "fruity_fruitier": "果香双杯乐"
-    },
-    "MealTaskNumber4": {
-      "name": "任务餐品4数量",
       "help": ""
     },
     "AwayCook": {

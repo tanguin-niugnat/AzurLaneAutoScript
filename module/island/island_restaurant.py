@@ -65,10 +65,8 @@ class IslandRestaurant(IslandShopBase):
         self.setup_config(
             config_meal_prefix="IslandRestaurant_Meal",
             config_number_prefix="IslandRestaurant_MealNumber",
-            config_task_prefix="IslandRestaurantNextTask_MealTask",
-            config_task_number_prefix="IslandRestaurantNextTask_MealTaskNumber",
-            config_post_number="IslandRestaurant_PostNumber",
-            config_away_cook="IslandRestaurantNextTask_AwayCook"
+            config_away_cook="IslandRestaurantNextTask_AwayCook",
+            config_post_number="IslandRestaurant_PostNumber"
         )
 
         # 初始化店铺

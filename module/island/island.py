@@ -153,9 +153,6 @@ class Island(SelectCharacter):
                 self.device.click(POST_CLOSE)
                 break
 
-
-
-
     def post_open(self,post):
         template = TEMPLATE_POST_LOCK
         while True:
