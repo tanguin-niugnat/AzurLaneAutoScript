@@ -587,8 +587,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         self.goto_postmanage()
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.post_close()
-        self.post_manage_down_swipe(450)
-        self.post_manage_down_swipe(450)
+        self.post_manage_swipe(0)
 
         if ranch_needs:
             print(f"需要执行的牧场岗位: {ranch_needs}")

@@ -171,6 +171,28 @@ class Island(SelectCharacter):
     def post_manage_down_swipe(self,distance):
         self.device.swipe_vector(vector=(0, distance), box=(688, 69, 725, 656), name="PostDownSwipe")
         self.device.click(ISLAND_WORKING)
+    def post_manage_swipe(self,count):
+        if count >= 2:
+            for _ in range(count):
+                self.post_manage_up_swipe(450)
+        elif count == 1:
+            if self.appear(ISLAND_FARM_POST1, offset=50):
+                for _ in range(count):
+                    self.post_manage_up_swipe(450)
+            else:
+                self.post_manage_down_swipe(450)
+                self.device.sleep(0.3)
+                self.post_manage_down_swipe(450)
+                self.device.sleep(0.3)
+                for _ in range(count):
+                    self.post_manage_up_swipe(450)
+        elif count == 0:
+            if not self.appear(ISLAND_FARM_POST1, offset=50):
+                self.post_manage_down_swipe(450)
+                self.device.sleep(0.3)
+                self.post_manage_down_swipe(450)
+                self.device.sleep(0.3)
+
     def island_up(self,hold_time):
         p1 = (218, 507)
         p2 = (218, 441)

@@ -172,7 +172,7 @@ class IslandShopBase(Island, WarehouseOCR):
                 break
         self.wait_until_appear(ISLAND_POSTMANAGE_CHECK)
         self.device.sleep(0.3)
-        self.post_manage_swipe()
+        self.post_manage_swipe(self.post_manage_swipe_count)
         print(post_button)
         self.post_open(post_button)
         image = self.device.screenshot()
@@ -206,23 +206,6 @@ class IslandShopBase(Island, WarehouseOCR):
         """获取空闲的岗位ID列表（通用）"""
         return [post_id for post_id, post_info in self.posts.items()
                 if post_info['status'] == 'idle']
-    def post_manage_swipe(self):
-        count = self.post_manage_swipe_count
-        if count >= 2:
-            for _ in range(count):
-                self.post_manage_up_swipe(450)
-        elif count == 1:
-            if self.appear(ISLAND_FARM_POST1, offset=50):
-                for _ in range(count):
-                    self.post_manage_up_swipe(450)
-            else:
-                self.post_manage_down_swipe(450)
-                self.device.sleep(0.3)
-                self.post_manage_down_swipe(450)
-                self.device.sleep(0.3)
-                for _ in range(count):
-                    self.post_manage_up_swipe(450)
-
     # ============ 核心逻辑 ============
 
     def run(self):
@@ -231,7 +214,7 @@ class IslandShopBase(Island, WarehouseOCR):
         self.goto_postmanage()
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.post_close()
-        self.post_manage_swipe()
+        self.post_manage_swipe(self.post_manage_swipe_count)
         # 检查岗位状态
         post_count = getattr(self.config, self.config_post_number, 2)
         time_vars = []
@@ -247,7 +230,7 @@ class IslandShopBase(Island, WarehouseOCR):
         self.goto_postmanage()
         self.post_manage_mode(POST_MANAGE_PRODUCTION)
         self.post_close()
-        self.post_manage_swipe()
+        self.post_manage_swipe(self.post_manage_swipe_count)
 
         # 计算当前总库存
         total_subtract = Counter(self.post_check_meal)
