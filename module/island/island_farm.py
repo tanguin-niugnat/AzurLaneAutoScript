@@ -309,6 +309,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 self.device.click(ISLAND_POST_SAFE_AREA)
                 continue
             if self.appear_then_click(POST_GET,offset=(50,0)):
+                self.device.click(ISLAND_POST_SAFE_AREA)
                 continue
             if self.appear_then_click(POST_ADD):
                 continue
@@ -800,7 +801,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
             raise GameBugError("检测到岛屿ERROR1，需要重启")
 
     def test(self):
-        self.ui_goto(page_island_warehouse_filter)
+        self.ranch_post_get_and_add()
 if __name__ == "__main__":
     az =IslandFarm('alas', task='Alas')
     az.device.screenshot()
