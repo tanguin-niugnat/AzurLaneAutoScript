@@ -91,7 +91,7 @@ class IslandJuuEatery(IslandShopBase):
         super().get_warehouse_counts()
 
         # 额外获取cheese数量
-        self.ui_goto(page_island_warehouse_filter)
+        self.ui_goto(page_island_warehouse_filter,get_ship=False)
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(FILTER_ISLAND_JUU_COFFEE)
         self.appear_then_click(FILTER_CONFIRM)

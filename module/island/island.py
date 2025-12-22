@@ -21,12 +21,12 @@ class Island(SelectCharacter):
         page = self.ui_get_current_page()
         valid_pages = ['page_island_management', 'page_island_postmanage', 'page_island', 'page_island_warehouse']
         if page.name in valid_pages:
-            self.ui_goto(page_island_postmanage)
+            self.ui_goto(page_island_postmanage,get_ship=False)
         else:
             self.goto_management()
-            self.ui_goto(page_island_postmanage)
+            self.ui_goto(page_island_postmanage,get_ship=False)
     def goto_management(self):
-        self.ui_goto(page_island)
+        self.ui_goto(page_island,get_ship=False)
         while True:
             self.device.screenshot()
             if self.appear(ISLAND_CHECK, offset=(5, 5)):
@@ -34,7 +34,7 @@ class Island(SelectCharacter):
             if self.appear(ISLAND_MANAGEMENT_CHECK, offset=(5, 5)):
                 break
     def goto_island_map(self):
-        self.ui_goto(page_island)
+        self.ui_goto(page_island,get_ship=False)
         while True:
             self.device.screenshot()
             if self.appear_then_click(ISLAND_GOTO_MAP):

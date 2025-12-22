@@ -224,7 +224,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
     def warehouse_inventory(self, category):
         """获取仓库库存信息"""
         config = self.INVENTORY_CONFIG[category]
-        self.ui_goto(page_island_warehouse_filter)
+        self.ui_goto(page_island_warehouse_filter,get_ship=False)
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(config['filter'])
         self.appear_then_click(FILTER_CONFIRM)
@@ -240,7 +240,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         return results
 
     def warehouse_mill_ranch(self):
-        self.ui_goto(page_island_warehouse_filter)
+        self.ui_goto(page_island_warehouse_filter,get_ship=False)
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(FILTER_PROCESSED)
         self.appear_then_click(FILTER_CONFIRM)
@@ -252,7 +252,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
             count = self.ocr_item_quantity(image, item_config['template'])
             self.inventory_counts['mill'][item_config['name']] = count
             print(f"{item_config['name']}: {count}")
-        self.ui_goto(page_island_warehouse_filter)
+        self.ui_goto(page_island_warehouse_filter,get_ship=False)
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(FILTER_RANCH)
         self.appear_then_click(FILTER_CONFIRM)
@@ -687,7 +687,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         need_to_buy_seeds = any(all_plants_to_buy.values())
 
         if need_to_buy_seeds:
-            self.ui_goto(page_island_shop)
+            self.ui_goto(page_island_shop,get_ship=False)
 
             # 按类别购买种子
             for category in ['farm', 'orchard', 'nursery']:
@@ -723,7 +723,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
 
             # 购买完成后返回岗位管理界面
             self.goto_management()
-            self.ui_goto(page_island_postmanage)
+            self.ui_goto(page_island_postmanage,get_ship=False)
             self.post_manage_mode(POST_MANAGE_PRODUCTION)
             self.post_close()
 

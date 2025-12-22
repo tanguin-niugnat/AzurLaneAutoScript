@@ -134,7 +134,7 @@ class IslandShopBase(Island, WarehouseOCR):
 
     def get_warehouse_counts(self):
         """获取仓库数量（通用）"""
-        self.ui_goto(page_island_warehouse_filter)
+        self.ui_goto(page_island_warehouse_filter,get_ship=False)
         self.appear_then_click(FILTER_RESET)
         self.device.click(self.filter_asset)
         self.appear_then_click(FILTER_CONFIRM)

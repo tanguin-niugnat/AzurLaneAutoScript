@@ -92,7 +92,7 @@ class IslandTeahouse(IslandShopBase):
         super().get_warehouse_counts()
 
         # 额外获取蜂蜜数量（用于库存限制）
-        self.ui_goto(page_island_warehouse_filter)
+        self.ui_goto(page_island_warehouse_filter,get_ship=False)
         self.appear_then_click(FILTER_RESET)
         self.appear_then_click(FILTER_BASIC)
         self.appear_then_click(FILTER_OTHER)
