@@ -310,6 +310,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 continue
             if self.appear_then_click(POST_GET,offset=(50,0)):
                 self.device.click(ISLAND_POST_SAFE_AREA)
+                self.device.sleep(0.5)
                 continue
             if self.appear_then_click(POST_ADD):
                 continue
