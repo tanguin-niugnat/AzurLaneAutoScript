@@ -112,10 +112,14 @@ class Island(SelectCharacter):
                 continue
             if self.appear(ISLAND_GET,offset=1):
                 self.device.click(ISLAND_POST_SAFE_AREA)
-                self.device.click(ISLAND_POST_SAFE_AREA)
                 self.device.sleep(0.5)
                 continue
             if self.appear_then_click(POST_GET,offset=(50,0)):
+                self.device.sleep(0.5)
+                self.device.click(ISLAND_POST_SAFE_AREA)
+                self.device.sleep(0.5)
+                self.device.click(ISLAND_POST_SAFE_AREA)
+                self.device.sleep(0.5)
                 continue
             if  self.appear(ISLAND_POST_CHECK,offset=1) and not self.appear(POST_GET,offset=(50,0)):
                 self.device.click(POST_CLOSE)
@@ -135,7 +139,9 @@ class Island(SelectCharacter):
             if self.appear_then_click(POST_ADD):
                 continue
             if self.appear_then_click(POST_GET,offset=(50,0)):
+                self.device.sleep(0.5)
                 self.device.click(ISLAND_POST_SAFE_AREA)
+                self.device.sleep(0.5)
                 self.device.click(ISLAND_POST_SAFE_AREA)
                 self.device.sleep(0.5)
                 continue
