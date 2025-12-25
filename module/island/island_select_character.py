@@ -158,7 +158,15 @@ class SelectCharacter(UI):
             if char_info["grid_position"] == (row, col):
                 return char_info
         return None
-
+    def select_character_filter(self):
+        if self.appear_then_click(SELECT_CHARACTER_FILTER):
+            self.device.sleep(0.5)
+            self.device.click(SELECT_CHARACTER_FILTER_STAMINA)
+            self.device.sleep(0.5)
+            self.device.click(SELECT_CHARACTER_FILTER_CONFIRM)
+            self.device.sleep(0.5)
+            return True
+        return False
     def select_character(self, character_name="WorkerJuu"):
         """
         选择指定角色，如果不可用则选择WorkerJuu
@@ -166,6 +174,7 @@ class SelectCharacter(UI):
         Returns:
             bool: 成功选择角色返回True，无角色可选返回False
         """
+        self.select_character_filter()
         screenshot = self.device.screenshot()
         all_status = self.recognize_all_characters(screenshot)
         target_row, target_col = None, None
@@ -217,7 +226,7 @@ class SelectCharacter(UI):
         # 特殊角色配置检查
         if character_name == "YingSwei" and self.config.IslandRestaurant_Chef == "YingSwei":
             return False  # 不可用
-        if character_name == "Amagi_chan" and self.config.PersonnelManagement_AmagiChanRubber:
+        if character_name == "Amagi_chan" and self.config.IslandOrchard_AmagiChanRubber:
             return False  # 不可用
         # 获取营业状态
         business_status = self.config.PersonnelManagement_BusinessStatus
@@ -303,6 +312,7 @@ class SelectCharacter(UI):
         Returns:
             bool: 成功选择角色返回True，无角色可选返回False
         """
+        self.select_character_filter()
         character_list = ["LeMalin", "Unicorn", "ChaoHo", "NewJersey", "Amagi_chan"]
 
         screenshot = self.device.screenshot()
@@ -337,6 +347,7 @@ class SelectCharacter(UI):
         Returns:
             bool: 成功选择角色返回True，无角色可选返回False
         """
+        self.select_character_filter()
         character_list = ["Cheshire", "YingSwei", "Shimakaze", "Saratoga", "Tashkent", "Akashi"]
         screenshot = self.device.screenshot()
         position = self._select_first_available_character(screenshot, character_list)

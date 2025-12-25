@@ -2588,7 +2588,7 @@
   "PersonnelManagement": {
     "_info": {
       "name": "人员管理",
-      "help": ""
+      "help": "这一页无用"
     },
     "BusinessStatus": {
       "name": "营业状态",
@@ -2836,7 +2836,7 @@
   "IslandFarm": {
     "_info": {
       "name": "农田",
-      "help": ""
+      "help": "仅支持minitouch"
     },
     "Positions": {
       "name": "农田岗位",
@@ -2891,8 +2891,8 @@
       "4": "4"
     },
     "AmagiChanRubber": {
-      "name": "天城种橡胶",
-      "help": ""
+      "name": "小天城种橡胶",
+      "help": "会从厨师排除小天城"
     }
   },
   "IslandNursery": {
@@ -3044,7 +3044,7 @@
     },
     "Chef": {
       "name": "厨师",
-      "help": "",
+      "help": "a为上限为a的厨师，b为b及b以下的厨师",
       "WorkerJuu": "工作啾",
       "a": "a",
       "b": "b",
@@ -3120,7 +3120,7 @@
   "IslandTeahouse": {
     "_info": {
       "name": "白熊饮品",
-      "help": ""
+      "help": "请手动制作蜂蜜制品"
     },
     "PostNumber": {
       "name": "岗位数量",
@@ -3137,7 +3137,7 @@
     },
     "Chef": {
       "name": "厨师",
-      "help": "",
+      "help": "a为上限为a的厨师，b为b及b以下的厨师",
       "WorkerJuu": "工作啾",
       "a": "方案a",
       "b": "方案b"
@@ -3239,7 +3239,7 @@
     },
     "Chef": {
       "name": "厨师",
-      "help": "",
+      "help": "a为上限为a的厨师，b为b及b以下的厨师",
       "WorkerJuu": "工作啾",
       "a": "方案a",
       "b": "方案b"
@@ -3331,7 +3331,7 @@
     },
     "Chef": {
       "name": "厨师",
-      "help": "",
+      "help": "a为上限为a的厨师，b为b及b以下的厨师",
       "WorkerJuu": "工作啾",
       "a": "方案a",
       "b": "方案b"
@@ -3433,7 +3433,7 @@
     },
     "Chef": {
       "name": "厨师",
-      "help": "",
+      "help": "a为上限为a的厨师，b为b及b以下的厨师",
       "WorkerJuu": "工作啾",
       "a": "方案a",
       "b": "方案b"
@@ -3518,7 +3518,7 @@
   "IslandDailyGather": {
     "_info": {
       "name": "每日采集",
-      "help": ""
+      "help": "仅支持minitouch"
     },
     "Daily": {
       "name": "每日任务",
@@ -3528,7 +3528,7 @@
   "WoodProcessing": {
     "_info": {
       "name": "木料加工",
-      "help": ""
+      "help": "仅制作文件柜"
     },
     "Positions": {
       "name": "岗位数",
@@ -3541,7 +3541,7 @@
   "Industrial": {
     "_info": {
       "name": "工业加工",
-      "help": ""
+      "help": "钉子超过15个开始做餐具，未解锁则需手动"
     },
     "Positions": {
       "name": "岗位数",
@@ -3554,7 +3554,7 @@
   "Handmade": {
     "_info": {
       "name": "手工制作",
-      "help": ""
+      "help": "皮革超过15个开始做鞋靴，未解锁则需手动"
     },
     "Positions": {
       "name": "岗位数",
