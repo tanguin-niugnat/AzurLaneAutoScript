@@ -317,10 +317,10 @@ class OperationSiren(OSMap):
         Recommend 3 or 5 for higher meowfficer searching point per action points ratio.
         """
         logger.hr(f'OS meowfficer farming, hazard_level={self.config.OpsiMeowfficerFarming_HazardLevel}', level=1)
-        if self.is_cl1_enabled and self.config.OpsiMeowfficerFarming_ActionPointPreserve < 1000:
-            logger.info('With CL1 leveling enabled, set action point preserve to 1000')
-            self.config.OpsiMeowfficerFarming_ActionPointPreserve = 1000
-        preserve = min(self.get_action_point_limit(), self.config.OpsiMeowfficerFarming_ActionPointPreserve, 2000)
+        if self.is_cl1_enabled and self.config.OpsiMeowfficerFarming_ActionPointPreserve < 500:
+            logger.info('With CL1 leveling enabled, set action point preserve to 500')
+            self.config.OpsiMeowfficerFarming_ActionPointPreserve = 500
+        preserve = min(self.get_action_point_limit(), self.config.OpsiMeowfficerFarming_ActionPointPreserve)
         if preserve == 0:
             self.config.override(OpsiFleet_Submarine=False)
         if self.is_cl1_enabled:
@@ -422,6 +422,11 @@ class OperationSiren(OSMap):
                 with self.config.multi_set():
                     self.config.task_delay(server_update=True)
                     if not self.is_in_opsi_explore():
+                        cd = self.nearest_task_cooling_down
+                        if cd is None:
+                            for task in ['OpsiAbyssal', 'OpsiStronghold', 'OpsiObscure']:
+                                if self.config.is_task_enabled(task):
+                                    self.config.task_call(task)
                         self.config.task_call('OpsiMeowfficerFarming')
                 self.config.task_stop()
 
@@ -437,6 +442,11 @@ class OperationSiren(OSMap):
                 with self.config.multi_set():
                     self.config.task_delay(server_update=True)
                     if not self.is_in_opsi_explore():
+                        cd = self.nearest_task_cooling_down
+                        if cd is None:
+                            for task in ['OpsiAbyssal', 'OpsiStronghold', 'OpsiObscure']:
+                                if self.config.is_task_enabled(task):
+                                    self.config.task_call(task)
                         self.config.task_call('OpsiMeowfficerFarming')
                 self.config.task_stop()
 
