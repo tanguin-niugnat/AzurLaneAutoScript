@@ -2512,7 +2512,7 @@
     },
     "ActionPointPreserve": {
       "name": "Keep X Amount of AP",
-      "help": "Stops task if total AP (including AP boxes in inventory) is below this number, 1000 is recommended\nThis value will be auto reduced to 300 at 3 days before OpSi reset, or 1000 if CL1 leveling enabled, and to 0 at day before reset"
+      "help": "Stops task if total AP (including AP boxes in inventory) is below this number\nThis value will be auto reduced to 300 at 3 days before OpSi reset, or 2000 if CL1 leveling enabled, and to 0 at day before reset"
     },
     "HazardLevel": {
       "name": "Target Zone Hazard Level",
@@ -2531,7 +2531,7 @@
   "OpsiHazard1Leveling": {
     "_info": {
       "name": "CL1 leveling",
-      "help": "Consume operation coins to gain a lot of experience and a little action points.\nRecommended to carry 1-2 pre-loaded CV to obtain the highest average hourly benefit.\n\nTo avoid being unable to buying goods from port shops, Alas will retain 100,000 operation coins\nSince buying action points at the mystery shop requires a large number of operation coins, this function will be supplemented by running meowfficer farming with overflow action points."
+      "help": "Consume operation coins to gain a lot of experience and a little action points.\nRecommended to carry 1-2 pre-loaded CV to obtain the highest average hourly benefit.\n\nTo avoid being unable to buying goods from port shops, Alas will retain 16,000 operation coins\nSince buying action points at the mystery shop requires a large number of operation coins, this function will be supplemented by running meowfficer farming with overflow action points."
     },
     "TargetZone": {
       "name": "Target Zone ID",
