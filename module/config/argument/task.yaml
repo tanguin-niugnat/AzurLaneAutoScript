@@ -61,6 +61,8 @@ Farm:
       - Campaign
       - StopCondition
       - Fleet
+      - Submarine
+      - Emotion
 
 # ==================== Event ====================
 
@@ -112,6 +114,7 @@ Event:
     WarArchives:
       - Scheduler
       - Campaign
+      - InterceptiveCheck
       - StopCondition
       - Fleet
       - Submarine
@@ -223,6 +226,23 @@ Reward:
     Awaken:
       - Scheduler
       - Awaken
+    Island:
+      - Scheduler
+      - Island1
+      - Island2
+      - Island3
+      - Island4
+      - Island5
+      - Island6
+      - Island7
+      - Island8
+      - Island9
+      - Island10
+      - Island11
+      - Island12
+      - Island13
+      - Island14
+      - Island15
 
 # ==================== DailyMission ====================
 
@@ -337,6 +357,8 @@ Tool:
       - OpsiDaemon
     EventStory:
       - EventStory
+    BoxDisassemble:
+      - BoxDisassemble
     Benchmark:
       - Benchmark
     AzurLaneUncensored:

@@ -1,7 +1,7 @@
-from module.base.button import ButtonGrid
+from module.base.button import Button, ButtonGrid
 from module.base.utils import *
 from module.handler.assets import AUTO_SEARCH_MENU_EXIT
-from module.statistics.assets import CAMPAIGN_BONUS
+from module.statistics.assets import *
 from module.statistics.get_items import ITEM_GROUP, GetItemsStatistics
 from module.statistics.item import Item
 from module.statistics.utils import *
@@ -9,13 +9,24 @@ from module.statistics.utils import *
 
 class BonusItem(Item):
     def predict_valid(self):
-        return np.mean(rgb2gray(self.image) > 160) > 0.1
+        image = rgb2gray(self.image)
+        width, height = image_size(image)
+        wm, hm = width // 2, height // 2
+        row_center = image[hm: hm + 5, :]
+        info_bar = image[64: 69, :]
+        column_center = image[:, wm: wm + 5]
+        return all(np.mean(img > 160) > 0.1 for img in [image, row_center, info_bar, column_center])
 
 
 class CampaignBonusStatistics(GetItemsStatistics):
-    def appear_on(self, image):
-        if AUTO_SEARCH_MENU_EXIT.match(image, offset=(200, 20)) \
-                and CAMPAIGN_BONUS.match(image, offset=(20, 500)):
+    bonus_button: Button = CAMPAIGN_BONUS
+
+    def appear_on(self, image, similarity=0.85):
+        if CAMPAIGN_BONUS_STRATEGY_CHECK.match(image, offset=(200, 500), similarity=similarity):
+            return False
+        if AUTO_SEARCH_MENU_EXIT.match(image, offset=(200, 20), similarity=similarity) \
+                and CAMPAIGN_BONUS_SINGLE.match(image, offset=(200, 100), similarity=similarity) \
+                and CAMPAIGN_BONUS.match(image, offset=(200, 500), similarity=similarity):
             return True
 
         return False
@@ -24,7 +35,7 @@ class CampaignBonusStatistics(GetItemsStatistics):
         ITEM_GROUP.item_class = BonusItem
         ITEM_GROUP.similarity = 0.85
         ITEM_GROUP.amount_area = (35, 51, 63, 63)
-        origin = area_offset(CAMPAIGN_BONUS.button, offset=(-7, 34))[:2]
+        origin = area_offset(self.bonus_button.button, offset=(-7, 34))[:2]
         grids = ButtonGrid(origin=origin, button_shape=(64, 64), grid_shape=(7, 2), delta=(72 + 2 / 3, 75))
 
         reward_bottom = AUTO_SEARCH_MENU_EXIT.button[1]
@@ -41,11 +52,16 @@ class CampaignBonusStatistics(GetItemsStatistics):
         """
         result = super().stats_get_items(image, **kwargs)
         valid = False
+        valid_coin = False
         for item in result:
             if item.name == 'Coin':
                 valid = True
-        if valid:
+                if item.amount > 80:
+                    valid_coin = True
+        if valid and valid_coin:
             return [self.revise_item(item) for item in result]
+        elif valid:
+            raise ImageError('Campaign bonus image have too low coins, dropped')
         else:
             raise ImageError('Campaign bonus image does not have coins, dropped')
 
@@ -60,5 +76,14 @@ class CampaignBonusStatistics(GetItemsStatistics):
         # Campaign bonus drop 9 to 30+ chips, but sometimes 10 is detected as 1.
         if item.name == 'Chip' and 0 < item.amount < 4:
             item.amount *= 10
+
+        if 'ship' in item.name:
+            if 3 < item.amount < 10:
+                item.amount = 1
+            elif item.amount >= 10:
+                if 0 <= item.amount % 10 <= 3:
+                    item.amount %= 10
+                else:
+                    item.amount //= 10
 
         return item
