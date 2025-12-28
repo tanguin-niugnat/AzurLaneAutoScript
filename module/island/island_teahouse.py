@@ -20,6 +20,9 @@ class IslandTeahouse(IslandShopBase):
 
         # 设置商品列表
         self.shop_items = [
+            {'name': 'chrysanthemum_tea', 'template': TEMPLATE_CHRYSANTHEMUM_TEA, 'var_name': 'chrysanthemum_tea',
+             'selection': SELECT_CHRYSANTHEMUM_TEA, 'selection_check': SELECT_CHRYSANTHEMUM_TEA_CHECK,
+             'post_action': POST_CHRYSANTHEMUM_TEA},
             {'name': 'apple_juice', 'template': TEMPLATE_APPLE_JUICE, 'var_name': 'apple_juice',
              'selection': SELECT_APPLE_JUICE, 'selection_check': SELECT_APPLE_JUICE_CHECK,
              'post_action': POST_APPLE_JUICE},

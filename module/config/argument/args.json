@@ -9949,6 +9949,7 @@
         "value": "floral_fruity",
         "option": [
           "None",
+          "chrysanthemum_tea",
           "apple_juice",
           "banana_mango",
           "honey_lemon",
@@ -9965,6 +9966,7 @@
         "value": "lavender_tea",
         "option": [
           "None",
+          "chrysanthemum_tea",
           "apple_juice",
           "banana_mango",
           "honey_lemon",
@@ -9981,6 +9983,7 @@
         "value": "strawberry_lemon",
         "option": [
           "None",
+          "chrysanthemum_tea",
           "apple_juice",
           "banana_mango",
           "honey_lemon",
@@ -9997,6 +10000,7 @@
         "value": "None",
         "option": [
           "None",
+          "chrysanthemum_tea",
           "apple_juice",
           "banana_mango",
           "honey_lemon",
@@ -10015,6 +10019,7 @@
         "value": "None",
         "option": [
           "None",
+          "chrysanthemum_tea",
           "apple_juice",
           "banana_mango",
           "honey_lemon",
