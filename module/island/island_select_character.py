@@ -306,14 +306,14 @@ class SelectCharacter(UI):
 
     def select_character_a(self):
         """
-        选择第一个可用的A类角色，否则选择WorkerJuu
-        角色列表: "Amagi_chan", "NewJersey", "Unicorn", "LeMalin"
-
+        设置方案a使用角色,否则选择WorkerJuu
+        角色对照表: "LeMalin", "Unicorn", "ChaoHo", "NewJersey", "Amagi_chan", "Cheshire", "YingSwei", "Shimakaze", "Saratoga", "Tashkent", "Akashi"
+        角色对照表: "恶毒"   , "独角兽"  , "肇和"  , "新泽西"    , "小天城"    , "柴郡"     , "应瑞"    , "岛风"     , "萨拉托加" , "塔什干"   , "明石"
         Returns:
-            bool: 成功选择角色返回True，无角色可选返回False
+            bool: 成功选择角色返回True,无角色可选返回False
         """
         self.select_character_filter()
-        character_list = ["LeMalin", "Unicorn", "ChaoHo", "NewJersey", "Amagi_chan"]
+        character_list = ["Amagi_chan", "NewJersey"]
 
         screenshot = self.device.screenshot()
         position = self._select_first_available_character(screenshot, character_list)
@@ -340,15 +340,14 @@ class SelectCharacter(UI):
 
     def select_character_b(self):
         """
-        选择第一个可用的B类角色，否则选择WorkerJuu
-        合并了原来的B类和C类角色
-        角色列表: "Cheshire", "YingSwei", "Shimakaze", "Saratoga", "Tashkent", "Akashi"
-
+        设置方案b使用角色,否则选择WorkerJuu
+        角色对照表: "LeMalin", "Unicorn", "ChaoHo", "NewJersey", "Amagi_chan", "Cheshire", "YingSwei", "Shimakaze", "Saratoga", "Tashkent", "Akashi"
+        角色对照表: "恶毒"   , "独角兽"  , "肇和"  , "新泽西"    , "小天城"    , "柴郡"     , "应瑞"    , "岛风"     , "萨拉托加" , "塔什干"   , "明石"
         Returns:
-            bool: 成功选择角色返回True，无角色可选返回False
+            bool: 成功选择角色返回True,无角色可选返回False
         """
         self.select_character_filter()
-        character_list = ["Cheshire", "YingSwei", "Shimakaze", "Saratoga", "Tashkent", "Akashi"]
+        character_list = ["Tashkent", "Saratoga", "Akashi" ]
         screenshot = self.device.screenshot()
         position = self._select_first_available_character(screenshot, character_list)
 
