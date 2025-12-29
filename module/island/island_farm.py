@@ -778,7 +778,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
             raise GameBugError("检测到岛屿ERROR1，需要重启")
 
     def test(self):
-        self.buy_seeds('potato', 'farm')
+        self.warehouse_mill_ranch()
 
 
 if __name__ == "__main__":
