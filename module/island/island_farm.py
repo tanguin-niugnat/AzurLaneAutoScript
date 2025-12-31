@@ -766,11 +766,12 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                         future_finish.append(time_var)
 
         if future_finish:
+            future_finish.append(datetime.now() + timedelta(hours=6))
             future_finish.sort()
             self.config.task_delay(target=future_finish)
             logger.info(f'下次运行时间: {future_finish[0]}')
         else:
-            next_check = datetime.now() + timedelta(hours=12)
+            next_check = datetime.now() + timedelta(hours=6)
             logger.info(f'没有任务需要安排，下次检查时间：{next_check.strftime("%H:%M")}')
             self.config.task_delay(target=[next_check])
         if self.island_error:
