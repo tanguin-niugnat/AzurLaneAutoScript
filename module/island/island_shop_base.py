@@ -358,12 +358,9 @@ class IslandShopBase(Island, WarehouseOCR):
             logger.info(f"    当前总库存: {current_stock}")
 
             # 计算净需求
-            net_needed = max(0, total_needed - current_stock)
-            if net_needed > 0:
-                result[base_product] = net_needed
-                logger.info(f"    添加到生产计划: {base_product} x{net_needed}")
-            else:
-                logger.info(f"    库存充足，不需要生产")
+            net_needed = total_needed
+            result[base_product] = net_needed
+            logger.info(f"    添加到生产计划: {base_product} x{net_needed}")
 
         # 5. 处理剩余的原材料需求（这些基础餐品不在基础需求列表中）
         for material, material_quantity in material_needs.items():
