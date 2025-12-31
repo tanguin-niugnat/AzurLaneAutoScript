@@ -1,5 +1,6 @@
 from module.island.island import *
 from time import sleep
+from module.logger import logger
 
 class IslandDailyGather(Island):
     def run(self):
@@ -194,7 +195,7 @@ class IslandDailyGather(Island):
         ocr_air_drop = Digit(OCR_AIR_DROP, name='air_drop', letter=(170, 170, 170), threshold=80,
                                     alphabet='0123456789')
         x= ocr_air_drop.ocr(image)
-        print(x)
+        logger.info(x)
 
 
 
