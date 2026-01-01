@@ -336,15 +336,12 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                 self.device.click(POST_CLOSE)
                 break
 
-    def ranch_post(self, post_id, time_var_name):
+    def ranch_post(self, post_id):
         post_button = self.posts_ranch[post_id]
         self.post_close()
         self.post_open(post_button)
-        time_work = Duration(ISLAND_WORKING_TIME)
         self.ranch_post_get_and_add()
         self.post_open(post_button)
-        time_value = time_work.ocr(self.device.image)
-        setattr(self, time_var_name, datetime.now() + time_value)
 
     def post_plant(self, post_button, product, category, time_var_name):
         self.post_close()
@@ -598,8 +595,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         if ranch_needs:
             print(f"需要执行的牧场岗位: {ranch_needs}")
             for post_id in ranch_needs:
-                time_var_name = f'ranch_time_{post_id[-1]}'
-                self.ranch_post(post_id, time_var_name)
+                self.ranch_post(post_id)
         self.time_vars = {
             'farm': [None] * self.farm_positions,
             'orchard': [None] * self.orchard_positions,
@@ -759,20 +755,15 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         for category in ['farm', 'orchard', 'nursery']:
             positions = len(self.time_vars[category])
             for i in range(positions):
-                var_name = f'{category}_time_{i}'
-                if hasattr(self, var_name):
-                    time_var = getattr(self, var_name)
-                    if time_var is not None:
-                        future_finish.append(time_var)
+                time_var = self.time_vars[category][i]
+                if time_var is not None:
+                    future_finish.append(time_var)
 
-        if future_finish:
-            future_finish.sort()
-            self.config.task_delay(target=future_finish)
-            print(f'下次运行时间: {future_finish[0]}')
-        else:
-            next_check = datetime.now() + timedelta(hours=12)
-            logger.info(f'没有任务需要安排，下次检查时间：{next_check.strftime("%H:%M")}')
-            self.config.task_delay(target=[next_check])
+        six_hours_later = datetime.now() + timedelta(hours=6)
+        future_finish.append(six_hours_later)
+        future_finish.sort()
+        self.config.task_delay(target=future_finish)
+        print(f'下次运行时间: {future_finish[0]}')
         if self.island_error:
             from module.exception import GameBugError
             raise GameBugError("检测到岛屿ERROR1，需要重启")
