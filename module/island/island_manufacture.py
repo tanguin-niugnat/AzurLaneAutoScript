@@ -247,7 +247,7 @@ class IslandManufacture(IslandShopBase):
         # 检查库存iron_nail
         iron_nail_stock = self.warehouse_counts.get('iron_nail', 0)
         # 根据规则选择产品
-        if iron_nail_stock >= 15:
+        if iron_nail_stock >= 20:
             product_list = [item for item in self.manufacture['industrial_production']['items']
                             if item['name'] == 'cutlery']
         else:
@@ -271,8 +271,8 @@ class IslandManufacture(IslandShopBase):
                            if item['name'] == 'peanut_oil'][0]
         product_list.append(peanut_oil_item)
 
-        # 如果leather库存>=15，则生产boot
-        if leather_stock >= 15:
+        # 如果leather库存>=10，则生产boot
+        if leather_stock >= 10:
             boot_item = [item for item in self.manufacture['handmade']['items']
                          if item['name'] == 'boot'][0]
             product_list.append(boot_item)
