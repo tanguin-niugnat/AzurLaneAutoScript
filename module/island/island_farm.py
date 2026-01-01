@@ -466,7 +466,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         wheat_flour_count = self.inventory_counts['mill'].get('wheat_flour', 0)
         wheat_count = self.inventory_counts['farm'].get('wheat', 0)
 
-        if wheat_flour_count < 50 and wheat_count > 330:
+        if wheat_flour_count < 100 and wheat_count > 330:
             mill_needs.append('wheat_flour')
             logger.info("需要加工面粉")
 
