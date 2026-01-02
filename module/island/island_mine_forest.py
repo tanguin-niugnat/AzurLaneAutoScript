@@ -83,6 +83,8 @@ class IslandMineForest(Island,LoginHandler):
     def _process_finish_times(self, time_vars):
         """处理完成时间"""
         finish_times = [getattr(self, var) for var in time_vars if getattr(self, var) is not None]
+        six_hours_later = datetime.now() + timedelta(hours=6)
+        finish_times.append(six_hours_later)
         finish_times.sort()
 
         logger.info(f'Island post finish times: {[str(f) for f in finish_times]}')

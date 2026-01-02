@@ -343,7 +343,7 @@ class IslandManufacture(IslandShopBase):
             finish_times.sort()
             self.config.task_delay(target=finish_times)
         else:
-            next_check = datetime.now() + timedelta(hours=12)
+            next_check = datetime.now() + timedelta(hours=6)
             logger.info(f'没有任务需要安排，下次检查时间：{next_check.strftime("%H:%M")}')
             self.config.task_delay(target=[next_check])
 
