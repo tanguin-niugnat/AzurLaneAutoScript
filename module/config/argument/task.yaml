@@ -325,6 +325,57 @@ Opsi:
     OpsiCrossMonth:
       - Scheduler
 
+# ==================== Island ====================
+
+Island:
+  menu: 'collapse'
+  page: 'setting'
+  tasks:
+    IslandFarm:
+      - Scheduler
+      - IslandFarm
+      - IslandOrchard
+      - IslandNursery
+    IslandRancher:
+      - Scheduler
+      - IslandRancher
+      - IslandFishery
+    IslandMineForest:
+      - Scheduler
+      - IslandMine
+      - IslandForest
+    IslandRestaurant:
+      - Scheduler
+      - IslandRestaurant
+      - IslandRestaurantNextTask
+    IslandTeahouse:
+      - Scheduler
+      - IslandTeahouse
+      - IslandTeahouseNextTask
+    IslandGrill:
+      - Scheduler
+      - IslandGrill
+      - IslandGrillNextTask
+    IslandJuuEatery:
+      - Scheduler
+      - IslandJuuEatery
+      - IslandJuuEateryNextTask
+    IslandJuuCoffee:
+      - Scheduler
+      - IslandJuuCoffee
+      - IslandJuuCoffeeNextTask
+    IslandManufacture:
+      - Scheduler
+      - WoodProcessing
+      - ElectronicProcessing
+      - Industrial
+      - Handmade
+    IslandDailyGather:
+      - Scheduler
+      - IslandDailyGather
+    IslandAirDrop:
+      - Scheduler
+      - IslandAirDrop
 # ==================== Tool ====================
 
 Tool:
