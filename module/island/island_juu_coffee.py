@@ -23,9 +23,6 @@ class IslandJuuCoffee(IslandShopBase):
             {'name': 'omelette', 'template': TEMPLATE_OMELETTE, 'var_name': 'omelette',
              'selection': SELECT_OMELETTE, 'selection_check': SELECT_OMELETTE_CHECK,
              'post_action': POST_OMELETTE},
-            {'name': 'cheese', 'template': TEMPLATE_CHEESE, 'var_name': 'cheese',
-             'selection': SELECT_CHEESE, 'selection_check': SELECT_CHEESE_CHECK,
-             'post_action': POST_CHEESE},
             {'name': 'latte', 'template': TEMPLATE_LATTE, 'var_name': 'latte',
              'selection': SELECT_LATTE, 'selection_check': SELECT_LATTE_CHECK,
              'post_action': POST_LATTE},
@@ -45,6 +42,9 @@ class IslandJuuCoffee(IslandShopBase):
             {'name': 'fruity_fruitier', 'template': TEMPLATE_FRUITY_FRUITIER, 'var_name': 'fruity_fruitier',
              'selection': SELECT_FRUITY_FRUITIER, 'selection_check': SELECT_FRUITY_FRUITIER_CHECK,
              'post_action': POST_FRUITY_FRUITIER},
+            {'name': 'cheese', 'template': TEMPLATE_CHEESE, 'var_name': 'cheese',
+             'selection': SELECT_CHEESE, 'selection_check': SELECT_CHEESE_CHECK,
+             'post_action': POST_CHEESE},
         ]
 
         # 设置套餐组成

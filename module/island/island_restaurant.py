@@ -38,7 +38,19 @@ class IslandRestaurant(IslandShopBase):
              'post_action': POST_HEARTY_MEAL},
             {'name': 'double_bamboo_shoots', 'template': TEMPLATE_DOUBLE_BAMBOO_SHOOTS, 'var_name': 'double_bamboo_shoots',
              'selection': SELECT_DOUBLE_BAMBOO_SHOOTS, 'selection_check': SELECT_DOUBLE_BAMBOO_SHOOTS_CHECK,
-             'post_action': POST_DOUBLE_BAMBOO_SHOOTS}
+             'post_action': POST_DOUBLE_BAMBOO_SHOOTS},
+            {'name': 'asparagus_shrimp', 'template': TEMPLATE_ASPARAGUS_SHRIMP, 'var_name': 'asparagus_shrimp',
+             'selection': SELECT_ASPARAGUS_SHRIMP, 'selection_check': SELECT_ASPARAGUS_SHRIMP_CHECK,
+             'post_action': POST_ASPARAGUS_SHRIMP},
+            {'name': 'fish_chip', 'template': TEMPLATE_FISH_CHIP, 'var_name': 'fish_chip',
+             'selection': SELECT_FISH_CHIP, 'selection_check': SELECT_FISH_CHIP_CHECK,
+             'post_action': POST_FISH_CHIP},
+            {'name': 'fo_tiao', 'template': TEMPLATE_FO_TIAO, 'var_name': 'fo_tiao',
+             'selection': SELECT_FO_TIAO, 'selection_check': SELECT_FO_TIAO_CHECK,
+             'post_action': POST_FO_TIAO},
+            {'name': 'onion_fish', 'template': TEMPLATE_ONION_FISH, 'var_name': 'onion_fish',
+             'selection': SELECT_ONION_FISH, 'selection_check': SELECT_ONION_FISH_CHECK,
+             'post_action': POST_ONION_FISH}
         ]
 
         # 设置套餐组成

@@ -9602,7 +9602,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber1": {
@@ -9620,7 +9625,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber2": {
@@ -9638,7 +9648,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber3": {
@@ -9656,7 +9671,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber4": {
@@ -9674,7 +9694,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber5": {
@@ -9692,7 +9717,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber6": {
@@ -9710,7 +9740,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber7": {
@@ -9728,7 +9763,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       },
       "MealNumber8": {
@@ -9748,7 +9788,12 @@
           "salad",
           "tofu_meat",
           "tofu_combo",
-          "hearty_meal"
+          "hearty_meal",
+          "double_bamboo_shoots",
+          "asparagus_shrimp",
+          "fish_chip",
+          "fo_tiao",
+          "onion_fish"
         ]
       }
     },
@@ -9827,7 +9872,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber1": {
@@ -9847,7 +9893,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber2": {
@@ -9867,7 +9914,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber3": {
@@ -9887,7 +9935,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber4": {
@@ -9907,7 +9956,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber5": {
@@ -9927,7 +9977,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber6": {
@@ -9947,7 +9998,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber7": {
@@ -9967,7 +10019,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       },
       "MealNumber8": {
@@ -9989,7 +10042,8 @@
           "floral_fruity",
           "fruit_paradise",
           "lavender_tea",
-          "sunny_honey"
+          "sunny_honey",
+          "winter_jasmine_tea"
         ]
       }
     },
