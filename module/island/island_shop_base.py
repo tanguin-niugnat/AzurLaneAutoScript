@@ -295,7 +295,11 @@ class IslandShopBase(Island, WarehouseOCR):
                 current = self.current_totals.get(item, 0)
                 if current < target:
                     self.to_post_products[item] = target - current
-
+                    self.current_totals[item] = 0
+                else:
+                    self.current_totals[item] = current - target
+            logger.info(f"待完成备餐: {self.to_post_products}")
+            logger.info(f"当前剩余库存: {self.current_totals}")
             # ============ 处理套餐分解 ============
             if self.to_post_products:
                 self.to_post_products = self.process_meal_requirements(self.to_post_products)
@@ -512,6 +516,7 @@ class IslandShopBase(Island, WarehouseOCR):
             else:
                 logger.info(f"    库存充足，不需要生产")
 
+        logger.info(f"无特殊材料限制下的生产计划: {result}")
         # 6. 考虑特殊材料限制
         result = self.apply_special_material_constraints(result)
 

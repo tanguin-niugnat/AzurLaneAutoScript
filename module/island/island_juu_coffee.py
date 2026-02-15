@@ -210,10 +210,12 @@ class IslandJuuCoffee(IslandShopBase):
                 if remaining_milk < milk_for_latte:
                     max_latte = remaining_milk // 2
                     result['latte'] = max_latte
-                    logger.info(f"牛奶不足：latte需求从{latte_needed}调整为{max_latte}")
+                    logger.info(f"牛奶不足完成latte，需求从{latte_needed}调整为{max_latte}，剩余牛奶{remaining_milk}调整为{remaining_milk - max_latte * 2}")
                     remaining_milk -= max_latte * 2
                 else:
                     remaining_milk -= milk_for_latte
+                    logger.info(f"牛奶足够完成latte，扣除{milk_for_latte}，剩余牛奶{remaining_milk}")
+                    
 
             # 调整strawberry_milkshake需求
             if 'strawberry_milkshake' in result and result['strawberry_milkshake'] > 0:
@@ -223,10 +225,11 @@ class IslandJuuCoffee(IslandShopBase):
                 if remaining_milk < milk_for_milkshake:
                     max_milkshake = remaining_milk // 1
                     result['strawberry_milkshake'] = max_milkshake
-                    logger.info(f"牛奶不足：strawberry_milkshake需求从{milkshake_needed}调整为{max_milkshake}")
+                    logger.info(f"牛奶不足完成strawberry_milkshake，需求从{milkshake_needed}调整为{max_milkshake}，剩余牛奶{remaining_milk}调整为{remaining_milk - max_milkshake * 1}")
                     remaining_milk -= max_milkshake * 1
                 else:
                     remaining_milk -= milk_for_milkshake
+                    logger.info(f"牛奶足够完成strawberry_milkshake，扣除{milk_for_milkshake}，剩余牛奶{remaining_milk}")
 
             # 调整cheese需求
             if 'cheese' in result and result['cheese'] > 0:
@@ -236,10 +239,11 @@ class IslandJuuCoffee(IslandShopBase):
                 if remaining_milk < milk_for_cheese:
                     max_cheese = remaining_milk // 8
                     result['cheese'] = max_cheese
-                    logger.info(f"牛奶不足：cheese需求从{cheese_needed}调整为{max_cheese}")
+                    logger.info(f"牛奶不足完成cheese，需求从{cheese_needed}调整为{max_cheese}，剩余牛奶{remaining_milk}调整为{remaining_milk - max_cheese * 8}")
                     remaining_milk -= max_cheese * 8
                 else:
                     remaining_milk -= milk_for_cheese
+                    logger.info(f"牛奶足够完成cheese，扣除{milk_for_cheese}，剩余牛奶{remaining_milk}")
 
         return result
 
