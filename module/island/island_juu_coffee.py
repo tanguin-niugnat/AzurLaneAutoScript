@@ -112,14 +112,6 @@ class IslandJuuCoffee(IslandShopBase):
         if batch_size <= 0:
             return 0
 
-        # cheese需要8个牛奶
-        if product == 'cheese':
-            milk_needed_per_batch = 8
-            milk_available = self.milk_stock
-            max_by_milk = milk_available // milk_needed_per_batch
-            batch_size = min(batch_size, max_by_milk)
-            logger.info(f"  {product} 牛奶限制: 可用{milk_available}, 每批{milk_needed_per_batch}, 最大{max_by_milk}")
-
         # latte需要2个牛奶
         elif product == 'latte':
             milk_needed_per_batch = 2
@@ -136,6 +128,13 @@ class IslandJuuCoffee(IslandShopBase):
             batch_size = min(batch_size, max_by_milk)
             logger.info(f"  {product} 牛奶限制: 可用{milk_available}, 每批{milk_needed_per_batch}, 最大{max_by_milk}")
 
+        # cheese需要8个牛奶
+        if product == 'cheese':
+            milk_needed_per_batch = 8
+            milk_available = self.milk_stock
+            max_by_milk = milk_available // milk_needed_per_batch
+            batch_size = min(batch_size, max_by_milk)
+            logger.info(f"  {product} 牛奶限制: 可用{milk_available}, 每批{milk_needed_per_batch}, 最大{max_by_milk}")
         return batch_size
 
     def select_special_character(self,product):
@@ -148,17 +147,8 @@ class IslandJuuCoffee(IslandShopBase):
         # 先调用父类方法扣除套餐原材料
         super().deduct_materials(product, number)
 
-        # cheese需要扣除牛奶
-        if product == 'cheese':
-            milk_needed = number * 8
-            self.milk_stock = max(0, self.milk_stock - milk_needed)
-            self.special_materials['milk'] = self.milk_stock
-            if 'milk' in self.warehouse_counts:
-                self.warehouse_counts['milk'] = self.milk_stock
-            logger.info(f"扣除牛奶：milk -{milk_needed} (用于制作 {product})")
-
         # latte需要扣除牛奶
-        elif product == 'latte':
+        if product == 'latte':
             milk_needed = number * 2
             self.milk_stock = max(0, self.milk_stock - milk_needed)
             self.special_materials['milk'] = self.milk_stock
@@ -174,6 +164,14 @@ class IslandJuuCoffee(IslandShopBase):
             if 'milk' in self.warehouse_counts:
                 self.warehouse_counts['milk'] = self.milk_stock
             logger.info(f"扣除牛奶：milk -{milk_needed} (用于制作 {product})")
+        # cheese需要扣除牛奶
+        elif product == 'cheese':
+            milk_needed = number * 8
+            self.milk_stock = max(0, self.milk_stock - milk_needed)
+            self.special_materials['milk'] = self.milk_stock
+            if 'milk' in self.warehouse_counts:
+                self.warehouse_counts['milk'] = self.milk_stock
+            logger.info(f"扣除牛奶：milk -{milk_needed} (用于制作 {product})")
 
     def apply_special_material_constraints(self, requirements):
         """覆盖：根据牛奶库存调整需求"""
@@ -182,10 +180,6 @@ class IslandJuuCoffee(IslandShopBase):
         # 计算所有需要牛奶的产品总需求
         milk_demand = 0
 
-        # cheese需求（每个需要8牛奶）
-        if 'cheese' in result and result['cheese'] > 0:
-            milk_demand += result['cheese'] * 8
-
         # latte需求（每个需要2牛奶）
         if 'latte' in result and result['latte'] > 0:
             milk_demand += result['latte'] * 2
@@ -193,6 +187,10 @@ class IslandJuuCoffee(IslandShopBase):
         # strawberry_milkshake需求（每个需要1牛奶）
         if 'strawberry_milkshake' in result and result['strawberry_milkshake'] > 0:
             milk_demand += result['strawberry_milkshake'] * 1
+
+        # cheese需求（每个需要8牛奶）
+        if 'cheese' in result and result['cheese'] > 0:
+            milk_demand += result['cheese'] * 8
 
         # 检查牛奶是否足够
         milk_available = self.milk_stock
@@ -203,19 +201,6 @@ class IslandJuuCoffee(IslandShopBase):
             # 按优先级调整需求（这里可以根据需要调整优先级）
             # 例如：先满足latte，然后是strawberry_milkshake，最后是cheese
             remaining_milk = milk_available
-
-            # 调整cheese需求
-            if 'cheese' in result and result['cheese'] > 0:
-                cheese_needed = result['cheese']
-                milk_for_cheese = cheese_needed * 8
-
-                if remaining_milk < milk_for_cheese:
-                    max_cheese = remaining_milk // 8
-                    result['cheese'] = max_cheese
-                    logger.info(f"牛奶不足：cheese需求从{cheese_needed}调整为{max_cheese}")
-                    remaining_milk -= max_cheese * 8
-                else:
-                    remaining_milk -= milk_for_cheese
 
             # 调整latte需求
             if 'latte' in result and result['latte'] > 0:
@@ -242,6 +227,19 @@ class IslandJuuCoffee(IslandShopBase):
                     remaining_milk -= max_milkshake * 1
                 else:
                     remaining_milk -= milk_for_milkshake
+
+            # 调整cheese需求
+            if 'cheese' in result and result['cheese'] > 0:
+                cheese_needed = result['cheese']
+                milk_for_cheese = cheese_needed * 8
+
+                if remaining_milk < milk_for_cheese:
+                    max_cheese = remaining_milk // 8
+                    result['cheese'] = max_cheese
+                    logger.info(f"牛奶不足：cheese需求从{cheese_needed}调整为{max_cheese}")
+                    remaining_milk -= max_cheese * 8
+                else:
+                    remaining_milk -= milk_for_cheese
 
         return result
 
