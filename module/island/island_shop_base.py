@@ -169,8 +169,8 @@ class IslandShopBase(Island, WarehouseOCR):
                         self.device.sleep(0.5)
                         if product == self.special_food:
                             if product2:
-                                selection2 = self.name_to_config[product]['selection']
-                                selection_check2 = self.name_to_config[product]['selection_check']
+                                selection2 = self.name_to_config[product2]['selection']
+                                selection_check2 = self.name_to_config[product2]['selection_check']
                                 self.select_product(selection2, selection_check2)
                                 self.device.sleep(0.5)
                                 if self.produce_check():
