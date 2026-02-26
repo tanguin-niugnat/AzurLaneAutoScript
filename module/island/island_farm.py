@@ -272,9 +272,6 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                     self.device.click(POST_ADD_ORDER)
                     self.device.sleep(0.5)
                     break
-        if category == 'nursery':
-            self.device.sleep(1)
-            self.post_manage_up_swipe(450)
         self.post_open(post_button)
         self.device.sleep(0.5)
         self.device.screenshot()
@@ -510,7 +507,11 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
             self.ui_goto(page_island_postmanage, get_ship=False)
             self.post_manage_mode(POST_MANAGE_PRODUCTION)
             self.post_close()
-
+            self.device.sleep(1)
+            self.post_manage_down_swipe(450)
+            self.device.sleep(1)
+            self.post_manage_down_swipe(450)
+            self.device.sleep(1)
             # 先处理农田和果园的播种
             for category in ['farm', 'orchard']:
                 if not idle_posts[category]:
@@ -533,9 +534,11 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
                         logger.info(f"播种{category}岗位{post_info['post_id']}成功: {crop_to_plant}")
                         if crop_to_plant in self.to_plant_lists[category]:
                             self.to_plant_lists[category].remove(crop_to_plant)
-
-
-
+            self.device.sleep(1)
+            self.post_manage_down_swipe(450)
+            self.device.sleep(1)
+            self.post_manage_down_swipe(450)
+            self.device.sleep(1)
             # 然后处理苗圃的播种
             category = 'nursery'
             if idle_posts[category]:
