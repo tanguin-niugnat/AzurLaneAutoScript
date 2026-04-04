@@ -393,6 +393,7 @@ class IslandRancher(Island, WarehouseOCR, LoginHandler):
         mill_needs = self.check_mill_needs()
         if mill_needs:
             self.ui_goto(page_island_shop, get_ship=False)
+            self.device.sleep(1)
             while 1:
                 self.device.click(ISLAND_SHOP_GOTO_MILL)
                 self.device.screenshot()
