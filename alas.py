@@ -13,6 +13,7 @@ from module.config.deep import deep_get, deep_set
 from module.exception import *
 from module.logger import logger
 from module.notify import handle_notify
+from module.ui.page import page_main
 
 
 class AzurLaneAutoScript:
@@ -175,7 +176,12 @@ class AzurLaneAutoScript:
         from module.ui.ui import UI
         if self.device.app_is_running():
             logger.info('App is already running, goto main page')
-            UI(self.config, device=self.device).ui_goto_main()
+            page = UI(self.config, device=self.device).ui_get_current_page()
+            valid_pages = ['page_island_management', 'page_island_postmanage', 'page_island', 'page_island_warehouse', 'page_island_visit']
+            if page.name in valid_pages:
+                UI(self.config, device=self.device).ui_goto(page_main,get_ship=False)
+            else:
+                UI(self.config, device=self.device).ui_goto_main()
         else:
             logger.info('App is not running, start app and goto main page')
             LoginHandler(self.config, device=self.device).app_start()
@@ -430,6 +436,50 @@ class AzurLaneAutoScript:
     def game_manager(self):
         from module.daemon.game_manager import GameManager
         GameManager(config=self.config, device=self.device, task="GameManager").run()
+
+    def island_mine_forest(self):
+        from module.island.island_mine_forest import IslandMineForest
+        IslandMineForest(config=self.config, device=self.device).run()
+
+    def island_farm(self):
+        from module.island.island_farm import IslandFarm
+        IslandFarm(config=self.config, device=self.device).run()
+
+    def island_rancher(self):
+        from module.island.island_rancher import IslandRancher
+        IslandRancher(config=self.config, device=self.device).run()
+
+    def island_grill(self):
+        from module.island.island_grill import IslandGrill
+        IslandGrill(config=self.config, device=self.device).run()
+
+    def island_teahouse(self):
+        from module.island.island_teahouse import IslandTeahouse
+        IslandTeahouse(config=self.config, device=self.device).run()
+
+    def island_restaurant(self):
+        from module.island.island_restaurant import IslandRestaurant
+        IslandRestaurant(config=self.config, device=self.device).run()
+
+    def island_juu_coffee(self):
+        from module.island.island_juu_coffee import IslandJuuCoffee
+        IslandJuuCoffee(config=self.config, device=self.device).run()
+
+    def island_juu_eatery(self):
+        from module.island.island_juu_eatery import IslandJuuEatery
+        IslandJuuEatery(config=self.config, device=self.device).run()
+
+    def island_daily_gather(self):
+        from module.island.island_daily_gather import IslandDailyGather
+        IslandDailyGather(config=self.config, device=self.device).run()
+
+    def island_manufacture(self):
+        from module.island.island_manufacture import IslandManufacture
+        IslandManufacture(config=self.config, device=self.device).run()
+
+    def island_air_drop(self):
+        from module.island.island_air_drop import IslandAirDrop
+        IslandAirDrop(config=self.config, device=self.device).run()
 
     def wait_until(self, future):
         """
