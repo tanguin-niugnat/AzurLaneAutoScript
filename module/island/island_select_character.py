@@ -179,7 +179,7 @@ class SelectCharacter(UI):
             return True
         return False
 
-    def _select_first_available_character(self, screenshot, character_list):
+    def _select_first_available_character(self, character_list):
         """
         从指定角色列表中选择第一个空闲且体力充沛的角色
         如果无可选角色则选择WorkerJuu
@@ -187,13 +187,35 @@ class SelectCharacter(UI):
         Returns:
             tuple: (row, col) 或 None
         """
+        screenshot = self.device.screenshot()
         all_characters = self.recognize_all_characters(screenshot)
 
         # 构建角色名到状态的映射
         character_dict = {}
         for char_info in all_characters:
             character_dict[char_info["character_name"]] = char_info
+        logger.info(f"工作速度筛选下角色状态: {character_dict}")
+        # 优先按列表顺序检查指定角色
+        for char_name in character_list:
+            if char_name in character_dict:
+                char_info = character_dict[char_name]
+                # 检查角色状态和配置可用性
+                if (not char_info["is_working"] and
+                        char_info["has_stamina"]
+                        ):
+                    return char_info["grid_position"]
+        # 应用体力筛选
+        logger.info("应用体力筛选")
+        if not self.select_character_filter():
+            return None
+        screenshot = self.device.screenshot()
+        all_characters = self.recognize_all_characters(screenshot)
 
+        # 构建角色名到状态的映射
+        character_dict = {}
+        for char_info in all_characters:
+            character_dict[char_info["character_name"]] = char_info
+        logger.info(f"体力筛选下角色状态: {character_dict}")
         # 优先按列表顺序检查指定角色
         for char_name in character_list:
             if char_name in character_dict:
@@ -223,10 +245,6 @@ class SelectCharacter(UI):
         Returns:
             bool: 成功选择角色返回True，无角色可选返回False
         """
-        # 应用体力筛选
-        if not self.select_character_filter():
-            return False
-
         # 解析角色列表
         if isinstance(character_list, str):
             # 处理 "Cheshire > YingSwei" 格式
@@ -235,9 +253,7 @@ class SelectCharacter(UI):
             # 假设传入的是列表
             characters = character_list
 
-        # 获取截图并选择角色
-        screenshot = self.device.screenshot()
-        position = self._select_first_available_character(screenshot, characters)
+        position = self._select_first_available_character(characters)
 
         # 如果没有找到任何可用角色
         if position is None:
