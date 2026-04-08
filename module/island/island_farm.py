@@ -24,7 +24,7 @@ class IslandFarm(Island, WarehouseOCR, LoginHandler):
         self.plant_config = {
             'farm': {
                 'plant_default': self.config.IslandFarm_PlantPotatoes,  # 0-4
-                'default_crop': 'potato'
+                'default_crop': 'wheat'
             },
             'orchard': {
                 'plant_default': self.config.IslandOrchard_PlantRubber,  # 0-4
